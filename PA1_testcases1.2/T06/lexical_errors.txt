@@ -1,0 +1,6 @@
+4.	(*/, Unmatched comment) 
+13.	(/*this is wrong *
+		b = b - 1;
+	}
+	return;
+}, Unclosed comment) 

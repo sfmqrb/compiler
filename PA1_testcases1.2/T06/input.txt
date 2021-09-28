@@ -1,0 +1,17 @@
+// I know you are here to kill me. Shoot, coward, you are only going to kill a man.
+void min(void){
+	if (arr[g]) {
+		killed = me; */
+		killer = you;
+		b = b + 2;
+		if(3 < 2){
+			return;
+		}
+		x = 5;
+		b = u * 123;
+		break;
+		/*this is wrong *
+		b = b - 1;
+	}
+	return;
+}

@@ -1,0 +1,17 @@
+1.	if
+2.	else
+3.	void
+4.	int
+5.	repeat
+6.	break
+7.	until
+8.	return
+9.	min
+10.	voi
+11.	x
+12.	pple
+13.	mk3
+14.	b
+15.	arr
+16.	ilk
+17.	this

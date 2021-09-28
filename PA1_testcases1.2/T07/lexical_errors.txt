@@ -1,0 +1,6 @@
+2.	(*/, Unmatched comment) 
+13.	(/, Invalid input) 
+16.	(/*void main(void) {
+    f(10);
+}
+, Unclosed comment) 
