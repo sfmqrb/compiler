@@ -127,48 +127,70 @@ class STATES_TRANS():
 
 def get_next_state(this_state, this_char):
     if this_state == STATE.START:
-        next_state, log = STATES.next_state_after_START(this_char)
+        next_state, log = STATES_TRANS.next_state_after_START(this_char)
         return next_state, log
         
     if this_state == STATE.NUM:
-        next_state, log = STATES.next_state_after_NUM(this_char)
+        next_state, log = STATES_TRANS.next_state_after_NUM(this_char)
         return next_state, log
 
     if this_state == STATE.IDandKEYWORDS:
-        next_state, log = STATES.next_state_after_IDandKEYWORDS(this_char)
+        next_state, log = STATES_TRANS.next_state_after_IDandKEYWORDS(this_char)
         return next_state, log
     
     if this_state == STATE.EQU:
-        next_state, log = STATES.next_state_after_EQU(this_char)
+        next_state, log = STATES_TRANS.next_state_after_EQU(this_char)
         return next_state, log
 
     if this_state == STATE.WHITESPACE:
-        next_state, log = STATES.next_state_after_WHITESPACE(this_char)
+        next_state, log = STATES_TRANS.next_state_after_WHITESPACE(this_char)
         return next_state, log
 
-
     if this_state == STATE.COMBGN:
-        next_state, log = STATES.next_state_after_COMBGN(this_char)
+        next_state, log = STATES_TRANS.next_state_after_COMBGN(this_char)
         return next_state, log
 
     if this_state == STATE.ONELINECOM:
-        next_state, log = STATES.next_state_after_ONELINECOM(this_char)
+        next_state, log = STATES_TRANS.next_state_after_ONELINECOM(this_char)
         return next_state, log
 
     if this_state == STATE.TWOLINECOMBGN:
-        next_state, log = STATES.next_state_after_TWOLINECOMBGN(this_char)
+        next_state, log = STATES_TRANS.next_state_after_TWOLINECOMBGN(this_char)
         return next_state, log
 
 
     if this_state == STATE.TWOLINECOMEND:
-        next_state, log = STATES.next_state_after_TWOLINECOMEND(this_char)
+        next_state, log = STATES_TRANS.next_state_after_TWOLINECOMEND(this_char)
         return next_state, log
 
-    else : 
-        return this_state     
-        ERROR = -1
+    if this_state == STATE.ERROR:
+        next_state, log = STATE.START, 'ERROR'
+        return next_state, log
 
+    if this_state == STATE.END:
+        next_state, log = STATE.START, 'end'
+        return next_state, log
+    
+    if this_state == STATE.ENDBACK:
+        next_state, log = STATE.START, 'endback'
+        return next_state, log
+    
 
 if __name__ == "__main__":
-    # print(MY_DIGIT)
-    print(STATES_TRANS.next_state_after_START('1'))
+    s = "void main ( void ) {\n    int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
+    this_char_idx = 0
+    next_state = STATE.START
+    while this_char_idx < len(s):
+        # print("char_idx -- nextState -- log", this_char_idx, next_state)
+        # print()
+        this_state = next_state
+        this_char = s[this_char_idx]
+        next_state, log = get_next_state(this_state, this_char)
+        
+        print("char -- nextState -- log", this_char, this_state, log)
+
+        if next_state == STATE.ENDBACK:
+            next_state = STATE.START
+            this_char_idx -= 1
+            
+        this_char_idx += 1
