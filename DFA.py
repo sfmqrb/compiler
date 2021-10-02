@@ -4,7 +4,7 @@ import re
 class STATE(Enum):
     START = 0
     ENDBACK = 200
-    END = 100
+    END = 0
     NUM = 1
     IDandKEYWORDS = 3
     EQU = 5
@@ -25,6 +25,7 @@ MY_WHITESPACE = re.compile('\s+|\t+|\n+|\r+|\v+|\f+')
 MY_FORSLASH = re.compile('\/')
 MY_STAR = re.compile('\*')
 MY_EQ = re.compile('\=')
+MY_NEWLINE = re.compile('\n')
 
 
 class STATES_TRANS():
@@ -98,10 +99,10 @@ class STATES_TRANS():
             return next_state, 'Unclosed comment'
 
     def next_state_after_ONELINECOM(this_char):
-        if re.match(r'\n', this_char) != None:
+        if re.match(MY_NEWLINE, this_char) != None:
             next_state = STATE.ENDBACK
             return next_state, 'valid'
-        elif re.match(MY_STAR, this_char) != None:
+        else:
             next_state = STATE.ONELINECOM
             return next_state, 'valid'
 
@@ -123,7 +124,6 @@ class STATES_TRANS():
         else:
             next_state = STATE.TWOLINECOMBGN
             return next_state, 'valid'
-
 
 def get_next_state(this_state, this_char):
     if this_state == STATE.START:
@@ -177,9 +177,11 @@ def get_next_state(this_state, this_char):
     
 
 if __name__ == "__main__":
-    s = "void main ( void ) {\n    int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
+    # s = "void main ( void ) {\n    int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
+    s = "/* comment 3}*/ sajad == 10 "
     this_char_idx = 0
     next_state = STATE.START
+    
     while this_char_idx < len(s):
         # print("char_idx -- nextState -- log", this_char_idx, next_state)
         # print()
@@ -187,10 +189,14 @@ if __name__ == "__main__":
         this_char = s[this_char_idx]
         next_state, log = get_next_state(this_state, this_char)
         
-        print("char -- nextState -- log", this_char, this_state, log)
+        print("char -- thisState -- log -- idx -- nextState", this_char, this_state, log, this_char_idx, next_state)
+
+
+
+        # if next_state == STATE.END or next_state == STATE.ENDBACK or next_state == STATE.ERROR:
+        #     print("token found")
 
         if next_state == STATE.ENDBACK:
             next_state = STATE.START
-            this_char_idx -= 1
-            
+            this_char_idx -= 1    
         this_char_idx += 1
