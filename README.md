@@ -2,7 +2,8 @@
 **The code is complete and tested without any error.**
 
 ## todo
-  * Make output identical to the expected one.
-  * Double check project if anything has to be fixed. 
-  * Executable code must be in compiler.py.
-  * Graceful termination in the case of a fatal error.
+  * Make output identical to the expected one. || DONE
+  * Double check project if anything has to be fixed. || DONE
+  * Executable code must be in compiler.py. || DONE
+  * Graceful termination in the case of a fatal error. 
+  * Clean and make directories like utils etc.
