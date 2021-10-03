@@ -1,6 +1,7 @@
 from enum import Enum
 import re
 from sre_constants import IN_IGNORE
+# from typing_extensions import Required
 
 class STATE(Enum):
     START = 0
@@ -220,13 +221,23 @@ def get_next_state(this_state, this_char, idx):
 # def get_next_token():
 #     next_state, log, next_char_idx = get_next_state(this_state, this_char, this_char_idx)
 
+def get_final_token(this_state, s, addition_str, start_token, line, token):
+    if this_state == STATE.TWOLINECOMBGN or this_state == STATE.TWOLINECOMEND:
+        end_token = len(s) - len(addition_str)
+        token = s[start_token:end_token]
+        return line, token, 'Unclosed comment', start_token, end_token
+    else: 
+        return None, None, None, None, None  
+
 if __name__ == "__main__":
     # s = "void main ( void ) {\n \n\n   int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
     # s = "void main(void) {"
     # s = 'ifif  dfs '
     # s = "void main*/\nreturn;/* comment 3}"
-    s = "d3d = 10}"
+    s = "d3d = 10}; 100\nx=10 // a = 10  \n /* dsfds"
 
+    addition_str = "  \n  "
+    s += addition_str
     this_char_idx = 0
     this_state = STATE.START
     start_token = 0
@@ -251,7 +262,7 @@ if __name__ == "__main__":
             raw_token_type = log
 
 
-        if next_state == STATE.START:
+        if this_state == STATE.END:
             end_token = this_char_idx
             token = s[start_token:end_token]
             token_type = get_token_type(raw_token_type, token)
@@ -268,3 +279,9 @@ if __name__ == "__main__":
 
         this_char_idx = next_char_idx
         this_state = next_state
+    # print(this_state)
+
+    line, token, log, start_token, end_token = get_final_token(this_state, s, addition_str, start_token, line, token)
+    if line:
+        print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
+            line, token, log, start_token, end_token))
