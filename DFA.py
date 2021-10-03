@@ -15,18 +15,19 @@ class STATE(Enum):
     TWOLINECOMBGN = 11
     TWOLINECOMEND = 12
     ERROR = -1
+    STAR = 15
 
 
 MY_DIGIT = re.compile(r'[0-9]')
 MY_LETTER = re.compile(r'[a-zA-Z]')
 MY_LETDIG = re.compile(r'[a-zA-Z0-9]')
-MY_SYMB = re.compile(r'[\[\]\(\)\{\}\;\:\-\+\*\<\,]')
+MY_SYMB = re.compile(r'[\[\]\(\)\{\}\;\:\-\+\<\,]')
 KEYWORDS = re.compile(r'^if$|^else$|^void$|^int$|^repeat$|^break$|^until$|^return$')
-MY_WHITESPACE = re.compile('\s+|\t+|\n+|\r+|\v+|\f+')
+MY_WHITESPACE = re.compile(' |\t|\n|\r|\v|\f')
 MY_FORSLASH = re.compile('\/')
 MY_STAR = re.compile('\*')
 MY_EQ = re.compile('\=')
-MY_NEWLINE = re.compile('\n+')
+MY_NEWLINE = re.compile('\n')
 
 
 def get_token_type(raw_token_type, token):
@@ -55,6 +56,9 @@ class STATES_TRANS():
             return next_state, 'SYMBOL'
         elif re.match(MY_FORSLASH, this_char) != None:
             next_state = STATE.COMBGN
+            return next_state, ''
+        elif re.match(MY_STAR, this_char) != None:
+            next_state = STATE.STAR
             return next_state, ''
         elif re.match(MY_WHITESPACE, this_char) != None:
             next_state = STATE.WHITESPACE
@@ -91,12 +95,14 @@ class STATES_TRANS():
             return next_state, 'SYMBOL'
 
     def next_state_after_WHITESPACE(this_char):
-        if re.match(MY_WHITESPACE, this_char) != None:
-            next_state = STATE.WHITESPACE
-            return next_state, ''
-        else:
-            next_state = STATE.ENDBACK
-            return next_state, 'WWHITESPACE'
+        # if re.match(MY_WHITESPACE, this_char) != None:
+        #     next_state = STATE.WHITESPACE
+        #     return next_state, ''
+        # else:
+        #     next_state = STATE.ENDBACK
+        #     return next_state, 'WHITESPACE'
+        next_state = STATE.ENDBACK   # Why did not STATE.END work?
+        return next_state, 'WHITESPACE'
 
     def next_state_after_COMBGN(this_char):
         if re.match(MY_FORSLASH, this_char) != None:
@@ -136,9 +142,17 @@ class STATES_TRANS():
             next_state = STATE.TWOLINECOMBGN
             return next_state, ''
 
+    def next_state_after_STAR(this_char):
+        if re.match(MY_FORSLASH, this_char) != None:
+            next_state = STATE.ERROR
+            return next_state, 'Unmatched comment'
+        else:
+            next_state = STATE.END
+            return next_state, 'SYMBOL'
+
     def next_state_after_ERROR(this_char):
         next_state = STATE.START
-        return next_state, 'ERROR'
+        return next_state, ''
 
     def next_state_after_ENDBACK(this_char):
         next_state = STATE.END
@@ -182,14 +196,17 @@ def get_next_state(this_state, this_char, idx):
         next_state, log = STATES_TRANS.next_state_after_TWOLINECOMBGN(this_char)
         return next_state, log, idx + 1
 
-
     if this_state == STATE.TWOLINECOMEND:
         next_state, log = STATES_TRANS.next_state_after_TWOLINECOMEND(this_char)
         return next_state, log, idx + 1
 
+    if this_state == STATE.STAR:
+        next_state, log = STATES_TRANS.next_state_after_STAR(this_char)
+        return next_state, log, idx + 1
+
     if this_state == STATE.ERROR:
         next_state, log = STATES_TRANS.next_state_after_ERROR(this_char)
-        return next_state, log, idx + 1
+        return next_state, log, idx
 
     if this_state == STATE.END:
         next_state, log = STATES_TRANS.next_state_after_END(this_char)
@@ -204,9 +221,12 @@ def get_next_state(this_state, this_char, idx):
 #     next_state, log, next_char_idx = get_next_state(this_state, this_char, this_char_idx)
 
 if __name__ == "__main__":
-    # s = "void main ( void ) {\n    int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
-    s = "void main(void) {"
+    # s = "void main ( void ) {\n \n\n   int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
+    # s = "void main(void) {"
     # s = 'ifif  dfs '
+    # s = "void main*/\nreturn;/* comment 3}"
+    s = "d3d = 10}"
+
     this_char_idx = 0
     this_state = STATE.START
     start_token = 0
@@ -227,7 +247,7 @@ if __name__ == "__main__":
         #     print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(
         #         *[this_char, this_state, this_char_idx, next_state, log]))
 
-        if (next_state == STATE.ENDBACK  or next_state == STATE.END) and log:
+        if (next_state == STATE.ENDBACK  or next_state == STATE.END or next_state == STATE.ERROR) and log:
             raw_token_type = log
 
 
@@ -236,7 +256,15 @@ if __name__ == "__main__":
             token = s[start_token:end_token]
             token_type = get_token_type(raw_token_type, token)
 
-            print("{: >20} {: >20} {: >10} {: >10}".format(token, token_type, start_token, end_token))
+            if re.match(MY_NEWLINE, token):
+                line += 1
+
+            if re.match(MY_WHITESPACE, token):
+                print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
+                    line, 'WS', token_type, start_token, end_token))
+            else:
+                print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
+                    line, token, token_type, start_token, end_token))
 
         this_char_idx = next_char_idx
         this_state = next_state
