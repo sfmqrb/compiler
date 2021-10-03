@@ -1,5 +1,5 @@
 # compiler_assignment
-** The code is complete and tested without any error. **
+**The code is complete and tested without any error.**
 
 ## todo
   * Make output identical to the expected one.
