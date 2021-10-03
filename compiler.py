@@ -24,6 +24,13 @@ def save_tuple2file_based_on_1element(file_name, tl):
             f.write('(' + t[1] + ', ' + t[2] + ') ')
 
 
+def save_list2file(file_name, l):
+    f = open(file_name, mode='w')
+    for i, t in enumerate(l):
+        f.write('{0:4}'.format(str(i+1) + '.'))
+        f.write(t + '\n')
+
+
 def main():
     addr = './pa_1/PA1_testcases1.2/T01/input.txt'
     s = file2str(addr,)
@@ -33,9 +40,8 @@ def main():
         if next_token == None: break
         # print("{: >3}{: >20}{: >20}".format(*[line, next_token, next_token_type]))
 
-    print(scnr.lexemes)
     save_tuple2file_based_on_1element("lexical_errors.txt", scnr.errors)
     save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
-    # print(scanner)
+    save_list2file('symbol_table.txt', scnr.lexemes)
 if __name__ == "__main__":
     main()

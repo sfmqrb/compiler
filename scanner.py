@@ -76,6 +76,6 @@ class scanner():
     def return2compiler(self, to_return):
         if to_return[0] != None:
             self.tokens.append(to_return)
-            if to_return[2] == 'ID' and to_return[1] not in self.lexemes:
-                self.lexemes.append(to_return[1])
+            if to_return[1] == 'ID' and to_return[2] not in self.lexemes:
+                self.lexemes.append(to_return[2])
         return to_return
