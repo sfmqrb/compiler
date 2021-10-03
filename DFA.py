@@ -92,13 +92,7 @@ def print_letter_state(this_char_idx, this_state, this_char, next_state, log):
 
 
 if __name__ == "__main__":
-    # s = "void main ( void ) {\n \n\n   int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
-    # s = "void main(void) {"
-    # s = 'ifif  dfs '
-    # s = "void main*/\nreturn;/* comment 3}*/\ns=10; s=s+1;//#$@#$#@%^$#%$"
-    # s = "@sajad@ hello  -1 == 10;"
-    # s = "d3d = 10}; 100\nx=10 // a = 10  \n /* dsfds */"
-
+    
     f = open('./pa_1/PA1_testcases1.2/T10/input.txt', 'r')
     ls_text = f.readlines()
     s = ""
@@ -107,6 +101,7 @@ if __name__ == "__main__":
 
     addition_str = "\n  "  # has to begin with \n and be longer than 1
     s += addition_str
+    
     this_char_idx = 0
     this_state = STATE.START
     start_token = 0
