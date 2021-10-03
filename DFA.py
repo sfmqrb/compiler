@@ -25,7 +25,7 @@ MY_WHITESPACE = re.compile('\s+|\t+|\n+|\r+|\v+|\f+')
 MY_FORSLASH = re.compile('\/')
 MY_STAR = re.compile('\*')
 MY_EQ = re.compile('\=')
-MY_NEWLINE = re.compile('\n')
+MY_NEWLINE = re.compile('\n+')
 
 
 class STATES_TRANS():
@@ -186,12 +186,14 @@ def get_next_state(this_state, this_char, idx):
 
     if this_state == STATE.ENDBACK:
         next_state, log = STATES_TRANS.next_state_after_ENDBACK(this_char)
-        return next_state, log, idx
+        return next_state, log, idx - 1
 
+def get_next_token():
+    pass
 
 if __name__ == "__main__":
     # s = "void main ( void ) {\n    int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
-    s = "/* comment 3}*/ sajad == 10 "
+    s = "/* comment 3}*/ sajad == 10  \n if (sajjad99-12) == 223 \n printf('sajad')"
     this_char_idx = 0
     this_state = STATE.START
 
@@ -199,6 +201,9 @@ if __name__ == "__main__":
     while this_char_idx < len(s):
         this_char = s[this_char_idx]
         next_state, log, next_char_idx = get_next_state(this_state, this_char, this_char_idx)
-        print("{: >10} {: >20} {: >15} {: >20}".format(*[this_char, this_state, this_char_idx, next_state]))
+        if re.match(MY_NEWLINE, this_char):
+            print("{: >10} {: >20} {: >15} {: >20}".format(*['NEWLINE', this_state, this_char_idx, next_state]))
+        else:    
+            print("{: >10} {: >20} {: >15} {: >20}".format(*[this_char, this_state, this_char_idx, next_state]))
         this_char_idx = next_char_idx
         this_state = next_state
