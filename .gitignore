@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 
-*/*PA1_testcases1.2*/*
+*/PA1_testcases1.2/*

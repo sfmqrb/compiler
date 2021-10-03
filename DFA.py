@@ -120,12 +120,13 @@ class STATES_TRANS():
         if re.match(MY_FORSLASH, this_char) != None:
             next_state = STATE.ONELINECOM
             return next_state, ''
+
         elif re.match(MY_STAR, this_char) != None:
             next_state = STATE.TWOLINECOMBGN
             return next_state, ''
         else:
             next_state = STATE.ERROR
-            return next_state, 'Unclosed comment'
+            return next_state, 'Invalid input'
 
     def next_state_after_ONELINECOM(this_char):
         if re.match(MY_NEWLINE, this_char) != None:
@@ -265,7 +266,7 @@ if __name__ == "__main__":
     # s = "@sajad@ hello  -1 == 10;"
     # s = "d3d = 10}; 100\nx=10 // a = 10  \n /* dsfds */"
 
-    f = open('./pa_1/PA1_testcases1.2/T02/input.txt', 'r')
+    f = open('./pa_1/PA1_testcases1.2/T10/input.txt', 'r')
     ls_text = f.readlines()
     s = ""
     for txt in ls_text:
