@@ -229,12 +229,20 @@ def get_final_token(this_state, s, addition_str, start_token, line, token):
     else: 
         return None, None, None, None, None  
 
+def print_letter_state(this_char_idx, this_state, this_char, next_state, log):
+    if re.match(MY_NEWLINE, this_char):
+        print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(
+                *['NEWLINE', this_state, this_char_idx, next_state, log]))
+    else:
+        print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(
+                *[this_char, this_state, this_char_idx, next_state, log]))
+
 if __name__ == "__main__":
     # s = "void main ( void ) {\n \n\n   int a = 0;\n    // comment1\n    a = 2 + 2;\n    a = a - 3;\n    cde = a;\n    if (b /* comment2 */ == 3d) {\n        a = 3;\n        cd!e = 7;\n    }\n    else */\n    {\n        b = a < cde;\n        {cde = @2;\n    }}\n    return;/* comment 3}"
     # s = "void main(void) {"
     # s = 'ifif  dfs '
     # s = "void main*/\nreturn;/* comment 3}"
-    s = "d3d = 10}; 100\nx=10 // a = 10  \n /* dsfds"
+    s = "d3d = 10}; 100\nx=10 // a = 10  \n /* dsfds */"
 
     addition_str = "  \n  "
     s += addition_str
@@ -243,7 +251,6 @@ if __name__ == "__main__":
     start_token = 0
     raw_token_type = ''
     line = 1
-    # print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(*['this_char', 'this_state', 'this_char_idx', 'next_state', 'log']))
 
     while this_char_idx < len(s):
         if this_state == STATE.START:
@@ -251,12 +258,7 @@ if __name__ == "__main__":
         this_char = s[this_char_idx]
         next_state, log, next_char_idx = get_next_state(this_state, this_char, this_char_idx)
 
-        # if re.match(MY_NEWLINE, this_char):
-        #     print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(
-        #         *['NEWLINE', this_state, this_char_idx, next_state, log]))
-        # else:
-        #     print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(
-        #         *[this_char, this_state, this_char_idx, next_state, log]))
+        # print_letter_state(this_char_idx, this_state, this_char, next_state, log)
 
         if (next_state == STATE.ENDBACK  or next_state == STATE.END or next_state == STATE.ERROR) and log:
             raw_token_type = log
@@ -271,15 +273,15 @@ if __name__ == "__main__":
                 line += 1
 
             if re.match(MY_WHITESPACE, token):
-                print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
-                    line, 'WS', token_type, start_token, end_token))
+                pass
+                # print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
+                #     line, 'WS', token_type, start_token, end_token))
             else:
                 print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
                     line, token, token_type, start_token, end_token))
 
         this_char_idx = next_char_idx
         this_state = next_state
-    # print(this_state)
 
     line, token, log, start_token, end_token = get_final_token(this_state, s, addition_str, start_token, line, token)
     if line:
