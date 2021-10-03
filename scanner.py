@@ -5,9 +5,9 @@ from regex import RE
 
 
 class scanner():
-    def __init__(self, slen: int, s: str) -> None:
-        self.slen = slen
+    def __init__(self, s: str) -> None:
         self.s = s
+        self.slen = len(self.s)
         self.this_char_idx = 0
         self.start_token = 0
         self.raw_token_type = ''
