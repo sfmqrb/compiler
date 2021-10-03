@@ -13,15 +13,18 @@ class scanner():
         self.raw_token_type = ''
         self.this_state = STATE.START
         self.errors = []
+        self.tokens = []
+        self.lexemes = ['if', 'else', 'void', 'int', 'repeat', 'break', 'until', 'return']
         self.line = 1
         self.addition_str = "\n  "  # has to begin with \n and be longer than 1
         self.s += self.addition_str
         self.empty_return = (None, None, None)
 
+
     def get_next_token(self,):
         # End of the file
         if self.slen <= self.this_char_idx:
-            return self.empty_return
+            return self.return2compiler(self.empty_return)
 
         while self.this_char_idx < len(self.s):
             if self.this_state == STATE.START:
@@ -50,16 +53,29 @@ class scanner():
                 else:
                     # print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
                     #     self.line, self.token, self.token_type, self.start_token, self.end_token))
-                    to_return = (self.line, self.token, self.token_type)
+                    to_return = (self.line, self.token_type, self.token)
+                    if self.this_state == STATE.ERROR:
+                        self.errors.append((self.line, self.token, self.token_type))
+                        to_return = self.empty_return
+                    if self.token_type == 'COMMENT':
+                        to_return = self.empty_return
 
             self.this_char_idx = self.next_char_idx
             self.this_state = self.next_state
             if to_return[0] != None:
-                return to_return
+                return self.return2compiler(to_return)
 
-        self.line, self.token, self.log, self.start_token, self.end_token = get_final_token(
-            self.this_state, self.s, self.addition_str, self.start_token,
-            self.line, self.token)
+
+        self.line, self.token, self.token_type, self.start_token, self.end_token = get_final_token(
+                                                                    self.this_state, self.s, self.addition_str, self.start_token,
+                                                                    self.line, self.token)
         if self.line != None:
-            return (self.line, self.token, self.token_type)
-        return self.empty_return
+            self.errors.append((self.line, self.token, self.token_type))
+        return self.return2compiler(self.empty_return)
+
+    def return2compiler(self, to_return):
+        if to_return[0] != None:
+            self.tokens.append(to_return)
+            if to_return[2] == 'ID' and to_return[1] not in self.lexemes:
+                self.lexemes.append(to_return[1])
+        return to_return
