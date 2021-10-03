@@ -1,183 +1,16 @@
-from enum import Enum
+from states import STATE
 import re
-
-
-class STATE(Enum):
-    START = 0
-    ENDBACK = 200
-    END = 100
-    NUM = 1
-    IDandKEYWORDS = 3
-    EQU = 5
-    WHITESPACE = 14
-    COMBGN = 8
-    ONELINECOM = 9
-    TWOLINECOMBGN = 11
-    TWOLINECOMEND = 12
-    ERROR = -1
-    STAR = 15
-
-
-MY_DIGIT = re.compile(r'[0-9]')
-MY_LETTER = re.compile(r'[a-zA-Z]')
-MY_LETDIG = re.compile(r'[a-zA-Z0-9]')
-MY_SYMB = re.compile(r'[\[\]\(\)\{\}\;\:\-\+\<\,]')
-KEYWORDS = re.compile(
-    r'^if$|^else$|^void$|^int$|^repeat$|^break$|^until$|^return$')
-MY_WHITESPACE = re.compile(' |\t|\n|\r|\v|\f')
-MY_FORSLASH = re.compile('\/')
-MY_STAR = re.compile('\*')
-MY_EQ = re.compile('\=')
-MY_NEWLINE = re.compile('\n')
-MY_ALPHABET = re.compile(
-    r'[a-zA-Z0-9]|[\[\]\(\)\{\}\;\:\-\+\<\,\=\/\*]|[\s|\t|\n|\r|\v|\f]')
-
+from states_trans import STATES_TRANS
+from regex import RE
 
 def get_token_type(raw_token_type, token):
     if raw_token_type == 'IDorKeywords':
-        if re.match(KEYWORDS, token):
+        if re.match(RE.KEYWORDS, token):
             return 'KEYWORD'
         else:
             return 'ID'
     else:
         return raw_token_type
-
-
-class STATES_TRANS():
-    def next_state_after_START(this_char):
-        if re.match(MY_DIGIT, this_char) != None:
-            next_state = STATE.NUM
-            return next_state, ''
-        elif re.match(MY_LETTER, this_char) != None:
-            next_state = STATE.IDandKEYWORDS
-            return next_state, ''
-        elif re.match(MY_EQ, this_char) != None:
-            next_state = STATE.EQU
-            return next_state, ''
-        elif re.match(MY_SYMB, this_char) != None:
-            next_state = STATE.END
-            return next_state, 'SYMBOL'
-        elif re.match(MY_FORSLASH, this_char) != None:
-            next_state = STATE.COMBGN
-            return next_state, ''
-        elif re.match(MY_STAR, this_char) != None:
-            next_state = STATE.STAR
-            return next_state, ''
-        elif re.match(MY_WHITESPACE, this_char) != None:
-            next_state = STATE.WHITESPACE
-            return next_state, ''
-        else:
-            next_state = STATE.ERROR  # error
-            return next_state, 'Invalid input'
-
-    def next_state_after_NUM(this_char):
-        if re.match(MY_DIGIT, this_char) != None:
-            next_state = STATE.NUM
-            return next_state, ''
-        elif re.match(MY_LETTER, this_char) != None:
-            next_state = STATE.ERROR
-            return next_state, 'Invalid Number'
-        elif re.match(MY_ALPHABET, this_char) != None:
-            next_state = STATE.ENDBACK
-            return next_state, 'NUM'
-        else:
-            next_state = STATE.ERROR  # error
-            return next_state, 'Invalid input'
-
-    def next_state_after_IDandKEYWORDS(this_char):
-        if re.match(MY_LETDIG, this_char) != None:
-            next_state = STATE.IDandKEYWORDS
-            return next_state, ''
-        elif re.match(MY_ALPHABET, this_char) != None:
-            next_state = STATE.ENDBACK
-            return next_state, 'IDorKeywords'
-        else:
-            next_state = STATE.ERROR  # error
-            return next_state, 'Invalid input'
-
-    def next_state_after_EQU(this_char):
-        if re.match(MY_EQ, this_char) != None:
-            next_state = STATE.END
-            return next_state, 'SYMBOL'
-        elif re.match(MY_ALPHABET, this_char) != None:
-            next_state = STATE.ENDBACK
-            return next_state, 'SYMBOL'
-        else:
-            next_state = STATE.ERROR
-            return next_state, 'Invalid input'
-
-    def next_state_after_WHITESPACE(this_char):
-        # if re.match(MY_WHITESPACE, this_char) != None:
-        #     next_state = STATE.WHITESPACE
-        #     return next_state, ''
-        # else:
-        #     next_state = STATE.ENDBACK
-        #     return next_state, 'WHITESPACE'
-        next_state = STATE.ENDBACK
-        return next_state, 'WHITESPACE'
-
-    def next_state_after_COMBGN(this_char):
-        if re.match(MY_FORSLASH, this_char) != None:
-            next_state = STATE.ONELINECOM
-            return next_state, ''
-
-        elif re.match(MY_STAR, this_char) != None:
-            next_state = STATE.TWOLINECOMBGN
-            return next_state, ''
-        else:
-            next_state = STATE.ERROR
-            return next_state, 'Invalid input'
-
-    def next_state_after_ONELINECOM(this_char):
-        if re.match(MY_NEWLINE, this_char) != None:
-            next_state = STATE.ENDBACK
-            return next_state, 'COMMENT'
-        else:
-            next_state = STATE.ONELINECOM
-            return next_state, ''
-
-    def next_state_after_TWOLINECOMBGN(this_char):
-        if re.match(MY_STAR, this_char) != None:
-            next_state = STATE.TWOLINECOMEND
-            return next_state, ''
-        else:
-            next_state = STATE.TWOLINECOMBGN
-            return next_state, ''
-
-    def next_state_after_TWOLINECOMEND(this_char):
-        if re.match(MY_STAR, this_char) != None:
-            next_state = STATE.TWOLINECOMEND
-            return next_state, ''
-        elif re.match(MY_FORSLASH, this_char) != None:
-            next_state = STATE.END
-            return next_state, 'COMMENT'
-        else:
-            next_state = STATE.TWOLINECOMBGN
-            return next_state, ''
-
-    def next_state_after_STAR(this_char):  # just for begining star
-        if re.match(MY_FORSLASH, this_char) != None:
-            next_state = STATE.ERROR
-            return next_state, 'Unmatched comment'
-        elif re.match(MY_ALPHABET, this_char) != None:
-            next_state = STATE.ENDBACK
-            return next_state, 'SYMBOL'
-        else:
-            next_state = STATE.ERROR
-            return next_state, 'Invalid input'
-
-    def next_state_after_ERROR(this_char):
-        next_state = STATE.START
-        return next_state, ''
-
-    def next_state_after_ENDBACK(this_char):
-        next_state = STATE.END
-        return next_state, ''
-
-    def next_state_after_END(this_char):
-        next_state = STATE.START
-        return next_state, ''
-
 
 def get_next_state(this_state, this_char, idx):
     if this_state == STATE.START:
@@ -250,7 +83,7 @@ def get_final_token(this_state, s, addition_str, start_token, line, token):
 
 
 def print_letter_state(this_char_idx, this_state, this_char, next_state, log):
-    if re.match(MY_NEWLINE, this_char):
+    if re.match(RE.MY_NEWLINE, this_char):
         print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(
             *['NEWLINE', this_state, this_char_idx, next_state, log]))
     else:
@@ -298,10 +131,10 @@ if __name__ == "__main__":
             token = s[start_token:end_token]
             token_type = get_token_type(raw_token_type, token)
 
-            if re.match(MY_NEWLINE, token):
+            if re.match(RE.MY_NEWLINE, token):
                 line += 1
 
-            if re.match(MY_WHITESPACE, token):
+            if re.match(RE.MY_WHITESPACE, token):
                 pass
                 # print("line {: >5} {: >20} {: >20} {: >10} {: >10}".format(
                 #     line, 'WS', token_type, start_token, end_token))
