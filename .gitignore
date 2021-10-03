@@ -131,3 +131,5 @@ dmypy.json
 
 */PA1_testcases1.2/*
 */.vscode/*
+
+*.txt
