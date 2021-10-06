@@ -7,3 +7,4 @@
   * Executable code must be in compiler.py. || DONE
   * Graceful termination in the case of a fatal error. 
   * Clean and make directories like utils etc.
+  * Byte by Byte reading from input
