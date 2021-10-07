@@ -32,7 +32,8 @@ def save_list2file(file_name, l):
 
 
 def main():
-    addr = './pa_1/PA1_testcases1.2/T01/input.txt'
+    # addr = './pa_1/PA1_testcases1.2/T01/input.txt'
+    addr = './pa_1/PA1_testcases1.2/test'
     s = file2str(addr,)
     scnr = scanner.scanner(s=s)
     while True:

@@ -76,7 +76,10 @@ def get_next_state(this_state, this_char, idx):
 def get_final_token(this_state, s, addition_str, start_token, line, token):
     if this_state == STATE.TWOLINECOMBGN or this_state == STATE.TWOLINECOMEND:
         end_token = len(s) - len(addition_str)
-        token = s[start_token:end_token]
+        if end_token - start_token < 8:
+            token = s[start_token:end_token]
+        else:
+            token = s[start_token:start_token+7] + '...'
         return line, token, 'Unclosed comment', start_token, end_token
     else:
         return None, None, None, None, None
@@ -89,4 +92,3 @@ def print_letter_state(this_char_idx, this_state, this_char, next_state, log):
     else:
         print("{: >10} {: >20} {: >15} {: >20} {: >10}".format(
             *[this_char, this_state, this_char_idx, next_state, log]))
-

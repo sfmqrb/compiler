@@ -45,8 +45,8 @@ class scanner():
                 self.token = self.s[self.start_token:self.end_token]
                 self.token_type = get_token_type(self.raw_token_type, self.token)
 
-                if re.match(RE.MY_NEWLINE, self.token):
-                    self.line += 1
+                if len(re.findall(RE.MY_NEWLINE, self.token)) > 0:
+                    self.line += len(re.findall(RE.MY_NEWLINE, self.token))
 
                 if re.match(RE.MY_WHITESPACE, self.token):
                     pass
@@ -55,6 +55,7 @@ class scanner():
                     #     self.line, self.token, self.token_type, self.start_token, self.end_token))
                     to_return = (self.line, self.token_type, self.token)
                     if self.this_state == STATE.ERROR:
+                        print(self.token)
                         self.errors.append((self.line, self.token, self.token_type))
                         to_return = self.empty_return
                     if self.token_type == 'COMMENT':
