@@ -7,4 +7,4 @@
   * Executable code must be in compiler.py. || DONE
   * Graceful termination in the case of a fatal error. || TODO
   * Clean and make directories like utils etc. || DOING
-  * Byte by Byte reading from input (Due to buffering the input file there is no need to implement this segment) || INVALID
+  * Byte by Byte reading from input (buffer the input so there is no need to implement this segment) || INVALID
