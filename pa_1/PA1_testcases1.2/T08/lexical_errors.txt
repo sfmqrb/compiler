@@ -1,3 +1,0 @@
-4.	(1g, Invalid number) 
-7.	(hell$, Invalid input) (ooo&, Invalid input) 
-8.	(!, Invalid input) 

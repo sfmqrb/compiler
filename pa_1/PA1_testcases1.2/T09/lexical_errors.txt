@@ -1,4 +1,0 @@
-5.	(#, Invalid input) 
-6.	(=#, Invalid input) (#, Invalid input) 
-23.	(void$, Invalid input) 
-28.	(*#, Invalid input) (#, Invalid input) 

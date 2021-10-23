@@ -1,2 +1,0 @@
-4.	(re%, Invalid input) 
-8.	(1s, Invalid number) 

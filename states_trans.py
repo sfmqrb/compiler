@@ -35,7 +35,7 @@ class STATES_TRANS():
             return next_state, ''
         elif re.match(RE.MY_LETTER, this_char) != None:
             next_state = STATE.ERROR
-            return next_state, 'Invalid Number'
+            return next_state, 'Invalid number'
         elif re.match(RE.MY_ALPHABET, this_char) != None:
             next_state = STATE.ENDBACK
             return next_state, 'NUM'
