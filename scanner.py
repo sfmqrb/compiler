@@ -1,7 +1,7 @@
-from DFA import get_final_token, get_token_type, get_next_state, print_letter_state
-from states import STATE
+from DFA.DFA import get_final_token, get_token_type, get_next_state
+from DFA.states import STATE
 import re
-from regex import RE
+from Tools.regex import RE
 
 
 class scanner():

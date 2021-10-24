@@ -1,5 +1,5 @@
-from states import STATE
-from regex import RE
+from DFA.states import STATE
+from Tools.regex import RE
 import re
 
 class STATES_TRANS():

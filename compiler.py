@@ -14,6 +14,11 @@ def save_tuple2file_based_on_1element(file_name, tl):
     f = open(file_name, mode='w')
     this_el = -1
     for t in tl:
+        # resolve \n error
+        if "\n" in t[1]:
+            t = (t[0] - 1, t[1].replace("\n", ""), t[2])
+            # t[0] = int(t[0]) - 1
+            # t[1].replace("\n", "")
         if t[0] == this_el:
             f.write('(' + t[1] + ', ' + t[2] + ') ')
         else:
@@ -23,7 +28,7 @@ def save_tuple2file_based_on_1element(file_name, tl):
             this_el = t[0]
             f.write(str(this_el) + '.' + '	')
             # f.write('{0:4}'.format(str(this_el)+'.'))
-            f.write(('(' + t[1] + ', ' + t[2] + ') ').replace("\n", ""))
+            f.write(('(' + t[1] + ', ' + t[2] + ') '))
             # f.write('(' + repr(t[1]) + ', ' + repr(t[2]) + ') ')
 
 

@@ -1,7 +1,7 @@
-from states import STATE
+from DFA.states import STATE
 import re
-from states_trans import STATES_TRANS
-from regex import RE
+from DFA.states_trans import STATES_TRANS
+from Tools.regex import RE
 
 def get_token_type(raw_token_type, token):
     if raw_token_type == 'IDorKeywords':
