@@ -1,4 +1,5 @@
 import scanner
+from Parser import parser
 
 
 def file2str(filepath):
@@ -51,8 +52,12 @@ def main():
     s = file2str(addr, )
     scnr = scanner.scanner(s=s)
     while True:
-        line, next_token, next_token_type = scnr.get_next_token()
-        if next_token == None: break
+        line, next_token_type, next_token = scnr.get_next_token()
+        if next_token_type == None:
+            parser.get_next_token('$', line)
+            break
+        else:
+            parser.get_next_token((str(next_token_type), str(next_token)), line)
         # print("{: >3}{: >20}{: >20}".format(*[line, next_token, next_token_type]))
 
     if scnr.errors.__len__() == 0:
@@ -61,10 +66,24 @@ def main():
         save_tuple2file_based_on_1element("lexical_errors.txt", scnr.errors)
     save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
     save_list2file('symbol_table.txt', scnr.lexemes)
+    tree = parser.draw_tree()
+    f = open("parse_tree.txt", "w", encoding="utf-8")
+    f.write(tree)
+    f.close()
+    errors = (parser.get_pars_errors())
+    if errors.__len__() == 0:
+        f = open("syntax_errors.txt", "w", encoding="utf-8")
+        f.write("There is no syntax error.")
+        f.close()
+    else:
+        f = open("syntax_errors.txt", "w", encoding="utf-8")
+        for e in errors:
+            f.write(e + "\n")
+        f.close()
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except:
-        print("an unexpected error occurred")
+    # try:
+    main()
+    # except:
+    #     print("an unexpected error occurred")

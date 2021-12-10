@@ -1,6 +1,7 @@
 from enum import Enum
 
-class STATE(Enum):
+
+class STATE_SCANNER(Enum):
     START = 0
     ENDBACK = 200
     END = 100

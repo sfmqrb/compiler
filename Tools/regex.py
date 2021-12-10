@@ -8,7 +8,7 @@ class RE:
     MY_LETDIG = re.compile(r'[a-zA-Z0-9]')
     MY_SYMB = re.compile(r'[\[\]\(\)\{\}\;\:\-\+\<\,]')
     KEYWORDS = re.compile(
-        r'^if$|^else$|^void$|^int$|^repeat$|^break$|^until$|^return$')
+        r'^if$|^else$|^void$|^int$|^repeat$|^break$|^until$|^return$|^endif$')
     MY_WHITESPACE = re.compile(' |\t|\n|\r|\v|\f')
     MY_FORSLASH = re.compile('\/')
     MY_STAR = re.compile('\*')

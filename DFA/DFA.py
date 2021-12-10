@@ -1,4 +1,4 @@
-from DFA.states import STATE
+from DFA.states import STATE_SCANNER
 import re
 from DFA.states_trans import STATES_TRANS
 from Tools.regex import RE
@@ -13,58 +13,58 @@ def get_token_type(raw_token_type, token):
         return raw_token_type
 
 def get_next_state(this_state, this_char, idx):
-    if this_state == STATE.START:
+    if this_state == STATE_SCANNER.START:
         next_state, log = STATES_TRANS.next_state_after_START(this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.NUM:
+    if this_state == STATE_SCANNER.NUM:
         next_state, log = STATES_TRANS.next_state_after_NUM(this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.IDandKEYWORDS:
+    if this_state == STATE_SCANNER.IDandKEYWORDS:
         next_state, log = STATES_TRANS.next_state_after_IDandKEYWORDS(
             this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.EQU:
+    if this_state == STATE_SCANNER.EQU:
         next_state, log = STATES_TRANS.next_state_after_EQU(this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.WHITESPACE:
+    if this_state == STATE_SCANNER.WHITESPACE:
         next_state, log = STATES_TRANS.next_state_after_WHITESPACE(this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.COMBGN:
+    if this_state == STATE_SCANNER.COMBGN:
         next_state, log = STATES_TRANS.next_state_after_COMBGN(this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.ONELINECOM:
+    if this_state == STATE_SCANNER.ONELINECOM:
         next_state, log = STATES_TRANS.next_state_after_ONELINECOM(this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.TWOLINECOMBGN:
+    if this_state == STATE_SCANNER.TWOLINECOMBGN:
         next_state, log = STATES_TRANS.next_state_after_TWOLINECOMBGN(
             this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.TWOLINECOMEND:
+    if this_state == STATE_SCANNER.TWOLINECOMEND:
         next_state, log = STATES_TRANS.next_state_after_TWOLINECOMEND(
             this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.STAR:
+    if this_state == STATE_SCANNER.STAR:
         next_state, log = STATES_TRANS.next_state_after_STAR(this_char)
         return next_state, log, idx + 1
 
-    if this_state == STATE.ERROR:
+    if this_state == STATE_SCANNER.ERROR:
         next_state, log = STATES_TRANS.next_state_after_ERROR(this_char)
         return next_state, log, idx
 
-    if this_state == STATE.END:
+    if this_state == STATE_SCANNER.END:
         next_state, log = STATES_TRANS.next_state_after_END(this_char)
         return next_state, log, idx
 
-    if this_state == STATE.ENDBACK:
+    if this_state == STATE_SCANNER.ENDBACK:
         next_state, log = STATES_TRANS.next_state_after_ENDBACK(this_char)
         return next_state, log, idx - 1
 
@@ -74,7 +74,7 @@ def get_next_state(this_state, this_char, idx):
 
 
 def get_final_token(this_state, s, addition_str, start_token, line, token):
-    if this_state == STATE.TWOLINECOMBGN or this_state == STATE.TWOLINECOMEND:
+    if this_state == STATE_SCANNER.TWOLINECOMBGN or this_state == STATE_SCANNER.TWOLINECOMEND:
         end_token = len(s) - len(addition_str)
         if end_token - start_token < 8:
             token = s[start_token:end_token]
