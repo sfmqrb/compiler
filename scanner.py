@@ -14,7 +14,7 @@ class scanner():
         self.this_state = STATE.START
         self.errors = []
         self.tokens = []
-        self.lexemes = ['if', 'else', 'void', 'int', 'repeat', 'break', 'until', 'return']
+        self.lexemes = ['if', 'else', 'void', 'int', 'repeat', 'break', 'until', 'return', 'endif']
         self.line = 1
         self.addition_str = "\n  "  # has to begin with \n and be longer than 1
         self.s += self.addition_str
