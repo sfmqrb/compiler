@@ -95,7 +95,6 @@ class State:
             else:
                 states_stack.pop()
                 states_stack.append(state_id)
-            # todo next token
             return False, None
         # syntax-error
         if self.terminal_trans.keys().__len__() > 0:
