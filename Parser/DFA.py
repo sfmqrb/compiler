@@ -1,14 +1,17 @@
 from collections import deque
+
+import jsonpickle
 from anytree import Node, RenderTree
 from Parser import first_follow
+import json
 
 log = False
 id_state_dict = dict()
 states_stack = deque()
-nterminal_first_state = dict()
 nterminal_first_dict = first_follow.first
 nterminal_follow_dict = first_follow.follow
-state_id_nterminal_dict = dict()
+nterminal_first_state = dict()
+# state_id_nterminal_dict = dict()
 pars_tree = (0, [])
 tree_heads_list = ["Program"]
 first_node = Node(tree_heads_list[0])
@@ -60,7 +63,6 @@ class State:
             else:
                 states_stack.pop()
                 states_stack.append(state_id)
-            # todo next token
             if log:
                 print("read token to " + str(state_id))
             return True, None
@@ -76,7 +78,6 @@ class State:
                     tree_heads_Nodes_list.append(
                         Node(str(nt_trans[0]), parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1]))
                     tree_heads_list.append(str(nt_trans[0]))
-                    # todo current token
                     if log:
                         print("read nterminal to " + str(nt_trans[1]))
                     return False, None
@@ -152,6 +153,34 @@ class State:
         print(self.terminal_trans)
         print(self.nterminal_trans)
         print(self.end_state)
+
+
+def save_states():
+    global id_state_dict
+    jsonpickle.unpickler.loadclass("Parser.DFA.State")
+    nodes_json_pickled = jsonpickle.encode(id_state_dict, keys=False)
+    nodes_json = json.dumps(nodes_json_pickled)
+    nodes_json_pickled1 = jsonpickle.decode(nodes_json, keys=False)
+    python_file = open("states.json", "w")
+    python_file.write(nodes_json_pickled1)
+    python_file.close()
+    nodes_json_pickled = jsonpickle.encode(nterminal_first_state, keys=False)
+    nodes_json = json.dumps(nodes_json_pickled)
+    nodes_json_pickled1 = jsonpickle.decode(nodes_json, keys=False)
+    python_file = open("nterminal_first_state.json", "w")
+    python_file.write(nodes_json_pickled1)
+    python_file.close()
+
+
+def load_state():
+    global id_state_dict
+    global nterminal_first_state
+    python_file = open("states.json", "r")
+    state_dict_load = jsonpickle.unpickler.decode(python_file.read())
+    id_state_dict = {int(k): v for k, v in state_dict_load.items()}
+    id_state_dict
+    python_file = open("nterminal_first_state.json", "r")
+    nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())
 # nterminal_first_dict = {0: {'a'}, 1: {'b', 'x', 'w'}, 2: {'x', 'w'}, 3: {'z', 'a', ''}}
 # nterminal_follow_dict = {0: {'$'}, 1: {'$'}, 2: {'$'}, 3: {'$'}}
 # # s : 0 - A : 1 - B : 2 - C : 3

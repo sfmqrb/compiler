@@ -67,7 +67,7 @@ def rule_to_states(State, rule):
                 state_terminal_trans[righty_list[i]] = next_state_id
             else:
                 state_nterminal_trans.add((righty_list[i], next_state_id))
-                DFA.state_id_nterminal_dict[state_id] = righty_list[i]
+                # DFA.state_id_nterminal_dict[state_id] = righty_list[i]
             if i != 0:
                 State(state_id, last_nterminal, state_terminal_trans, state_nterminal_trans, False)
     State(first_state_id, main_nterminal, first_state_terminal_trans, first_state_nterminal_trans, False)

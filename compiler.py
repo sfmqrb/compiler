@@ -2,6 +2,9 @@ import scanner
 from Parser import parser
 
 
+# amir mohammad mohammadi 97107126
+# sajad faghfur maghreby 97106187
+
 def file2str(filepath):
     f = open(filepath, 'r')
     ls_text = f.readlines()
@@ -66,13 +69,22 @@ def main():
         save_tuple2file_based_on_1element("lexical_errors.txt", scnr.errors)
     save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
     save_list2file('symbol_table.txt', scnr.lexemes)
+    save_tree("parse_tree.txt")
+    save_errors("syntax_errors.txt")
+
+
+def save_tree(addr):
     tree = parser.draw_tree()
-    f = open("parse_tree.txt", "w", encoding="utf-8")
+    print(tree)
+    f = open(addr, "w", encoding="utf-8")
     f.write(tree)
     f.close()
+
+
+def save_errors(addr):
     errors = (parser.get_pars_errors())
     if errors.__len__() == 0:
-        f = open("syntax_errors.txt", "w", encoding="utf-8")
+        f = open(addr, "w", encoding="utf-8")
         f.write("There is no syntax error.")
         f.close()
     else:

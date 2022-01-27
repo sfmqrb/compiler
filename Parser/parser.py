@@ -1,18 +1,23 @@
 from Parser.grammer_to_transition import rule_to_states
 from Parser import DFA
+import json
+import jsonpickle
 
 errors = []
 # f = open("c-minus_001 (1).txt", "r")
 line_counter = 1
 grammar = "Program -> Declaration-list $@Declaration-list -> Declaration Declaration-list | EPSILON @Declaration -> Declaration-initial Declaration-prime@Declaration-initial ->  Type-specifier ID@Declaration-prime -> Fun-declaration-prime | Var-declaration-prime@Var-declaration-prime -> ; | [ NUM ] ; @Fun-declaration-prime ->  ( Params ) Compound-stmt@Type-specifier -> int | void@Params -> int ID Param-prime Param-list | void@Param-list -> , Param Param-list | EPSILON@Param -> Declaration-initial Param-prime@Param-prime -> [  ] | EPSILON@Compound-stmt -> { Declaration-list Statement-list }@Statement-list -> Statement Statement-list | EPSILON@Statement -> Expression-stmt | Compound-stmt | Selection-stmt | Iteration-stmt | Return-stmt@Expression-stmt -> Expression ; | break ; | ;@Selection-stmt -> if ( Expression ) Statement Else-stmt@Else-stmt -> endif | else Statement endif@Iteration-stmt -> repeat Statement until ( Expression ) @Return-stmt -> return Return-stmt-prime@Return-stmt-prime -> ; | Expression ;@Expression -> Simple-expression-zegond | ID B@B -> = Expression | [ Expression ] H | Simple-expression-prime@H -> = Expression | G D C@Simple-expression-zegond -> Additive-expression-zegond C@Simple-expression-prime -> Additive-expression-prime C@C -> Relop Additive-expression | EPSILON@Relop -> < | ==@Additive-expression -> Term D@Additive-expression-prime -> Term-prime D@Additive-expression-zegond -> Term-zegond D@D -> Addop Term D | EPSILON@Addop -> + | -@Term -> Factor G@Term-prime -> Factor-prime G@Term-zegond -> Factor-zegond G@G -> * Factor G | EPSILON@Factor -> ( Expression ) | ID Var-call-prime | NUM@Var-call-prime -> ( Args ) | Var-prime@Var-prime -> [ Expression ] | EPSILON@Factor-prime -> ( Args ) | EPSILON@Factor-zegond -> ( Expression ) | NUM@Args -> Arg-list | EPSILON@Arg-list -> Expression Arg-list-prime@Arg-list-prime -> , Expression Arg-list-prime | EPSILON"
 
-for line in grammar.split("@"):
-    rule_to_states(DFA.State, line)
+# for line in grammar.split("@"):
+#     rule_to_states(DFA.State, line)
+# # save transitions in json
+# DFA.save_states()
+DFA.load_state()
+
 f = open("input.txt", "r")
 for line in f:
     line_counter += 1
 DFA.nterminal_first_state
-a = 1
 
 # string = [('KEYWORD', 'void'), ('ID', 'main'), ('SYMBOL', '('), ('KEYWORD', 'void'), ('SYMBOL', ')'), ('SYMBOL', '{')
 #     , ('KEYWORD', 'int'), ('ID', 'a'), ('SYMBOL', ';'),
