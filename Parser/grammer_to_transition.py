@@ -25,7 +25,7 @@ state_id_index = 0
 
 def rule_to_states(State, rule):
     global state_id_index
-    rule_list = rule.split(' ->')
+    rule_list = rule.split(" ->")
     main_nterminal = rule_list[0]
     # main_nterminal_id = nterminal_id_dict[main_nterminal]
     first_state_id = state_id_index + 1
@@ -43,8 +43,8 @@ def rule_to_states(State, rule):
         righty_list = righty.split()
         last_state_id = first_state_id
         for i in range(len(righty_list)):
-            if righty_list[i] == 'EPSILON':
-                righty_list[i] = ''
+            if righty_list[i] == "EPSILON":
+                righty_list[i] = ""
             state_id = -1
             if i == 0:
                 state_id = first_state_id
@@ -69,5 +69,17 @@ def rule_to_states(State, rule):
                 state_nterminal_trans.add((righty_list[i], next_state_id))
                 # DFA.state_id_nterminal_dict[state_id] = righty_list[i]
             if i != 0:
-                State(state_id, last_nterminal, state_terminal_trans, state_nterminal_trans, False)
-    State(first_state_id, main_nterminal, first_state_terminal_trans, first_state_nterminal_trans, False)
+                State(
+                    state_id,
+                    last_nterminal,
+                    state_terminal_trans,
+                    state_nterminal_trans,
+                    False,
+                )
+    State(
+        first_state_id,
+        main_nterminal,
+        first_state_terminal_trans,
+        first_state_nterminal_trans,
+        False,
+    )
