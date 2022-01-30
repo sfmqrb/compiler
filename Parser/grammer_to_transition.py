@@ -1,15 +1,16 @@
 from Parser import DFA
-from parser import grammar
-
 
 nterminal_id_dict = dict()
 last_nterminal = ""
 # State = DFA.State
 # line = (f.readline())
-i = 0
-for line in grammar.split("@"):
-    nterminal_id_dict[line.split()[0]] = i
-    i += 1
+
+
+def fill_nterminal_id_dict(grammar):
+    i = 0
+    for line in grammar.split("\n"):
+        nterminal_id_dict[line.split()[0]] = i
+        i += 1
 
 
 def is_terminal(element):
