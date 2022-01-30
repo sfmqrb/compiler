@@ -41,11 +41,9 @@ def rule_to_states(State, rule):
         # state_id = state_id_index + 1
         # state_id_index += 1
         righty_list = righty.split()
-        last_state_id = first_state_id
         for i in range(len(righty_list)):
             if righty_list[i] == 'EPSILON':
                 righty_list[i] = ''
-            state_id = -1
             if i == 0:
                 state_id = first_state_id
             else:
