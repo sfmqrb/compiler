@@ -57,11 +57,7 @@ def get_next_token(token_tuple, line_number):
                     pars_row.category = "var"
             if token_tuple[1] == "(":
                 pars_table.set_line_category(line_number, "func")
-<<<<<<< HEAD
             if token_tuple[0] == "ID" and active_row:
-=======
-            if token_tuple[0] == 'ID' and active_row:
->>>>>>> d7c3f539d1ed07a3ee631585cc28be9382ce3ea6
                 pars_row.lexeme = token_tuple[1]
                 pars_row.line = line_number
                 pars_table.add(pars_row)

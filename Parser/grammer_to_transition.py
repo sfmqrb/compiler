@@ -43,14 +43,8 @@ def rule_to_states(State, rule):
         # state_id_index += 1
         righty_list = righty.split()
         for i in range(len(righty_list)):
-<<<<<<< HEAD
             if righty_list[i] == "EPSILON":
                 righty_list[i] = ""
-            state_id = -1
-=======
-            if righty_list[i] == 'EPSILON':
-                righty_list[i] = ''
->>>>>>> d7c3f539d1ed07a3ee631585cc28be9382ce3ea6
             if i == 0:
                 state_id = first_state_id
             else:
