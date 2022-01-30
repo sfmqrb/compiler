@@ -117,6 +117,7 @@ class State:
                 states_stack.append(state_id)
             return False, None
         # if semantic routine
+<<<<<<< HEAD
         if self.terminal_trans.keys[0][0] == "#":
             state_id = self.terminal_trans[self.terminal_trans.keys[0]]
             state = id_state_dict[state_id]
@@ -138,6 +139,26 @@ class State:
             if log:
                 print("read token to " + str(state_id))
             return True, None
+=======
+        # if self.nterminal_trans.__contains__('#'):
+        #     state_id = self.terminal_trans[self.terminal_trans.keys[0]]
+        #     state = id_state_dict[state_id]
+        #     try:
+        #         Node(tuple_token, parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1])
+        #     except:
+        #         print(token)
+        #     # todo run semantic routine
+        #     if state.end_state:
+        #         states_stack.pop()
+        #         tree_heads_list.pop()
+        #         tree_heads_Nodes_list.pop()
+        #     else:
+        #         states_stack.pop()
+        #         states_stack.append(state_id)
+        #     if log:
+        #         print("read token to " + str(state_id))
+        #     return True, None
+>>>>>>> 60dde2fd121a0852677bd2aa01298d5c3abf5ed1
         # syntax-error
         if self.terminal_trans.keys().__len__() > 0:
             missing_token = list(self.terminal_trans.keys())[0]
