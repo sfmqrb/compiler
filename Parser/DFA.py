@@ -16,8 +16,8 @@ pars_tree = (0, [])
 tree_heads_list = ["Program"]
 first_node = Node(tree_heads_list[0])
 tree_heads_Nodes_list = [first_node]
-token_type = ''
-token_main = ''
+token_type = ""
+token_main = ""
 
 
 class State:
@@ -29,7 +29,14 @@ class State:
 
     # set((int(nterminal),dest_state))
 
-    def __init__(self, state_id, nterminal_id, state_terminal_trans, state_nterminal_trans, end_state):
+    def __init__(
+        self,
+        state_id,
+        nterminal_id,
+        state_terminal_trans,
+        state_nterminal_trans,
+        end_state,
+    ):
         self.id = state_id
         self.nterminal_id = nterminal_id
         self.terminal_trans = state_terminal_trans
@@ -53,7 +60,10 @@ class State:
             state_id = self.terminal_trans[token]
             state = id_state_dict[state_id]
             try:
-                Node(tuple_token, parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1])
+                Node(
+                    tuple_token,
+                    parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                )
             except:
                 print(token)
             if state.end_state:
@@ -70,24 +80,32 @@ class State:
         else:
             for nt_trans in self.nterminal_trans:
                 normal_trans = nterminal_first_dict[nt_trans[0]].__contains__(token)
-                epsilon_trans = nterminal_follow_dict[nt_trans[0]].__contains__(token) and \
-                                nterminal_first_dict[nt_trans[0]].__contains__('')
+                epsilon_trans = nterminal_follow_dict[nt_trans[0]].__contains__(
+                    token
+                ) and nterminal_first_dict[nt_trans[0]].__contains__("")
                 if normal_trans or epsilon_trans:
                     states_stack.pop()
                     states_stack.append(nt_trans[1])
                     states_stack.append(nterminal_first_state[nt_trans[0]])
                     tree_heads_Nodes_list.append(
-                        Node(str(nt_trans[0]), parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1]))
+                        Node(
+                            str(nt_trans[0]),
+                            parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                        )
+                    )
                     tree_heads_list.append(str(nt_trans[0]))
                     if log:
                         print("read nterminal to " + str(nt_trans[1]))
                     return False, None
         # if epsilon
-        if self.terminal_trans.__contains__(''):
-            state_id = self.terminal_trans['']
+        if self.terminal_trans.__contains__(""):
+            state_id = self.terminal_trans[""]
             state = id_state_dict[state_id]
             try:
-                Node('epsilon', parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1])
+                Node(
+                    "epsilon",
+                    parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                )
             except:
                 print(token)
             if state.end_state:
@@ -133,13 +151,24 @@ class State:
             else:
                 states_stack.pop()
                 states_stack.append(state_id)
-            error = "#" + str(line_number) + " : " + "syntax error, missing " + missing_token
+            error = (
+                "#"
+                + str(line_number)
+                + " : "
+                + "syntax error, missing "
+                + missing_token
+            )
             return False, error
         try:
             missing_nterminal = list(self.nterminal_trans)[0][0]
             if nterminal_follow_dict[missing_nterminal].__contains__(token):
-                error = "#" + str(line_number) + " : " + "syntax error, missing " + str(
-                    missing_nterminal)
+                error = (
+                    "#"
+                    + str(line_number)
+                    + " : "
+                    + "syntax error, missing "
+                    + str(missing_nterminal)
+                )
                 state_id = list(self.nterminal_trans)[0][1]
                 state = id_state_dict[state_id]
                 # try:
@@ -159,7 +188,7 @@ class State:
             # self.terminal_trans = dict()
         except:
             a = 1
-        if token == '$':
+        if token == "$":
             error = "#" + str(line_number) + " : " + "syntax error, Unexpected EOF"
         else:
             error = "#" + str(line_number) + " : " + "syntax error, illegal " + token
@@ -201,6 +230,8 @@ def load_state():
     id_state_dict
     python_file = open("nterminal_first_state.json", "r")
     nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())
+
+
 # nterminal_first_dict = {0: {'a'}, 1: {'b', 'x', 'w'}, 2: {'x', 'w'}, 3: {'z', 'a', ''}}
 # nterminal_follow_dict = {0: {'$'}, 1: {'$'}, 2: {'$'}, 3: {'$'}}
 # # s : 0 - A : 1 - B : 2 - C : 3
