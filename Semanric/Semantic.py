@@ -1,4 +1,4 @@
-from SemanticRoutins import *
+import SemanticRoutins
 
 
 class TempManager:
@@ -16,7 +16,6 @@ class TempManager:
 
 class Semantic:
     name_function_dict = {
-        '#calc': calc
     }
     parse_table = None
     temp_manager = None
@@ -26,4 +25,4 @@ class Semantic:
         self.temp_manager = TempManager(500, 4)
 
     def run(self, func_name):
-        self.name_function_dict[func_name](self.parse_table.get_adr, self.temp_manager.get_temp())
+        getattr(SemanticRoutins, "func_" + func_name)()
