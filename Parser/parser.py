@@ -6,7 +6,7 @@ import jsonpickle
 from Semanric import parse_table
 
 errors = []
-f = open("c-minus_001 (1).txt", "r")
+f = open("test_grammer", "r")
 line_counter = 1
 grammar = f.read()
 fill_nterminal_id_dict(grammar)
@@ -27,10 +27,12 @@ for line in f:
 #           ('SYMBOL', '}'),'$']
 # string = ['void', 'ID', '(', 'void', ')', '{', 'int', 'ID', ';', 'int', 'ID', ';', 'ID', '=', 'ID', '+', 'NUM', ';',
 #           '}', '$']
-DFA.states_stack.append(DFA.nterminal_first_state['Program'])
+# DFA.states_stack.append(DFA.nterminal_first_state['Program'])
+DFA.states_stack.append(DFA.nterminal_first_state['S'])
 pars_row = parse_table.ParsRow()
 pars_table = parse_table.ParsTable()
 active_row = False
+
 
 def get_next_token(token_tuple, line_number):
     global active_row, pars_row

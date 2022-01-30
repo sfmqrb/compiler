@@ -24,5 +24,6 @@ class Semantic:
         self.parse_table = pars_table
         self.temp_manager = TempManager(500, 4)
 
-    def run(self, func_name):
-        getattr(SemanticRoutins, "func_" + func_name)()
+    def run(self, func_name, input_token):
+        getattr(SemanticRoutins, "func_" + func_name)(self.parse_table.pars_table, self.temp_manager.get_temp,
+                                                      input_token)
