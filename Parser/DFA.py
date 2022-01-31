@@ -121,6 +121,13 @@ class State:
             if '#' in k:
                 state_id = self.terminal_trans[k]
                 state = id_state_dict[state_id]
+                try:
+                    Node(
+                        k,
+                        parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                    )
+                except:
+                    print(token)
                 # todo run semantic routine
                 if state.end_state:
                     states_stack.pop()
