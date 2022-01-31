@@ -3,6 +3,7 @@ semantic_stack = []
 program_block = []
 semantic_instance = None
 EMPTY_PB = "( , , , )"
+WORD_SIZE = 4
 
 
 def get_PB_next():
@@ -79,13 +80,15 @@ def func_push(find_adr, get_temp, input_token):
     pass
 
 
-def func_add_op(find_adr, get_temp, input_token):
+def func_add_op(find_adr, get_temp, input_token, address_mode=False):
+    addrTrue = "&" if address_mode else ""
     right = semantic_stack.pop()
     action = "ADD" if semantic_stack.pop() == "+" else "SUB"
     left = semantic_stack.pop()
     t = get_temp()
-    program_block.append(f"({action}, {str(left)}, {str(right)}, {str(t)})")
-    semantic_stack.append(t)
+    program_block.append(
+        f"({action}, {str(left)}, {str(right)}, {str(t)})")
+    semantic_stack.append(f"{addrTrue}{str(t)}")
 
 
 def func_mult_op(find_adr, get_temp, input_token):
@@ -142,3 +145,19 @@ def func_until(find_adr, get_temp, input_token):
     left = semantic_stack.pop()
     right = semantic_stack.pop()
     program_block.append(f"(JPF, {str(left)}, {str(right)}, )")
+
+
+def func_parr(find_adr, get_temp, input_token):
+    arr_index = str(semantic_stack.pop())
+    arr_id = str(semantic_stack.pop())
+
+    semantic_stack.append(arr_index)
+    semantic_stack.append(f"#{WORD_SIZE}")
+    print(semantic_stack)
+    func_mult_op(find_adr, get_temp, None)
+
+    semantic_stack.append("+")
+    semantic_stack.append(arr_id)
+    print(semantic_stack)
+    func_add_op(find_adr, get_temp, None, address_mode=True)
+    print(semantic_stack)
