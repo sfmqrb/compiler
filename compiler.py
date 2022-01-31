@@ -50,8 +50,8 @@ def save_list2file(file_name, l):
 
 
 def main():
-    # addr = './pa_1/PA1_testcases1.2/T01/input.txt'
-    # addr = './pa_1/PA1_testcases1.2/test/input.txt'
+    # addr = './pa_1/PA1_testcases1.2/T01/input1.txt'
+    # addr = './pa_1/PA1_testcases1.2/test/input1.txt'
     addr = "input.txt"
     s = file2str(
         addr,

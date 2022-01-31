@@ -1,3 +1,5 @@
+from Semantic import instance
+
 semantic_stack = []
 program_block = []
 

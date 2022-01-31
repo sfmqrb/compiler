@@ -3,10 +3,11 @@ from Parser.grammer_to_transition import fill_nterminal_id_dict
 from Parser import DFA
 import json
 import jsonpickle
-from Semanric import parse_table, Semantic
-from Semanric.SemanticRoutins import program_block
+from Semantic import ParsTable, Semantic
+from Semantic.SemanticRoutines import program_block
 
 errors = []
+f = open("c-minus_001 (1).txt", "r")
 f = open("test_grammer", "r")
 line_counter = 1
 grammar = f.read()
@@ -17,7 +18,7 @@ for line in grammar.split("\n"):
 DFA.save_states()
 # DFA.load_state()
 
-f = open("input.txt", "r")
+f = open("input1.txt", "r")
 for line in f:
     line_counter += 1
 
@@ -28,10 +29,10 @@ for line in f:
 #           ('SYMBOL', '}'),'$']
 # string = ['void', 'ID', '(', 'void', ')', '{', 'int', 'ID', ';', 'int', 'ID', ';', 'ID', '=', 'ID', '+', 'NUM', ';',
 #           '}', '$']
-# DFA.states_stack.append(DFA.nterminal_first_state['Program'])
-DFA.states_stack.append(DFA.nterminal_first_state['P'])
-pars_row = parse_table.ParsRow()
-pars_table = parse_table.ParsTable()
+DFA.states_stack.append(DFA.nterminal_first_state['Program'])
+# DFA.states_stack.append(DFA.nterminal_first_state['P'])
+pars_row = ParsTable.ParsRow()
+pars_table = ParsTable.ParsTable()
 semantic = Semantic.Semantic(pars_table)
 active_row = False
 
@@ -62,7 +63,7 @@ def get_next_token(token_tuple, line_number):
                 pars_row.lexeme = token_tuple[1]
                 pars_row.line = line_number
                 pars_table.add(pars_row)
-                pars_row = parse_table.ParsRow()
+                pars_row = ParsTable.ParsRow()
                 active_row = False
             if token_tuple[0] == 'NUM' and last_state_id == 17:
                 pars_table.set_last_args(int(token_tuple[1]))
