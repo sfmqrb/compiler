@@ -72,7 +72,7 @@ def func_assign(find_adr, get_temp, input_token):
     _from = semantic_stack.pop()
     _to = semantic_stack.pop()
     program_block.append(f"(ASSIGN, {str(_from)}, {str(_to)}, )")
-    pass
+    semantic_stack.append(_to)
 
 
 def func_push(find_adr, get_temp, input_token):
@@ -81,7 +81,7 @@ def func_push(find_adr, get_temp, input_token):
 
 
 def func_add_op(find_adr, get_temp, input_token, address_mode=False):
-    addrTrue = "&" if address_mode else ""
+    addrTrue = "@" if address_mode else ""
     imdtTrue = "#" if address_mode else ""
     right = semantic_stack.pop()
     action = "ADD" if semantic_stack.pop() == "+" else "SUB"
@@ -159,3 +159,7 @@ def func_parr(find_adr, get_temp, input_token):
     semantic_stack.append("+")
     semantic_stack.append(arr_id)
     func_add_op(find_adr, get_temp, None, address_mode=True)
+
+
+def func_pop(find_adr, get_temp, input_token):
+    semantic_stack.pop()
