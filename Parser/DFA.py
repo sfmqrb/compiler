@@ -6,7 +6,7 @@ from Parser import first_follow
 import json
 from Semanric import Semantic
 
-log = True
+log = False
 id_state_dict = dict()
 states_stack = deque()
 nterminal_first_dict = first_follow.first
