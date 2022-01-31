@@ -65,7 +65,7 @@ def func_pnum(find_adr, get_temp, input_token):
 def func_assign(find_adr, get_temp, input_token):
     _from = semantic_stack.pop()
     _to = semantic_stack.pop()
-    program_block.append("(ASSIGN," + str(_from) + "," + str(_to) + ",)")
+    program_block.append(f"(ASSIGN, {str(_from)}, {str(_to)}, )")
     pass
 
 
@@ -75,11 +75,11 @@ def func_push(find_adr, get_temp, input_token):
 
 
 def func_add_op(find_adr, get_temp, input_token):
-    first = semantic_stack.pop()
+    right = semantic_stack.pop()
     action = "ADD" if semantic_stack.pop() == "+" else "SUB"
-    second = semantic_stack.pop()
+    left = semantic_stack.pop()
     t = get_temp()
-    program_block.append(f"({action}, {str(first)}, {str(second)}, {str(t)})")
+    program_block.append(f"({action}, {str(left)}, {str(right)}, {str(t)})")
     semantic_stack.append(t)
 
 
@@ -89,4 +89,13 @@ def func_mult_op(find_adr, get_temp, input_token):
     second = semantic_stack.pop()
     t = get_temp()
     program_block.append(f"({action}, {str(first)}, {str(second)}, {str(t)})")
+    semantic_stack.append(t)
+
+
+def func_comp_op(find_adr, get_temp, input_token):
+    right = semantic_stack.pop()
+    action = "EQ" if semantic_stack.pop() == "==" else "LT"
+    left = semantic_stack.pop()
+    t = get_temp()
+    program_block.append(f"({action}, {str(left)}, {str(right)}, {str(t)})")
     semantic_stack.append(t)
