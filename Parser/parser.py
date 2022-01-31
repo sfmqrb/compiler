@@ -16,7 +16,8 @@ from SemanticLevel import ParsTable, Semantic
 from SemanticLevel.SemanticRoutines import program_block
 
 errors = []
-f = open("c-minus_001 (1).txt", "r")
+f = open("grammer.txt", "r")
+# f = open("c-minus_001 (1).txt", "r")
 # f = open("test_grammer", "r")
 line_counter = 1
 grammar = f.read()

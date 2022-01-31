@@ -99,7 +99,9 @@ class State:
                         print("read nterminal to " + str(nt_trans[1]))
                     return False, None
         # if epsilon
-        if self.terminal_trans.__contains__(""):
+        if self.nterminal_id == 'D':
+            a = 23
+        if self.terminal_trans.__contains__("") and nterminal_follow_dict[self.nterminal_id].__contains__(token):
             state_id = self.terminal_trans[""]
             state = id_state_dict[state_id]
             try:
@@ -118,8 +120,17 @@ class State:
                 states_stack.append(state_id)
             return False, None
         # if semantic routine
-        for k in list(self.terminal_trans.keys()):
-            if "#" in k:
+        terminal_semantic_transition_list = list()
+        for t in self.terminal_trans.keys():
+            if "#" in t:
+                terminal_semantic_transition_list.append(t)
+        for k in terminal_semantic_transition_list:
+            semantic_trans = False
+            if len(list(terminal_semantic_transition_list)) < 2:
+                semantic_trans = True
+            else:
+                semantic_trans = nterminal_follow_dict[k].__contains__(token)
+            if semantic_trans:
                 state_id = self.terminal_trans[k]
                 state = id_state_dict[state_id]
                 try:
@@ -236,7 +247,6 @@ def load_state():
     python_file = open("states.json", "r")
     state_dict_load = jsonpickle.unpickler.decode(python_file.read())
     id_state_dict = {int(k): v for k, v in state_dict_load.items()}
-    id_state_dict
     python_file = open("nterminal_first_state.json", "r")
     nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())
 

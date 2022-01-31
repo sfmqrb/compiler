@@ -286,6 +286,8 @@ follow = {
     "Args": {")"},
     "Arg-list": {")"},
     "Arg-list-prime": {")"},
+    "#pnum": {"NUM"},
+    "#pid": {"ID"}
 }
 
 # first = {
