@@ -6,7 +6,7 @@ from Parser import first_follow
 import json
 from Semanric import Semantic
 
-log = False
+log = True
 id_state_dict = dict()
 states_stack = deque()
 nterminal_first_dict = first_follow.first
@@ -31,12 +31,12 @@ class State:
     # set((int(nterminal),dest_state))
 
     def __init__(
-            self,
-            state_id,
-            nterminal_id,
-            state_terminal_trans,
-            state_nterminal_trans,
-            end_state,
+        self,
+        state_id,
+        nterminal_id,
+        state_terminal_trans,
+        state_nterminal_trans,
+        end_state,
     ):
         self.id = state_id
         self.nterminal_id = nterminal_id
@@ -119,7 +119,7 @@ class State:
             return False, None
         # if semantic routine
         for k in list(self.terminal_trans.keys()):
-            if '#' in k:
+            if "#" in k:
                 state_id = self.terminal_trans[k]
                 state = id_state_dict[state_id]
                 try:
@@ -161,22 +161,22 @@ class State:
                 states_stack.pop()
                 states_stack.append(state_id)
             error = (
-                    "#"
-                    + str(line_number)
-                    + " : "
-                    + "syntax error, missing "
-                    + missing_token
+                "#"
+                + str(line_number)
+                + " : "
+                + "syntax error, missing "
+                + missing_token
             )
             return False, error
         try:
             missing_nterminal = list(self.nterminal_trans)[0][0]
             if nterminal_follow_dict[missing_nterminal].__contains__(token):
                 error = (
-                        "#"
-                        + str(line_number)
-                        + " : "
-                        + "syntax error, missing "
-                        + str(missing_nterminal)
+                    "#"
+                    + str(line_number)
+                    + " : "
+                    + "syntax error, missing "
+                    + str(missing_nterminal)
                 )
                 state_id = list(self.nterminal_trans)[0][1]
                 state = id_state_dict[state_id]
@@ -239,6 +239,7 @@ def load_state():
     id_state_dict
     python_file = open("nterminal_first_state.json", "r")
     nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())
+
 
 # nterminal_first_dict = {0: {'a'}, 1: {'b', 'x', 'w'}, 2: {'x', 'w'}, 3: {'z', 'a', ''}}
 # nterminal_follow_dict = {0: {'$'}, 1: {'$'}, 2: {'$'}, 3: {'$'}}
