@@ -14,8 +14,8 @@ Compound-stmt -> { Declaration-list Statement-list }
 Statement-list -> Statement Statement-list | EPSILON
 Statement -> Expression-stmt | Compound-stmt | Selection-stmt | Iteration-stmt | Return-stmt
 Expression-stmt -> Expression ; | break ; | ;
-Selection-stmt -> if ( Expression ) Statement Else-stmt
-Else-stmt -> endif | else Statement endif
+Selection-stmt -> if ( Expression ) #save Statement Else-stmt
+Else-stmt -> endif #jpf | else #jpf_save Statement endif #jp
 Iteration-stmt -> repeat Statement until ( Expression )
 Return-stmt -> return Return-stmt-prime
 Return-stmt-prime -> ; | Expression ;

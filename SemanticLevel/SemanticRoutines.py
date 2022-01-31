@@ -2,6 +2,11 @@
 semantic_stack = []
 program_block = []
 semantic_instance = None
+EMPTY_PB = "( , , , )"
+
+
+def get_PB_next():
+    return len(program_block)
 
 ####################### Test Routines #########################
 
@@ -99,3 +104,30 @@ def func_comp_op(find_adr, get_temp, input_token):
     t = get_temp()
     program_block.append(f"({action}, {str(left)}, {str(right)}, {str(t)})")
     semantic_stack.append(t)
+
+
+def func_save(find_adr, get_temp, input_token):
+    semantic_stack.append(get_PB_next())
+    program_block.append(EMPTY_PB)
+
+
+def func_jpf_save(find_adr, get_temp, input_token):
+    i = get_PB_next()
+    PBAddr = semantic_stack.pop()
+    expression = semantic_stack.pop()
+    program_block[PBAddr] = f"(JPF, {str(expression)}, {str(i+1)}, )"
+    semantic_stack.append(i)
+    program_block.append(EMPTY_PB)
+
+
+def func_jp(find_adr, get_temp, input_token):
+    i = get_PB_next()
+    PBAddr = semantic_stack.pop()
+    program_block[PBAddr] = f"(JP, {str(i)}, , )"
+
+
+def func_jpf(find_adr, get_temp, input_token):
+    i = get_PB_next()
+    PBAddr = semantic_stack.pop()
+    expression = semantic_stack.pop()
+    program_block[PBAddr] = f"(JPF, {str(expression)}, {str(i)}, )"

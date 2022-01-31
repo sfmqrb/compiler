@@ -10,8 +10,8 @@ from Parser.grammer_to_transition import rule_to_states
 
 def pp_list_of_tuples(lsot):
     print("\n[")
-    for t in lsot:
-        print(r" {t}".format(t=t))
+    for idx, t in enumerate(lsot):
+        print(r"{idx:3}: {t}".format(idx=idx, t=t))
     print("]")
 
 
