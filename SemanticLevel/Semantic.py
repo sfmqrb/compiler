@@ -39,9 +39,13 @@ class Semantic:
         self.parse_table = pars_table
         self.temp_manager = TempManager(500, 4)
         instance = self
+        print(r"    {:15} {:15} {}".format(
+            "func_name", "input_token", "Semantic Stack"))
 
     def run(self, func_name, input_token):
-        print("==>", func_name, input_token, SemanticRoutines.semantic_stack)
+        print(
+            r"==> {func_name:15} {input_token:15} {SemanticRoutines}".
+            format(func_name=func_name[1:], input_token=input_token, SemanticRoutines=SemanticRoutines.semantic_stack))
         func_name = func_name[1:len(func_name)]
         try:
             getattr(SemanticRoutines, "func_" + func_name)(self.parse_table.get_adr,

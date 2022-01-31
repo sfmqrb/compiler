@@ -153,11 +153,8 @@ def func_parr(find_adr, get_temp, input_token):
 
     semantic_stack.append(arr_index)
     semantic_stack.append(f"#{WORD_SIZE}")
-    print(semantic_stack)
     func_mult_op(find_adr, get_temp, None)
 
     semantic_stack.append("+")
     semantic_stack.append(arr_id)
-    print(semantic_stack)
     func_add_op(find_adr, get_temp, None, address_mode=True)
-    print(semantic_stack)
