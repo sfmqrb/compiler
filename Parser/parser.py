@@ -1,19 +1,21 @@
 # For test
+from SemanticLevel.SemanticRoutines import program_block
+from SemanticLevel import ParsTable, Semantic
+import jsonpickle
+import json
+from Parser import DFA
+from Parser.grammer_to_transition import fill_nterminal_id_dict
+from Parser.grammer_to_transition import rule_to_states
+
+
 def pp_list_of_tuples(lsot):
     print("\n[")
-    for t in lsot:
-        print(r" {t}".format(t=t))
+    for idx, t in enumerate(lsot):
+        print(r"{idx:3}: {t}".format(idx=idx, t=t))
     print("]")
 
 
 # Main imports
-from Parser.grammer_to_transition import rule_to_states
-from Parser.grammer_to_transition import fill_nterminal_id_dict
-from Parser import DFA
-import json
-import jsonpickle
-from SemanticLevel import ParsTable, Semantic
-from SemanticLevel.SemanticRoutines import program_block
 
 errors = []
 f = open("grammer.txt", "r")
@@ -28,7 +30,7 @@ for line in grammar.split("\n"):
 DFA.save_states()
 # DFA.load_state()
 
-f = open("input1.txt", "r")
+f = open("input.txt", "r")
 for line in f:
     line_counter += 1
 
@@ -58,7 +60,8 @@ def get_next_token(token_tuple, line_number):
         last_state_id = DFA.states_stack[DFA.states_stack.__len__() - 1]
         last_state = DFA.id_state_dict[last_state_id]
         if token_tuple == '$':
-            next_token, e = last_state.next_state('$', '$', line_counter, semantic)
+            next_token, e = last_state.next_state(
+                '$', '$', line_counter, semantic)
             # break
         else:
             # pars table
@@ -96,7 +99,8 @@ def get_next_token(token_tuple, line_number):
                 token = token_tuple[1]
             else:
                 token = token_tuple[0]
-            next_token, e = last_state.next_state(token, token_tuple, line_number, semantic)
+            next_token, e = last_state.next_state(
+                token, token_tuple, line_number, semantic)
         if e is not None:
             errors.append(e)
 

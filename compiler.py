@@ -63,7 +63,8 @@ def main():
             parser.get_next_token("$", line)
             break
         else:
-            parser.get_next_token((str(next_token_type), str(next_token)), line)
+            parser.get_next_token(
+                (str(next_token_type), str(next_token)), line)
         # print("{: >3}{: >20}{: >20}".format(*[line, next_token, next_token_type]))
 
     if scnr.errors.__len__() == 0:
@@ -78,7 +79,7 @@ def main():
 
 def save_tree(addr):
     tree = parser.draw_tree()
-    print(tree)
+    # print(tree)
     f = open(addr, "w", encoding="utf-8")
     f.write(tree)
     f.close()
