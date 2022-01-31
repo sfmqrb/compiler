@@ -29,7 +29,7 @@ Relop -> < | ==
 Additive-expression -> Term D
 Additive-expression-prime -> Term-prime D
 Additive-expression-zegond -> Term-zegond D
-D ->  #push Addop Term D | EPSILON
+D ->  #push Addop Term #add_op D | EPSILON
 Addop -> + | -
 Term -> Factor G
 Term-prime -> Factor-prime G
