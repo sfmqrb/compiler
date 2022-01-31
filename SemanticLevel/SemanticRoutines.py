@@ -131,3 +131,14 @@ def func_jpf(find_adr, get_temp, input_token):
     PBAddr = semantic_stack.pop()
     expression = semantic_stack.pop()
     program_block[PBAddr] = f"(JPF, {str(expression)}, {str(i)}, )"
+
+
+def func_label(find_adr, get_temp, input_token):
+    i = get_PB_next()
+    semantic_stack.append(i)
+
+
+def func_until(find_adr, get_temp, input_token):
+    left = semantic_stack.pop()
+    right = semantic_stack.pop()
+    program_block.append(f"(JPF, {str(left)}, {str(right)}, )")
