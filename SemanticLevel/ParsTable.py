@@ -10,9 +10,11 @@ class ParsTable:
         row.address = last_adr
         last_adr += 4
         self.pars_table.append(row)
+        # can handle zero input count function?? amir
         if row.category == "param":
             if self.pars_table[self.pars_table.__len__() - 2].category == "var":
-                self.pars_table[self.pars_table.__len__() - 2].category = "func"
+                self.pars_table[self.pars_table.__len__() -
+                                2].category = "func"
 
     def set_last_args(self, args):
         global last_adr
