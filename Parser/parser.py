@@ -1,3 +1,12 @@
+# For test
+def pp_list_of_tuples(lsot):
+    print("\n[")
+    for t in lsot:
+        print(r" {t}".format(t=t))
+    print("]")
+
+
+# Main imports
 from Parser.grammer_to_transition import rule_to_states
 from Parser.grammer_to_transition import fill_nterminal_id_dict
 from Parser import DFA
@@ -92,8 +101,10 @@ def get_next_token(token_tuple, line_number):
 
 
 def draw_tree():
-    print(pars_table.pars_table)
-    print(program_block)
+    # print(pars_table.pars_table)
+
+    pp_list_of_tuples(program_block)
+
     a = ""
     for pre, fill, node in DFA.RenderTree(DFA.first_node):
         p = ("%s%s" % (pre, node.name))

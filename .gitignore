@@ -132,4 +132,12 @@ dmypy.json
 */PA1_testcases1.2/*
 */.vscode/*
 
-*.txt
+فاز ۳ پروژه.pdf
+tokens.txt
+syntax_errors.txt
+symbol_table.txt
+states.json
+nterminal_first_state.json
+parse_tree.txt
+lexical_errors.txt
+input.txt
