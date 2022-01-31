@@ -16,7 +16,7 @@ from SemanticLevel import ParsTable, Semantic
 from SemanticLevel.SemanticRoutines import program_block
 
 errors = []
-f = open("c-minus_001 (1).txt", "r")
+f = open("grammer.txt", "r")
 # f = open("test_grammer", "r")
 line_counter = 1
 grammar = f.read()
@@ -27,7 +27,7 @@ for line in grammar.split("\n"):
 DFA.save_states()
 # DFA.load_state()
 
-f = open("input1.txt", "r")
+f = open("input.txt", "r")
 for line in f:
     line_counter += 1
 
@@ -38,7 +38,7 @@ for line in f:
 #           ('SYMBOL', '}'),'$']
 # string = ['void', 'ID', '(', 'void', ')', '{', 'int', 'ID', ';', 'int', 'ID', ';', 'ID', '=', 'ID', '+', 'NUM', ';',
 #           '}', '$']
-DFA.states_stack.append(DFA.nterminal_first_state['Program'])
+DFA.states_stack.append(DFA.nterminal_first_state["Program"])
 # DFA.states_stack.append(DFA.nterminal_first_state['P'])
 pars_row = ParsTable.ParsRow()
 pars_table = ParsTable.ParsTable()
@@ -56,12 +56,14 @@ def get_next_token(token_tuple, line_number):
     while not next_token:
         last_state_id = DFA.states_stack[DFA.states_stack.__len__() - 1]
         last_state = DFA.id_state_dict[last_state_id]
-        if token_tuple == '$':
-            next_token, e = last_state.next_state('$', '$', line_counter, semantic)
+        if token_tuple == "$":
+            next_token, e = last_state.next_state("$", "$", line_counter, semantic)
             # break
         else:
             # pars table
-            if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
+            if token_tuple[0] == "KEYWORD" and (
+                token_tuple[1] == "int" or token_tuple[1] == "void"
+            ):
                 pars_row.type = token_tuple[1]
                 active_row = True
                 if last_state.nterminal_id == "Type-specifier":
@@ -72,14 +74,14 @@ def get_next_token(token_tuple, line_number):
                     pars_row.category = "var"
             if token_tuple[1] == "(":
                 pars_table.set_line_category(line_number, "func")
-            if token_tuple[0] == 'ID' and active_row:
+            if token_tuple[0] == "ID" and active_row:
                 pars_row.lexeme = token_tuple[1]
                 pars_row.line = line_number
                 pars_row.scope = scope
                 pars_table.add(pars_row)
                 pars_row = ParsTable.ParsRow()
                 active_row = False
-            if token_tuple[0] == 'NUM' and last_state_id == 17:
+            if token_tuple[0] == "NUM" and last_state_id == 17:
                 pars_table.set_last_args(int(token_tuple[1]))
             if token_tuple[1] == "{":
                 brackets.append(no_bracket_function)
@@ -91,11 +93,13 @@ def get_next_token(token_tuple, line_number):
                 # bracket = brackets.pop()
                 # if bracket:
                 #     scope -= 1
-            if token_tuple[0] == 'KEYWORD' or token_tuple[0] == 'SYMBOL':
+            if token_tuple[0] == "KEYWORD" or token_tuple[0] == "SYMBOL":
                 token = token_tuple[1]
             else:
                 token = token_tuple[0]
-            next_token, e = last_state.next_state(token, token_tuple, line_number, semantic)
+            next_token, e = last_state.next_state(
+                token, token_tuple, line_number, semantic
+            )
         if e is not None:
             errors.append(e)
 
@@ -107,11 +111,11 @@ def draw_tree():
 
     a = ""
     for pre, fill, node in DFA.RenderTree(DFA.first_node):
-        p = ("%s%s" % (pre, node.name))
+        p = "%s%s" % (pre, node.name)
         x = "'"
         p = p.replace(x, "")
         a += p + "\n"
-    return a[0:a.__len__() - 1]
+    return a[0 : a.__len__() - 1]
 
 
 def get_pars_errors():
