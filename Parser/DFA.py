@@ -4,6 +4,7 @@ import jsonpickle
 from anytree import Node, RenderTree
 from Parser import first_follow
 import json
+from Semanric import Semantic
 
 log = False
 id_state_dict = dict()
@@ -44,7 +45,7 @@ class State:
         self.end_state = end_state
         id_state_dict[state_id] = self
 
-    def next_state(self, token, tuple_token, line_number):
+    def next_state(self, token, tuple_token, line_number, semantic):
         if log:
             print("token" + str(tuple_token))
             print(self.to_str())
@@ -128,7 +129,11 @@ class State:
                     )
                 except:
                     print(token)
-                # todo run semantic routine
+                if len(tuple_token) > 1:
+                    current_token = tuple_token[1]
+                else:
+                    current_token = ""
+                semantic.run(k, current_token)
                 if state.end_state:
                     states_stack.pop()
                     tree_heads_list.pop()

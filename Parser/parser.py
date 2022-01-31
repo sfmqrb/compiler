@@ -3,7 +3,8 @@ from Parser.grammer_to_transition import fill_nterminal_id_dict
 from Parser import DFA
 import json
 import jsonpickle
-from Semanric import parse_table
+from Semanric import parse_table, Semantic
+from Semanric.SemanticRoutins import program_block
 
 errors = []
 f = open("test_grammer", "r")
@@ -28,9 +29,10 @@ for line in f:
 # string = ['void', 'ID', '(', 'void', ')', '{', 'int', 'ID', ';', 'int', 'ID', ';', 'ID', '=', 'ID', '+', 'NUM', ';',
 #           '}', '$']
 # DFA.states_stack.append(DFA.nterminal_first_state['Program'])
-DFA.states_stack.append(DFA.nterminal_first_state['S'])
+DFA.states_stack.append(DFA.nterminal_first_state['P'])
 pars_row = parse_table.ParsRow()
 pars_table = parse_table.ParsTable()
+semantic = Semantic.Semantic(pars_table)
 active_row = False
 
 
@@ -41,7 +43,7 @@ def get_next_token(token_tuple, line_number):
         last_state_id = DFA.states_stack[DFA.states_stack.__len__() - 1]
         last_state = DFA.id_state_dict[last_state_id]
         if token_tuple == '$':
-            next_token, e = last_state.next_state('$', '$', line_counter)
+            next_token, e = last_state.next_state('$', '$', line_counter, semantic)
             # break
         else:
             # pars table
@@ -68,13 +70,14 @@ def get_next_token(token_tuple, line_number):
                 token = token_tuple[1]
             else:
                 token = token_tuple[0]
-            next_token, e = last_state.next_state(token, token_tuple, line_number)
+            next_token, e = last_state.next_state(token, token_tuple, line_number, semantic)
         if e is not None:
             errors.append(e)
 
 
 def draw_tree():
     print(pars_table.pars_table)
+    print(program_block)
     a = ""
     for pre, fill, node in DFA.RenderTree(DFA.first_node):
         p = ("%s%s" % (pre, node.name))

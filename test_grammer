@@ -1,6 +1,8 @@
-S -> #test_pid ID : = E #test_assign $
+P -> SP $
+SP -> S SP | EPSILON
+S -> ID : = E #test_assign | int #test_pid ID
 E -> T EP
-EP -> EPSILON | + T #add EP
+EP -> EPSILON | + T #test_add EP
 T -> F TP
-TP -> EPSILON | * F #mult TP
-F -> ( E ) | #test_pid ID
+TP -> EPSILON | * F #test_mult TP
+F -> ( E ) | ID
