@@ -12,12 +12,12 @@ from Parser.grammer_to_transition import fill_nterminal_id_dict
 from Parser import DFA
 import json
 import jsonpickle
-from Semantic import ParsTable, Semantic
-from Semantic.SemanticRoutines import program_block
+from SemanticLevel import ParsTable, Semantic
+from SemanticLevel.SemanticRoutines import program_block
 
 errors = []
 f = open("c-minus_001 (1).txt", "r")
-f = open("test_grammer", "r")
+# f = open("test_grammer", "r")
 line_counter = 1
 grammar = f.read()
 fill_nterminal_id_dict(grammar)
@@ -44,10 +44,14 @@ pars_row = ParsTable.ParsRow()
 pars_table = ParsTable.ParsTable()
 semantic = Semantic.Semantic(pars_table)
 active_row = False
+# (started, ended, function dependent)
+brackets = list()
+no_bracket_function = False
+scope = 0
 
 
 def get_next_token(token_tuple, line_number):
-    global active_row, pars_row
+    global active_row, pars_row, no_bracket_function, scope
     next_token = False
     while not next_token:
         last_state_id = DFA.states_stack[DFA.states_stack.__len__() - 1]
@@ -60,9 +64,9 @@ def get_next_token(token_tuple, line_number):
             if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
                 pars_row.type = token_tuple[1]
                 active_row = True
-                if last_state_id == 25:
+                if last_state.nterminal_id == "Type-specifier":
                     pars_row.category = "var"
-                elif last_state_id == 27:
+                elif last_state.nterminal_id == "Params":
                     pars_row.category = "param"
                 else:
                     pars_row.category = "var"
@@ -71,11 +75,22 @@ def get_next_token(token_tuple, line_number):
             if token_tuple[0] == 'ID' and active_row:
                 pars_row.lexeme = token_tuple[1]
                 pars_row.line = line_number
+                pars_row.scope = scope
                 pars_table.add(pars_row)
                 pars_row = ParsTable.ParsRow()
                 active_row = False
             if token_tuple[0] == 'NUM' and last_state_id == 17:
                 pars_table.set_last_args(int(token_tuple[1]))
+            if token_tuple[1] == "{":
+                brackets.append(no_bracket_function)
+                if no_bracket_function:
+                    scope += 1
+                    no_bracket_function = False
+            if token_tuple[1] == "}":
+                pass
+                # bracket = brackets.pop()
+                # if bracket:
+                #     scope -= 1
             if token_tuple[0] == 'KEYWORD' or token_tuple[0] == 'SYMBOL':
                 token = token_tuple[1]
             else:

@@ -4,7 +4,7 @@ import jsonpickle
 from anytree import Node, RenderTree
 from Parser import first_follow
 import json
-from Semantic import Semantic
+from SemanticLevel import Semantic
 
 log = False
 id_state_dict = dict()

@@ -1,8 +1,7 @@
-from Semantic import instance
 
 semantic_stack = []
 program_block = []
-
+semantic_instance = None
 
 ####################### Test Routines #########################
 def test():

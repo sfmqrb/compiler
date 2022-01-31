@@ -39,3 +39,6 @@ class ParsRow:
     line = 0
     # func, var
     category = ""
+
+    def __str__(self):
+        return "address: " + str(self.address) + " lexeme: " + self.lexeme + " scope: " + str(self.scope)
