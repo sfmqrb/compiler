@@ -141,3 +141,6 @@ nterminal_first_state.json
 parse_tree.txt
 lexical_errors.txt
 input.txt
+states.json~f921556c1ea74103b076151004ce56f177c2e3c3
+test_grammer
+.vscode/settings.json
