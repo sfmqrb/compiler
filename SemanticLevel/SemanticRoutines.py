@@ -81,3 +81,12 @@ def func_add_op(find_adr, get_temp, input_token):
     t = get_temp()
     program_block.append(f"({action}, {str(first)}, {str(second)}, {str(t)})")
     semantic_stack.append(t)
+
+
+def func_mult_op(find_adr, get_temp, input_token):
+    first = semantic_stack.pop()
+    action = "MULT"
+    second = semantic_stack.pop()
+    t = get_temp()
+    program_block.append(f"({action}, {str(first)}, {str(second)}, {str(t)})")
+    semantic_stack.append(t)
