@@ -82,12 +82,13 @@ def func_push(find_adr, get_temp, input_token):
 
 def func_add_op(find_adr, get_temp, input_token, address_mode=False):
     addrTrue = "&" if address_mode else ""
+    imdtTrue = "#" if address_mode else ""
     right = semantic_stack.pop()
     action = "ADD" if semantic_stack.pop() == "+" else "SUB"
     left = semantic_stack.pop()
     t = get_temp()
     program_block.append(
-        f"({action}, {str(left)}, {str(right)}, {str(t)})")
+        f"({action}, {str(left)}, {imdtTrue}{str(right)}, {str(t)})")
     semantic_stack.append(f"{addrTrue}{str(t)}")
 
 
