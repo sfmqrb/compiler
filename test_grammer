@@ -1,6 +1,6 @@
-S -> #test_pid ID := E #test_assign
+S -> #test_pid ID : = E #test_assign $
 E -> T EP
-EP -> EPSILON | + T #test_add EP
+EP -> EPSILON | + T EP
 T -> F TP
-TP -> EPSILON | * F #test_mult TP
+TP -> EPSILON | * F TP
 F -> ( E ) | #test_pid ID

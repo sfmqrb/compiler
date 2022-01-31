@@ -30,12 +30,12 @@ class State:
     # set((int(nterminal),dest_state))
 
     def __init__(
-        self,
-        state_id,
-        nterminal_id,
-        state_terminal_trans,
-        state_nterminal_trans,
-        end_state,
+            self,
+            state_id,
+            nterminal_id,
+            state_terminal_trans,
+            state_nterminal_trans,
+            end_state,
     ):
         self.id = state_id
         self.nterminal_id = nterminal_id
@@ -76,7 +76,7 @@ class State:
             if log:
                 print("read token to " + str(state_id))
             return True, None
-        #
+        # non terminal
         else:
             for nt_trans in self.nterminal_trans:
                 normal_trans = nterminal_first_dict[nt_trans[0]].__contains__(token)
@@ -117,24 +117,21 @@ class State:
                 states_stack.append(state_id)
             return False, None
         # if semantic routine
-        if self.nterminal_trans.__contains__('#'):
-            state_id = self.terminal_trans[self.terminal_trans.keys[0]]
-            state = id_state_dict[state_id]
-            try:
-                Node(tuple_token, parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1])
-            except:
-                print(token)
-            # todo run semantic routine
-            if state.end_state:
-                states_stack.pop()
-                tree_heads_list.pop()
-                tree_heads_Nodes_list.pop()
-            else:
-                states_stack.pop()
-                states_stack.append(state_id)
-            if log:
-                print("read token to " + str(state_id))
-            return True, None
+        for k in list(self.terminal_trans.keys()):
+            if '#' in k:
+                state_id = self.terminal_trans[k]
+                state = id_state_dict[state_id]
+                # todo run semantic routine
+                if state.end_state:
+                    states_stack.pop()
+                    tree_heads_list.pop()
+                    tree_heads_Nodes_list.pop()
+                else:
+                    states_stack.pop()
+                    states_stack.append(state_id)
+                if log:
+                    print("read token to " + str(state_id))
+                return False, None
         # syntax-error
         if self.terminal_trans.keys().__len__() > 0:
             missing_token = list(self.terminal_trans.keys())[0]
@@ -152,22 +149,22 @@ class State:
                 states_stack.pop()
                 states_stack.append(state_id)
             error = (
-                "#"
-                + str(line_number)
-                + " : "
-                + "syntax error, missing "
-                + missing_token
+                    "#"
+                    + str(line_number)
+                    + " : "
+                    + "syntax error, missing "
+                    + missing_token
             )
             return False, error
         try:
             missing_nterminal = list(self.nterminal_trans)[0][0]
             if nterminal_follow_dict[missing_nterminal].__contains__(token):
                 error = (
-                    "#"
-                    + str(line_number)
-                    + " : "
-                    + "syntax error, missing "
-                    + str(missing_nterminal)
+                        "#"
+                        + str(line_number)
+                        + " : "
+                        + "syntax error, missing "
+                        + str(missing_nterminal)
                 )
                 state_id = list(self.nterminal_trans)[0][1]
                 state = id_state_dict[state_id]
@@ -230,7 +227,6 @@ def load_state():
     id_state_dict
     python_file = open("nterminal_first_state.json", "r")
     nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())
-
 
 # nterminal_first_dict = {0: {'a'}, 1: {'b', 'x', 'w'}, 2: {'x', 'w'}, 3: {'z', 'a', ''}}
 # nterminal_follow_dict = {0: {'$'}, 1: {'$'}, 2: {'$'}, 3: {'$'}}
