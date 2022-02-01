@@ -57,8 +57,7 @@ class Semantic:
                        SemanticRoutines=SemanticRoutines.semantic_stack))
         func_name = func_name[1:len(func_name)]
         try:
-            getattr(SemanticRoutines, "func_" + func_name)(self.parse_table.get_adr,
-                                                           self.temp_manager.get_temp, input_token)
+            getattr(SemanticRoutines, "func_" + func_name)(self.temp_manager.get_temp, input_token)
         except:
             pass
 

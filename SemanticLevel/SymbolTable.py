@@ -63,6 +63,11 @@ class SymbolTableClass:
             if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
                 self.pars_table[self.pars_table.__len__() - 1 - i].starting_line = line
 
+    def get_starting_line(self, lexeme):
+        for i in range(self.pars_table.__len__()):
+            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+                return self.pars_table[self.pars_table.__len__() - 1 - i].starting_line
+
     def find_adrs(self):
         adrs = []
         last_scope = -1
