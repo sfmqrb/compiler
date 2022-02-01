@@ -1,3 +1,5 @@
+from gettext import find
+from glob import glob
 import stacks as sf
 sss = sf.SnapshotStack()
 frs = sf.FunctionRelatedStack()
@@ -7,6 +9,7 @@ program_block = []
 semantic_instance = None
 EMPTY_PB = "( , , , )"
 WORD_SIZE = 4
+ARG_COUNT = 0
 
 
 def get_PB_next():
@@ -78,34 +81,43 @@ def _restore_snapshot(find_adr, get_temp, input_token, find_adrs=None):
 
 # function call
 def func_call_begin(find_adr, get_temp, input_token, find_adrs=None):
+    global ARG_COUNT
     _save_snapshot(find_adr, get_temp, input_token, find_adrs)
-    semantic_stack.push(0)  # number of args until now
+    ARG_COUNT = 0
 
 
 def func_call_add_args(find_adr, get_temp, input_token):
+    global ARG_COUNT
+    ARG_COUNT += 1
     arg = semantic_stack.pop()
-    arg_count = semantic_stack.pop()
-    arg_count += 1
-    semantic_stack.push(arg_count)
     frs.push(arg)
 
 
-def func_call_end(find_adr, get_temp, input_token):
-    arg_count = semantic_stack.pop()
+def func_call_end(find_adr, get_temp, input_token, find_adrs=None):
     # encountered JP operation so + 1 is needed
     return_adr = get_PB_next() + 1
 
-    frs.push(f"#{arg_count}", program_block)    # number of arguments
     frs.push("#0", program_block)               # push rv
-    frs.push(return_adr, program_block)         # push ra empty now
+    frs.push(return_adr, program_block)         # push ra
 
     function_id = semantic_stack.pop()
     function_addr = find_adr(function_id)  # direct like line 6 or line 20
+
     program_block.append(f"(JP, {function_addr}, , )")
+    _restore_snapshot(find_adr, get_temp, input_token, find_adrs)
+    frs.pop()                                   # pop ra
+    pop_addr = frs.pop()                        # pop rv
+    
+                                                # addr of return value
+                                                # stored in semantic_stack
+    semantic_stack.append(pop_addr)
+    for _ in range(ARG_COUNT):
+        frs.pop(program_block, _assign_=False)  # pop input args
 
 
 # TODO function declaration
-
+def func_declaration_start(find_adr, get_temp, input_token):
+    arg_count = arg
 
 # TODO function return
 

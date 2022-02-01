@@ -30,7 +30,8 @@ class FunctionRelatedStack():
         program_block.append(f"(assign, {push_val}, @{self.sp}, )")
         self.sp += self.WORD_SIZE
 
-    def pop(self, program_block):
+    def pop(self, program_block, _assign_=True):
         self.sp -= self.WORD_SIZE
-        program_block.append(f"(assign, @{self.sp}, {self.POP_ADDR}, )")
+        if _assign_:
+            program_block.append(f"(assign, @{self.sp}, {self.POP_ADDR}, )")
         return self.POP_ADDR
