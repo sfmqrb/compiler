@@ -3,7 +3,7 @@ Declaration-list -> Declaration Declaration-list | EPSILON
 Declaration -> Declaration-initial Declaration-prime
 Declaration-initial ->  Type-specifier ID
 Declaration-prime -> Fun-declaration-prime | Var-declaration-prime
-Var-declaration-prime -> ; | [ #pnum NUM ] ;
+Var-declaration-prime -> ; | [ NUM ] ;
 Fun-declaration-prime ->  ( Params ) Compound-stmt
 Type-specifier -> int | void
 Params -> int ID Param-prime Param-list | void
@@ -13,14 +13,14 @@ Param-prime -> [  ] | EPSILON
 Compound-stmt -> { Declaration-list Statement-list }
 Statement-list -> Statement Statement-list | EPSILON
 Statement -> Expression-stmt | Compound-stmt | Selection-stmt | Iteration-stmt | Return-stmt
-Expression-stmt -> Expression ; | break ; | ;
+Expression-stmt -> Expression ; #pop | break ; | ;
 Selection-stmt -> if ( Expression ) #save Statement Else-stmt
 Else-stmt -> endif #jpf | else #jpf_save Statement endif #jp
 Iteration-stmt -> repeat #label Statement until ( Expression ) #until
 Return-stmt -> return Return-stmt-prime
 Return-stmt-prime -> ; | Expression ;
 Expression -> Simple-expression-zegond | #pid ID B
-B -> = Expression #assign | [ Expression ] H | Simple-expression-prime
+B -> = Expression #assign | [ Expression #parr ] H | Simple-expression-prime
 H -> = Expression #assign | G D C
 Simple-expression-zegond -> Additive-expression-zegond C
 Simple-expression-prime -> Additive-expression-prime C
@@ -37,7 +37,7 @@ Term-zegond -> Factor-zegond G
 G -> * Factor #mult_op G | EPSILON
 Factor -> ( Expression ) | #pid ID Var-call-prime | #pnum NUM
 Var-call-prime -> ( Args ) | Var-prime
-Var-prime -> [ Expression ] | EPSILON
+Var-prime -> [ Expression #parr ] | EPSILON
 Factor-prime -> ( Args ) | EPSILON
 Factor-zegond -> ( Expression ) | #pnum NUM
 Args -> Arg-list | EPSILON

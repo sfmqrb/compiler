@@ -79,7 +79,7 @@ def main():
 
 def save_tree(addr):
     tree = parser.draw_tree()
-    # print(tree)
+    print(tree)
     f = open(addr, "w", encoding="utf-8")
     f.write(tree)
     f.close()
