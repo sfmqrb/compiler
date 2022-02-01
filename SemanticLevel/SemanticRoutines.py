@@ -26,6 +26,13 @@ def get_PB_next():
     return len(program_block)
 
 
+def get_address_better_handling(arg):
+    try:
+        arg = int(arg)
+    except:
+        arg = st.get_adr(arg)
+    return arg
+
 ####################### Main Routines #########################
 
 
@@ -78,7 +85,7 @@ def func_call_end(get_temp, input_token):
     function_id = semantic_stack.pop()
     # function_addr = find_adr(function_id)  # direct like line 6 or line 20
     function_addr = st.get_starting_line(
-        function_id)  # direct like line 6 or line 20
+        function_id, by_adr=True)  # direct like line 6 or line 20
 
     program_block.append(f"(JP, {function_addr}, , )")
     _restore_snapshot(get_temp, input_token)
@@ -98,8 +105,10 @@ def func_declaration_after_header(get_temp, input_token):
     arg_count = st.get_func_args()
     for first_arg_offset in range(3, 3 + arg_count):
         arg = semantic_stack.pop()
+        arg = get_address_better_handling(arg)
+
         t = frs.access_using_offset(first_arg_offset, program_block, get_temp)
-        program_block.append(f"(ASSIGN, {str(t)}, {str(st.get_adr(arg))}, )")
+        program_block.append(f"(ASSIGN, {str(t)}, {str(arg)}, )")
 
 
 def func_push_zero(get_temp, input_token):
@@ -111,17 +120,17 @@ def func_push_zero(get_temp, input_token):
 def func_declaration_after_return(get_temp, input_token):
     rv = semantic_stack.pop()
     print("rv", rv)
-    addr_rv = st.get_adr(rv)
+    addr_rv = get_address_better_handling(rv)
     frs.push(addr_rv, program_block)
     ra = frs.access_using_offset(2, program_block, get_temp)
     program_block.append(f"(JP, @{ra}, , )")
 
 
 def func_pid(get_temp, input_token):
-    p = st.get_adr(input_token)
+    p = get_address_better_handling(input_token)
     if p is None:
         semantic.error(ErrorTypeEnum.scoping, input_token)
-    semantic_stack.append(input_token)
+    semantic_stack.append(p)
     pass
 
 

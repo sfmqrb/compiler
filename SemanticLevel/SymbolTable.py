@@ -73,10 +73,15 @@ class SymbolTableClass:
     def set_starting_line(self, line):
         self.pars_table[self.pars_table.__len__() - 1].starting_line = line
 
-    def get_starting_line(self, lexeme):
+    def get_starting_line(self, lexeme, by_adr=False):
         for i in range(self.pars_table.__len__()):
-            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
-                return self.pars_table[self.pars_table.__len__() - 1 - i].starting_line
+            if not by_adr:
+                if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+                    return self.pars_table[self.pars_table.__len__() - 1 - i].starting_line
+            else:
+                adr = int(lexeme)
+                if self.pars_table[self.pars_table.__len__() - 1 - i].address == adr:
+                    return self.pars_table[self.pars_table.__len__() - 1 - i].starting_line
 
     def find_adrs(self):
         adrs = []
@@ -88,7 +93,8 @@ class SymbolTableClass:
             if last_scope != self.pars_table[self.pars_table.__len__() - 1 - i].scope:
                 return adrs
             if self.pars_table[self.pars_table.__len__() - 1 - i].category != "func":
-                adrs.append(self.pars_table[self.pars_table.__len__() - 1 - i].address)
+                adrs.append(
+                    self.pars_table[self.pars_table.__len__() - 1 - i].address)
         return adrs
 
     def get_func_args(self):
