@@ -1,62 +1,114 @@
+from gettext import find
+from glob import glob
+
+from matplotlib.pyplot import get
+import stacks as sf
+sss = sf.SnapshotStack()
+frs = sf.FunctionRelatedStack()
 
 semantic_stack = []
 program_block = []
 semantic_instance = None
 EMPTY_PB = "( , , , )"
 WORD_SIZE = 4
+ARG_COUNT = 0
+
+
+# should imported
+def get_arg_count_last():
+    pass
+
+
+# should imported
+def find_adrs():
+    pass
 
 
 def get_PB_next():
     return len(program_block)
 
-####################### Test Routines #########################
-
-
-def test():
-    print("xxx")
-
-
-def func_test_pid(find_adr, get_temp, input_token):
-    p = find_adr(input_token)
-    semantic_stack.append(p)
-
-
-def func_test_assign(find_adr, get_temp, input_token):
-    program_block.append(
-        "(ASSIGN," + str(semantic_stack.pop()) +
-        "," + str(semantic_stack.pop()) + ",)"
-    )
-
-
-def func_test_add(find_adr, get_temp, input_token):
-    t = get_temp()
-    program_block.append(
-        "(ADD,"
-        + str(semantic_stack.pop())
-        + ","
-        + str(semantic_stack.pop())
-        + ","
-        + str(t)
-        + ")"
-    )
-    semantic_stack.append(t)
-
-
-def func_test_mult(find_adr, get_temp, input_token):
-    t = get_temp()
-    program_block.append(
-        "(MULT,"
-        + str(semantic_stack.pop())
-        + ","
-        + str(semantic_stack.pop())
-        + ","
-        + str(t)
-        + ")"
-    )
-    semantic_stack.append(t)
-
-
 ####################### Main Routines #########################
+
+
+# related to function call to handle SnapshotStack
+def _save_snapshot(find_adr, get_temp, input_token):
+    last_scope_addrs = find_adrs()
+    for addr in last_scope_addrs:
+        sss.push(addr, program_block)
+
+
+def _restore_snapshot(find_adr, get_temp, input_token):
+    last_scope_addrs = find_adrs()
+    for addr in last_scope_addrs[::-1]:
+        pop_addr = sss.pop(addr)
+        program_block.append(f"(assign, {str(pop_addr)}, {str(addr)}, )")
+
+
+def func_set_starting_line():
+    # TODO:
+    pass
+
+# function call
+
+
+def func_call_begin(find_adr, get_temp, input_token):
+    global ARG_COUNT
+    ARG_COUNT = 0
+    _save_snapshot(find_adr, get_temp, input_token)
+
+
+def func_call_add_args(find_adr, get_temp, input_token):
+    global ARG_COUNT
+    ARG_COUNT += 1
+    # todo push to SemanticStack calling args
+    arg = semantic_stack.pop()
+    frs.push(arg, program_block)
+
+
+def func_call_end(find_adr, get_temp, input_token):
+    global ARG_COUNT
+    # encountered JP operation so +5 is needed
+    return_adr = get_PB_next() + 5
+
+    frs.push(ARG_COUNT, program_block)          # push arg_count
+    frs.push(return_adr, program_block)         # push ra
+
+    function_id = semantic_stack.pop()
+    # function_addr = find_adr(function_id)  # direct like line 6 or line 20
+    function_addr = find_starting_line(
+        function_id)  # direct like line 6 or line 20
+
+    program_block.append(f"(JP, {function_addr}, , )")
+    _restore_snapshot(find_adr, get_temp, input_token)
+
+    rv = frs.pop(program_block)
+    frs.pop(program_block, _assign_=False)
+    frs.pop(program_block, _assign_=False)
+    # addr of return value stored in semantic_stack
+    semantic_stack.append(rv)
+    for _ in range(ARG_COUNT):
+        frs.pop(program_block, _assign_=False)  # pop input args
+    ARG_COUNT = 0
+
+
+# function declaration
+def func_declaration_after_header(find_adr, get_temp, input_token):
+    arg_count = get_arg_count_last()
+
+    for first_arg_offset in range(3, 2+arg_count):
+        arg = semantic_stack.pop()
+        t = frs.access_using_offset(first_arg_offset, program_block, get_temp)
+        program_block.append(f"(ASSIGN, {str(t)}, {str(arg)}, )")
+
+
+# function return
+def func_declaration_after_return(find_adr, get_temp, input_token):
+    rv = semantic_stack.pop()
+    frs.push(rv, program_block)
+    ra = frs.access_using_offset(2, program_block, get_temp)
+    program_block.append(f"(JP, @{ra}, , )")
+
+
 def func_pid(find_adr, get_temp, input_token):
     p = find_adr(input_token)
     semantic_stack.append(p)
@@ -152,7 +204,8 @@ def func_parr(find_adr, get_temp, input_token):
     arr_index = str(semantic_stack.pop())
     arr_id = str(semantic_stack.pop())
 
-    semantic_stack.append(arr_index)
+    # semantic_stack.append(arr_index)
+    semantic_stack.append(f"@{arr_index}")
     semantic_stack.append(f"#{WORD_SIZE}")
     func_mult_op(find_adr, get_temp, None)
 
