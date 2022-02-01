@@ -12,7 +12,7 @@ class SymbolTableClass:
     def get_instance():
         global symbol_table_instance
         if symbol_table_instance is None:
-            symbol_table_instance = SymbolTableClass
+            symbol_table_instance = SymbolTableClass()
         return symbol_table_instance
 
     def add(self, row):

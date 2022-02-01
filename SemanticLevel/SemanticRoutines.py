@@ -4,9 +4,6 @@ from SemanticLevel.SymbolTable import SymbolTableClass
 from matplotlib.pyplot import get
 import SemanticLevel.stacks as sf
 
-st = SymbolTableClass.get_instance()
-sss = sf.SnapshotStack()
-frs = sf.FunctionRelatedStack()
 
 semantic_stack = []
 program_block = []
@@ -15,6 +12,9 @@ EMPTY_PB = "( , , , )"
 WORD_SIZE = 4
 ARG_COUNT = 0
 
+st = SymbolTableClass.get_instance()
+sss = sf.SnapshotStack(program_block)
+frs = sf.FunctionRelatedStack(program_block)
 
 # should imported
 def get_arg_count_last():

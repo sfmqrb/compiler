@@ -43,9 +43,9 @@ for line in f:
 #           '}', '$']
 DFA.states_stack.append(DFA.nterminal_first_state['Program'])
 # DFA.states_stack.append(DFA.nterminal_first_state['P'])
-pars_row = SymbolTable.SymbolRow()
-pars_table = SymbolTable.SymbolTableClass.get_instance()
-semantic = Semantic.Semantic(pars_table)
+symbol_row = SymbolTable.SymbolRow()
+symbol_table = SymbolTable.SymbolTableClass.get_instance()
+semantic = Semantic.Semantic(symbol_table)
 active_row = False
 # (started, ended, function dependent)
 brackets = list()
@@ -55,7 +55,7 @@ gl_line_number = 0
 
 
 def get_next_token(token_tuple, line_number):
-    global active_row, pars_row, no_bracket_function, scope, gl_line_number
+    global active_row, symbol_row, no_bracket_function, scope, gl_line_number
     gl_line_number = line_number
     next_token = False
     if token_tuple != "$":
@@ -67,7 +67,7 @@ def get_next_token(token_tuple, line_number):
         if token_tuple[1] == "}":
             bracket = brackets.pop()
             if bracket:
-                pars_table.remove_scope(scope)
+                symbol_table.remove_scope(scope)
                 scope -= 1
     while not next_token:
         last_state_id = DFA.states_stack[DFA.states_stack.__len__() - 1]
@@ -79,29 +79,29 @@ def get_next_token(token_tuple, line_number):
         else:
             # pars table
             if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
-                pars_row.type = token_tuple[1]
+                symbol_row.type = token_tuple[1]
                 active_row = True
                 if last_state.nterminal_id == "Type-specifier":
-                    pars_row.category = "var"
+                    symbol_row.category = "var"
                 elif last_state.nterminal_id == "Params":
-                    if pars_row.category != "param":
-                        pars_row.category = "param"
-                        pars_table.inc_func_args()
+                    if symbol_row.category != "param":
+                        symbol_row.category = "param"
+                        symbol_table.inc_func_args()
                 else:
-                    pars_row.category = "var"
+                    symbol_row.category = "var"
             if last_state.nterminal_id == "Fun-declaration-prime":
                 no_bracket_function = True
-                pars_table.set_line_category(line_number, "func")
+                symbol_table.set_line_category(line_number, "func")
                 scope +=1
             if token_tuple[0] == 'ID' and active_row:
-                pars_row.lexeme = token_tuple[1]
-                pars_row.line = line_number
-                pars_row.scope = scope
-                pars_table.add(pars_row)
-                pars_row = ParsTable.SymbolRow()
+                symbol_row.lexeme = token_tuple[1]
+                symbol_row.line = line_number
+                symbol_row.scope = scope
+                symbol_table.add(symbol_row)
+                symbol_row = SymbolTable.SymbolRow()
                 active_row = False
             if token_tuple[0] == 'NUM' and last_state.nterminal_id == "Var-declaration-prime":
-                pars_table.set_last_args(int(token_tuple[1]))
+                symbol_table.set_last_args(int(token_tuple[1]))
 
             if token_tuple[0] == 'KEYWORD' or token_tuple[0] == 'SYMBOL':
                 token = token_tuple[1]
