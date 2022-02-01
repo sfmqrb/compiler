@@ -27,10 +27,14 @@ def get_PB_next():
 
 
 def get_address_better_handling(arg):
+    init_arg = arg
     try:
         arg = int(arg)
     except:
         arg = st.get_adr(arg)
+
+    if arg == None:
+        arg = init_arg
     return arg
 
 ####################### Main Routines #########################
@@ -69,7 +73,8 @@ def func_call_add_args(get_temp, input_token):
     global ARG_COUNT
     ARG_COUNT += 1
     # todo push to SemanticStack calling args
-    arg = semantic_stack.pop()
+    arg = get_address_better_handling(semantic_stack.pop())
+
     # print(arg)
     frs.push(arg, program_block)
 
@@ -280,5 +285,7 @@ def func_at_the_end(get_temp, input_token):
                       ] = f"(JP, {str(st.get_starting_line('main'))}, , )"
 
 
-def output(lexeme):
-    program_block.append(f"(PRINT, {lexeme}, , )")
+def output():
+    pop_addr = semantic_stack.pop()
+    pop_addr = get_address_better_handling(pop_addr)
+    program_block.append(f"(PRINT, {pop_addr}, , )")
