@@ -44,7 +44,8 @@ class Semantic:
     def get_instance():
         global semantic_instance
         if semantic_instance is None:
-            semantic_instance = Semantic(SemanticLevel.SymbolTable.SymbolTableClass.get_instance())
+            semantic_instance = Semantic(
+                SemanticLevel.SymbolTable.SymbolTableClass.get_instance())
         return semantic_instance
 
     def __init__(self, pars_table):
@@ -52,16 +53,17 @@ class Semantic:
         self.parse_table = pars_table
         self.temp_manager = TempManager(500, 4)
         semantic_instance = self
-        print(r"    {:15} {:15} {}".format(
+        print(r"    {:20} {:15} {}".format(
             "func_name", "input_token", "Semantic Stack"))
 
     def run(self, func_name, input_token):
         print(
-            r"==> {func_name:15} {input_token:15} {SemanticRoutines}".
-                format(func_name=func_name[1:], input_token=input_token,
-                       SemanticRoutines=SemanticRoutines.semantic_stack))
+            r"==> {func_name:20} {input_token:15} {SemanticRoutines}".
+            format(func_name=func_name[1:], input_token=input_token,
+                   SemanticRoutines=SemanticRoutines.semantic_stack))
         func_name = func_name[1:len(func_name)]
-        getattr(SemanticRoutines, "func_" + func_name)(self.temp_manager.get_temp, input_token)
+        getattr(SemanticRoutines, "func_" +
+                func_name)(self.temp_manager.get_temp, input_token)
 
     def error(self, err_type, id, expected=None, illegal=None, arg=None):
         line_number = str(ErrorType.gl_line_number)
