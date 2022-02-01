@@ -1,3 +1,6 @@
+import SemanticLevel.Semantic
+from SemanticLevel.ErrorType import ErrorTypeEnum
+
 last_adr = 100
 symbol_table_instance = None
 
@@ -82,6 +85,12 @@ class SymbolTableClass:
             if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
                 return self.pars_table[self.pars_table.__len__() - 1 - i].args_cells
 
+    def check_void_var(self):
+        for row in self.pars_table:
+            if row.category == "var" and row.type == "void" and not row.err_wrote:
+                row.err_wrote = True
+                SemanticLevel.Semantic.Semantic.get_instance().error(ErrorTypeEnum.void_type, row.lexeme)
+
 
 class SymbolRow:
     address = 0
@@ -94,6 +103,7 @@ class SymbolRow:
     temp_start_pos = 0
     # func, var
     category = ""
+    err_wrote = False
 
     def __str__(self):
         return "address: " + str(self.address) + " lexeme: " + self.lexeme + " scope: " + str(self.scope)

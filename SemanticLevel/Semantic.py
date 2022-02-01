@@ -65,6 +65,7 @@ class Semantic:
 
     def error(self, err_type, id, expected=None, illegal=None, arg=None):
         line_number = str(ErrorType.gl_line_number)
+        id = str(id)
         if err_type == ErrorTypeEnum.scoping:
             err = "#" + line_number + ": SemanticLevel Error! '" + id + "' is not defined"
         elif err_type == ErrorTypeEnum.void_type:

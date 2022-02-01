@@ -60,6 +60,7 @@ def get_next_token(token_tuple, line_number):
         if token_tuple[1] == "}":
             bracket = brackets.pop()
             if bracket:
+                symbol_table.check_void_var()
                 symbol_table.remove_scope(scope)
                 scope -= 1
     while not next_token:
@@ -96,6 +97,8 @@ def get_next_token(token_tuple, line_number):
             if token_tuple[0] == 'NUM' and last_state.nterminal_id == "Var-declaration-prime":
                 symbol_table.set_last_args(int(token_tuple[1]),
                                            TempManager.get_instance().get_arr_temp(int(token_tuple[1])))
+            if token_tuple[1] == ';':
+                symbol_table.check_void_var()
 
             if token_tuple[0] == 'KEYWORD' or token_tuple[0] == 'SYMBOL':
                 token = token_tuple[1]
@@ -109,6 +112,8 @@ def get_next_token(token_tuple, line_number):
 
 def draw_tree():
     # print(pars_table.pars_table)
+
+    x = Semantic.Semantic.errors
     pp_list_of_tuples(program_block)
 
     a = ""
