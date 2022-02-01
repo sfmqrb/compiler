@@ -249,34 +249,3 @@ def load_state():
     id_state_dict = {int(k): v for k, v in state_dict_load.items()}
     python_file = open("nterminal_first_state.json", "r")
     nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())
-
-
-# nterminal_first_dict = {0: {'a'}, 1: {'b', 'x', 'w'}, 2: {'x', 'w'}, 3: {'z', 'a', ''}}
-# nterminal_follow_dict = {0: {'$'}, 1: {'$'}, 2: {'$'}, 3: {'$'}}
-# # s : 0 - A : 1 - B : 2 - C : 3
-# s1 = State(1, 0, {'a': 2}, {}, False)
-# s2 = State(2, 0, dict(), {(1, 3)}, False)
-# s3 = State(3, 0, {'$': 12}, {}, False)
-# s12 = State(12, 0, dict(), {}, True)
-# s4 = State(4, 1, {'b': 5}, {(2, 6)}, False)
-# s5 = State(5, 1, dict(), {(3, 6)}, False)
-# s6 = State(6, 1, dict(), {}, True)
-# s7 = State(7, 2, {'x': 8, 'w': 9}, set(), False)
-# s8 = State(8, 2, {'y': 9}, set(), False)
-# s9 = State(9, 2, dict(), {}, True)
-# s10 = State(10, 3, {'z': 11, 'a': 11, '': 11}, set(), False)
-# s11 = State(11, 3, dict(), {}, True)
-# nterminal_first_state = {0: 1, 1: 4, 2: 7, 3: 10}
-# states_stack.append(1)
-# b = states_stack[states_stack.__len__() - 1]
-#
-# a = 1
-# string = ['a', 'b', '$']
-# while string.__len__() > 0:
-#     last_state_id = states_stack[states_stack.__len__() - 1]
-#     last_state = id_state_dict[last_state_id]
-#     next_token = last_state.next_state(string[0])
-#     if next_token:
-#         string.pop(0)
-# for pre, fill, node in RenderTree(first_node):
-#     print("%s%s" % (pre, node.name))

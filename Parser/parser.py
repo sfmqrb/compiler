@@ -51,10 +51,12 @@ active_row = False
 brackets = list()
 no_bracket_function = False
 scope = 0
+gl_line_number = 0
 
 
 def get_next_token(token_tuple, line_number):
-    global active_row, pars_row, no_bracket_function, scope
+    global active_row, pars_row, no_bracket_function, scope, gl_line_number
+    gl_line_number = line_number
     next_token = False
     if token_tuple != "$":
         if token_tuple[1] == "{":
@@ -91,7 +93,6 @@ def get_next_token(token_tuple, line_number):
                 no_bracket_function = True
                 pars_table.set_line_category(line_number, "func")
                 scope +=1
-                print(token_tuple[1] + " " + str(scope))
             if token_tuple[0] == 'ID' and active_row:
                 pars_row.lexeme = token_tuple[1]
                 pars_row.line = line_number

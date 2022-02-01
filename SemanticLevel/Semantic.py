@@ -1,19 +1,9 @@
-import enum
-
 from SemanticLevel import SemanticRoutines
+from SemanticLevel.ErrorType import ErrorType
+from SemanticLevel import ErrorType
 
-instance = None
-SemanticRoutines.semantic_instance = instance
+semantic_instance = None
 temp_instance = None
-
-
-class ErrorType(enum.Enum):
-    scoping = 1
-    void_type = 2
-    number_mathing = 3
-    break_stmt = 4
-    type_mismatch = 5
-    type_matching = 6
 
 
 class TempManager:
@@ -48,10 +38,15 @@ class Semantic:
     temp_manager = None
     errors = []
 
+    @staticmethod
+    def get_instance():
+        return semantic_instance
+
     def __init__(self, pars_table):
+        global semantic_instance
         self.parse_table = pars_table
         self.temp_manager = TempManager(500, 4)
-        instance = self
+        semantic_instance = self
         print(r"    {:15} {:15} {}".format(
             "func_name", "input_token", "Semantic Stack"))
 
@@ -67,9 +62,10 @@ class Semantic:
         except:
             pass
 
-    def error(self, err_type, line_number, id, expected, illegal, arg):
-        line_number = str(line_number)
-        if err_type == ErrorType.scoping:
+    def error(self, err_type, id, expected, illegal, arg):
+        line_number = str(ErrorType.gl_line_number)
+        t = err_type == ErrorType.scoping
+        if t:
             err = "#" + line_number + ": SemanticLevel Error! '" + id + "' is not defined"
         elif err_type == ErrorType.void_type:
             err = "#" + line_number + ": SemanticLevel Error! Illegal type of void for '" + id + "'"

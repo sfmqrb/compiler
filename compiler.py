@@ -1,6 +1,6 @@
 import scanner
 from Parser import parser
-
+from SemanticLevel import ErrorType
 
 # amir mohammad mohammadi 97107126
 # sajad faghfur maghreby 97106187
@@ -59,6 +59,7 @@ def main():
     scnr = scanner.scanner(s=s)
     while True:
         line, next_token_type, next_token = scnr.get_next_token()
+        ErrorType.gl_line_number = line
         if next_token_type == None:
             parser.get_next_token("$", line)
             break

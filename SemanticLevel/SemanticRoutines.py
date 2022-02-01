@@ -1,3 +1,5 @@
+import SemanticLevel.Semantic
+from SemanticLevel.ErrorType import ErrorType
 
 semantic_stack = []
 program_block = []
@@ -8,6 +10,7 @@ WORD_SIZE = 4
 
 def get_PB_next():
     return len(program_block)
+
 
 ####################### Test Routines #########################
 
@@ -59,6 +62,8 @@ def func_test_mult(find_adr, get_temp, input_token):
 ####################### Main Routines #########################
 def func_pid(find_adr, get_temp, input_token):
     p = find_adr(input_token)
+    if p is None:
+        SemanticLevel.Semantic.Semantic.get_instance().error(ErrorType.scoping, input_token, None, None, None)
     semantic_stack.append(p)
     pass
 
@@ -119,7 +124,7 @@ def func_jpf_save(find_adr, get_temp, input_token):
     i = get_PB_next()
     PBAddr = semantic_stack.pop()
     expression = semantic_stack.pop()
-    program_block[PBAddr] = f"(JPF, {str(expression)}, {str(i+1)}, )"
+    program_block[PBAddr] = f"(JPF, {str(expression)}, {str(i + 1)}, )"
     semantic_stack.append(i)
     program_block.append(EMPTY_PB)
 
