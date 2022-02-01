@@ -26,6 +26,14 @@ class ParsTable:
             if row.line == line:
                 row.category = c
 
+    def remove_scope(self, scope):
+        length = self.pars_table.__len__()
+        for i in range(length):
+            if self.pars_table[length - 1 - i].scope == scope:
+                self.pars_table.pop()
+            else:
+                return
+
     def get_adr(self, lexeme):
         for i in range(self.pars_table.__len__()):
             if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
