@@ -9,6 +9,7 @@ import SemanticLevel.stacks as sf
 
 semantic_stack = []
 program_block = []
+ru_stack = []
 semantic_instance = None
 EMPTY_PB = "( , , , )"
 WORD_SIZE = 4
@@ -45,6 +46,7 @@ def func_set_starting_line(get_temp, input_token):
     # TODO:
     return st.set_starting_line(program_block.__len__())
     pass
+
 
 
 # function call
@@ -196,12 +198,30 @@ def func_jpf(get_temp, input_token):
 def func_label(get_temp, input_token):
     i = get_PB_next()
     semantic_stack.append(i)
+    ru_stack.append(i)
 
 
 def func_until(get_temp, input_token):
     left = semantic_stack.pop()
     right = semantic_stack.pop()
     program_block.append(f"(JPF, {str(left)}, {str(right)}, )")
+    rep_pos = ru_stack.pop()
+    for i in range(program_block.__len__()):
+        if program_block.__len__() - 1 - i < rep_pos:
+            break
+        tac = program_block[program_block.__len__() - 1 - i]
+        tac: str
+        if tac[0] == 'b':
+            tac = tac.replace("?", str(get_PB_next()))
+            program_block[program_block.__len__() - 1 - i] = tac.replace("b", "")
+
+
+def func_break(get_temp, input_token):
+    if ru_stack.__len__() > 0:
+        program_block.append(f"b(JP, {'?'}, , )")
+    else:
+        semantic.error(ErrorTypeEnum.break_stmt, None)
+        pass
 
 
 def func_parr(get_temp, input_token):
