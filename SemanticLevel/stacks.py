@@ -9,6 +9,7 @@ class SnapshotStack():
         return "SnapshotStack: sp=" + str(self.sp)
 
     def push(self, push_val, program_block):
+        push_val = str(push_val)
         program_block.append(f"(assign, {push_val}, @{self.sp}, )")
         program_block.append(f"(ADD, {self.sp}, #{self.WORD_SIZE}, {self.sp})")
 
@@ -18,6 +19,14 @@ class SnapshotStack():
             program_block.append(f"(assign, @{self.sp}, {self.POP_ADDR}, )")
             return self.POP_ADDR
         return None
+
+    def access_using_offset(self, offset, program_block, get_temp):
+        t1 = get_temp()
+        t2 = get_temp()
+        program_block.append(
+            f"(SUB, {self.sp}, #{offset*self.WORD_SIZE}, {t1})")
+        program_block.append(f"(assign, @{t1}, {t2}, )")
+        return t2
 
 
 class FunctionRelatedStack():
@@ -31,6 +40,7 @@ class FunctionRelatedStack():
         return "FunctionRelatedStack: sp=" + str(self.sp)
 
     def push(self, push_val, program_block):
+        push_val = str(push_val)
         program_block.append(f"(assign, {push_val}, @{self.sp}, )")
         program_block.append(f"(ADD, {self.sp}, #{self.WORD_SIZE}, {self.sp})")
 
@@ -40,3 +50,11 @@ class FunctionRelatedStack():
             program_block.append(f"(assign, @{self.sp}, {self.POP_ADDR}, )")
             return self.POP_ADDR
         return None
+
+    def access_using_offset(self, offset, program_block, get_temp):
+        t1 = get_temp()
+        t2 = get_temp()
+        program_block.append(
+            f"(SUB, {self.sp}, #{offset*self.WORD_SIZE}, {t1})")
+        program_block.append(f"(assign, @{t1}, {t2}, )")
+        return t2
