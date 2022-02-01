@@ -124,7 +124,7 @@ def func_push_zero(get_temp, input_token):
 
 def func_declaration_after_return(get_temp, input_token):
     rv = semantic_stack.pop()
-    print("rv", rv)
+    # print("rv", rv)
     addr_rv = get_address_better_handling(rv)
     frs.push(addr_rv, program_block)
     ra = frs.access_using_offset(2, program_block, get_temp)
@@ -274,7 +274,7 @@ def func_save_first_func(get_temp, input_token):
     global FIRST_FUNC
     if not FIRST_FUNC:
         FIRST_FUNC = (True, get_PB_next())
-        print(FIRST_FUNC)
+        # print(FIRST_FUNC)
         program_block.append(EMPTY_PB)
 
 

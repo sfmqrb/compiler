@@ -10,10 +10,14 @@ from Parser.grammer_to_transition import rule_to_states
 
 
 def pp_list_of_tuples(lsot):
+    f = open("output.txt", "w")
+    s = ""
     print("\n[")
     for idx, t in enumerate(lsot):
+        s += f"{idx}\t{t}\n"
         print(r"{idx:3}: {t}".format(idx=idx, t=t))
     print("]")
+    f.write(s)
 
 
 # Main imports
@@ -115,7 +119,7 @@ def get_next_token(token_tuple, line_number):
                             expected = "array" if function_row.params_type[i].is_arr else "int"
                             illegal = "array" if call_params[i].is_arr else "int"
                             Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_matching,
-                                                                   function_row.lexeme, illegal=illegal, arg= i + 1,
+                                                                   function_row.lexeme, illegal=illegal, arg=i + 1,
                                                                    expected=expected)
                 else:
                     Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.number_mathing,
