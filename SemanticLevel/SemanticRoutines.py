@@ -1,6 +1,6 @@
-import runtime_stack as rtsf
-rts = rtsf.RuntimeStack()
-
+import stacks as sf
+sss = sf.SnapshotStack()
+frs = sf.FunctionRelatedStack()
 
 semantic_stack = []
 program_block = []
@@ -60,6 +60,56 @@ def func_test_mult(find_adr, get_temp, input_token):
 
 
 ####################### Main Routines #########################
+
+
+# related to function call handling SnapshotStack
+def _save_snapshot(find_adr, get_temp, input_token, find_adrs=None):
+    last_scope_addrs = find_adrs()
+    for addr in last_scope_addrs:
+        sss.push(addr, program_block)
+
+
+def _restore_snapshot(find_adr, get_temp, input_token, find_adrs=None):
+    last_scope_addrs = find_adrs()
+    for addr in last_scope_addrs[::-1]:
+        pop_addr = sss.pop(addr)
+        program_block.append(f"(assign, {str(pop_addr)}, {str(addr)}, )")
+
+
+# function call
+def func_call_begin(find_adr, get_temp, input_token, find_adrs=None):
+    _save_snapshot(find_adr, get_temp, input_token, find_adrs)
+    semantic_stack.push(0)  # number of args until now
+
+
+def func_call_add_args(find_adr, get_temp, input_token):
+    arg = semantic_stack.pop()
+    arg_count = semantic_stack.pop()
+    arg_count += 1
+    semantic_stack.push(arg_count)
+    frs.push(arg)
+
+
+def func_call_end(find_adr, get_temp, input_token):
+    arg_count = semantic_stack.pop()
+    # encountered JP operation so + 1 is needed
+    return_adr = get_PB_next() + 1
+
+    frs.push(f"#{arg_count}", program_block)    # number of arguments
+    frs.push("#0", program_block)               # push rv
+    frs.push(return_adr, program_block)         # push ra empty now
+
+    function_id = semantic_stack.pop()
+    function_addr = find_adr(function_id)  # direct like line 6 or line 20
+    program_block.append(f"(JP, {function_addr}, , )")
+
+
+# TODO function declaration
+
+
+# TODO function return
+
+
 def func_pid(find_adr, get_temp, input_token):
     p = find_adr(input_token)
     semantic_stack.append(p)
