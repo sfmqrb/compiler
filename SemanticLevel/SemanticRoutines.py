@@ -1,3 +1,6 @@
+import runtime_stack as rtsf
+rts = rtsf.RuntimeStack()
+
 
 semantic_stack = []
 program_block = []
