@@ -14,6 +14,7 @@ semantic_instance = None
 EMPTY_PB = "( , , , )"
 WORD_SIZE = 4
 ARG_COUNT = 0
+FIRST_FUNC = False
 
 st = SymbolTableClass.get_instance()
 semantic = SemanticLevel.Semantic.Semantic.get_instance()
@@ -48,7 +49,6 @@ def func_set_starting_line(get_temp, input_token):
     pass
 
 
-
 # function call
 
 
@@ -63,6 +63,7 @@ def func_call_add_args(get_temp, input_token):
     ARG_COUNT += 1
     # todo push to SemanticStack calling args
     arg = semantic_stack.pop()
+    # print(arg)
     frs.push(arg, program_block)
 
 
@@ -71,8 +72,8 @@ def func_call_end(get_temp, input_token):
     # encountered JP operation so +5 is needed
     return_adr = get_PB_next() + 5
 
-    frs.push(ARG_COUNT, program_block)  # push arg_count
-    frs.push(return_adr, program_block)  # push ra
+    frs.push(f"#{ARG_COUNT}", program_block)  # push arg_count
+    frs.push(f"#{return_adr}", program_block)  # push ra
 
     function_id = semantic_stack.pop()
     # function_addr = find_adr(function_id)  # direct like line 6 or line 20
@@ -98,7 +99,7 @@ def func_declaration_after_header(get_temp, input_token):
     for first_arg_offset in range(3, 3 + arg_count):
         arg = semantic_stack.pop()
         t = frs.access_using_offset(first_arg_offset, program_block, get_temp)
-        program_block.append(f"(ASSIGN, {str(t)}, {str(arg)}, )")
+        program_block.append(f"(ASSIGN, {str(t)}, {str(st.get_adr(arg))}, )")
 
 
 def func_push_zero(get_temp, input_token):
@@ -109,7 +110,9 @@ def func_push_zero(get_temp, input_token):
 
 def func_declaration_after_return(get_temp, input_token):
     rv = semantic_stack.pop()
-    frs.push(rv, program_block)
+    print("rv", rv)
+    addr_rv = st.get_adr(rv)
+    frs.push(addr_rv, program_block)
     ra = frs.access_using_offset(2, program_block, get_temp)
     program_block.append(f"(JP, @{ra}, , )")
 
@@ -118,7 +121,7 @@ def func_pid(get_temp, input_token):
     p = st.get_adr(input_token)
     if p is None:
         semantic.error(ErrorTypeEnum.scoping, input_token)
-    semantic_stack.append(p)
+    semantic_stack.append(input_token)
     pass
 
 
@@ -218,7 +221,8 @@ def func_until(get_temp, input_token):
         tac: str
         if tac[0] == 'b':
             tac = tac.replace("?", str(get_PB_next()))
-            program_block[program_block.__len__() - 1 - i] = tac.replace("b", "")
+            program_block[program_block.__len__() - 1 -
+                          i] = tac.replace("b", "")
 
 
 def func_break(get_temp, input_token):
@@ -250,3 +254,18 @@ def func_pop(get_temp, input_token):
 def func_set_tmp_addr(get_temp, input_token):
     arr_tmp_start, arr_addr = st.get_arr_temp()
     program_block.append(f"(ASSIGN, #{str(arr_tmp_start)}, {str(arr_addr)}, )")
+
+
+def func_save_first_func(get_temp, input_token):
+    global FIRST_FUNC
+    if not FIRST_FUNC:
+        FIRST_FUNC = (True, get_PB_next())
+        print(FIRST_FUNC)
+        program_block.append(EMPTY_PB)
+
+
+def func_at_the_end(get_temp, input_token):
+    global FIRST_FUNC
+    if FIRST_FUNC:
+        program_block[FIRST_FUNC[1]
+                      ] = f"(JP, {str(st.get_starting_line('main'))}, , )"
