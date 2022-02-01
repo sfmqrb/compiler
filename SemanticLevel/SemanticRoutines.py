@@ -63,6 +63,7 @@ def func_call_add_args(get_temp, input_token):
     ARG_COUNT += 1
     # todo push to SemanticStack calling args
     arg = semantic_stack.pop()
+    # print(arg)
     frs.push(arg, program_block)
 
 
@@ -98,7 +99,7 @@ def func_declaration_after_header(get_temp, input_token):
     for first_arg_offset in range(3, 3 + arg_count):
         arg = semantic_stack.pop()
         t = frs.access_using_offset(first_arg_offset, program_block, get_temp)
-        program_block.append(f"(ASSIGN, {str(t)}, {str(arg)}, )")
+        program_block.append(f"(ASSIGN, {str(t)}, {str(st.get_adr(arg))}, )")
 
 
 def func_push_zero(get_temp, input_token):
@@ -109,7 +110,9 @@ def func_push_zero(get_temp, input_token):
 
 def func_declaration_after_return(get_temp, input_token):
     rv = semantic_stack.pop()
-    frs.push(rv, program_block)
+    print("rv", rv)
+    addr_rv = st.get_adr(rv)
+    frs.push(addr_rv, program_block)
     ra = frs.access_using_offset(2, program_block, get_temp)
     program_block.append(f"(JP, @{ra}, , )")
 
