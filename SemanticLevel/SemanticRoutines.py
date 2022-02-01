@@ -42,6 +42,13 @@ def _restore_snapshot(get_temp, input_token):
         program_block.append(f"(assign, {str(pop_addr)}, {str(addr)}, )")
 
 
+def func_set_starting_line(get_temp, input_token):
+    # TODO:
+    return st.set_starting_line(program_block.__len__())
+    pass
+
+
+
 # function call
 
 
@@ -69,7 +76,8 @@ def func_call_end(get_temp, input_token):
 
     function_id = semantic_stack.pop()
     # function_addr = find_adr(function_id)  # direct like line 6 or line 20
-    function_addr = st.find_starting_line(function_id)  # direct like line 6 or line 20
+    function_addr = st.find_starting_line(
+        function_id)  # direct like line 6 or line 20
 
     program_block.append(f"(JP, {function_addr}, , )")
     _restore_snapshot(get_temp, input_token)
@@ -128,7 +136,7 @@ def func_push(get_temp, input_token):
 
 def func_add_op(get_temp, input_token, address_mode=False):
     addrTrue = "@" if address_mode else ""
-    imdtTrue = "#" if address_mode else ""
+    imdtTrue = ""
     right = semantic_stack.pop()
     action = "ADD" if semantic_stack.pop() == "+" else "SUB"
     left = semantic_stack.pop()
@@ -221,14 +229,19 @@ def func_parr(get_temp, input_token):
     arr_id = str(semantic_stack.pop())
 
     # semantic_stack.append(arr_index)
-    semantic_stack.append(f"@{arr_index}")
+    semantic_stack.append(f"{arr_index}")
     semantic_stack.append(f"#{WORD_SIZE}")
     func_mult_op(get_temp, None)
 
     semantic_stack.append("+")
-    semantic_stack.append(arr_id)
+    semantic_stack.append(f"{arr_id}")
     func_add_op(get_temp, None, address_mode=True)
 
 
 def func_pop(get_temp, input_token):
     semantic_stack.pop()
+
+
+def func_set_tmp_addr(get_temp, input_token):
+    arr_tmp_start, arr_addr = st.get_arr_temp()
+    program_block.append(f"(ASSIGN, #{str(arr_tmp_start)}, {str(arr_addr)}, )")

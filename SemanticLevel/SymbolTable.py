@@ -30,7 +30,8 @@ class SymbolTableClass:
     def set_last_args(self, args, arr_temp):
         global last_adr
         self.pars_table[self.pars_table.__len__() - 1].args_cells = args
-        self.pars_table[self.pars_table.__len__() - 1].temp_start_pos = arr_temp
+        self.pars_table[self.pars_table.__len__() -
+                        1].temp_start_pos = arr_temp
 
     def set_line_category(self, line, c):
         for row in self.pars_table:
@@ -48,7 +49,8 @@ class SymbolTableClass:
     def inc_func_args(self):
         for i in range(self.pars_table.__len__()):
             if self.pars_table[self.pars_table.__len__() - 1 - i].category == "func":
-                self.pars_table[self.pars_table.__len__() - 1 - i].args_cells += 1
+                self.pars_table[self.pars_table.__len__() - 1 -
+                                i].args_cells += 1
                 return
 
     def get_adr(self, lexeme):
@@ -57,8 +59,11 @@ class SymbolTableClass:
                 return self.pars_table[self.pars_table.__len__() - 1 - i].address
 
     def get_arr_temp(self):
-        return self.pars_table[self.pars_table.__len__() - 1].temp_start_pos, self.pars_table[
-            self.pars_table.__len__() - 1].address
+
+        arr_addr = self.pars_table[self.pars_table.__len__() - 1].address
+        arr_tmp_start = self.pars_table[self.pars_table.__len__(
+        ) - 1].temp_start_pos
+        return arr_tmp_start, arr_addr
 
     def set_starting_line(self, line):
         self.pars_table[self.pars_table.__len__() - 1].starting_line = line
@@ -73,10 +78,12 @@ class SymbolTableClass:
         last_scope = -1
         for i in range(self.pars_table.__len__()):
             if last_scope == -1:
-                last_scope = self.pars_table[self.pars_table.__len__() - 1 - i].scope
+                last_scope = self.pars_table[self.pars_table.__len__(
+                ) - 1 - i].scope
             if last_scope != self.pars_table[self.pars_table.__len__() - 1 - i].scope:
                 return adrs
-            adrs.append(self.pars_table[self.pars_table.__len__() - 1 - i].address)
+            adrs.append(
+                self.pars_table[self.pars_table.__len__() - 1 - i].address)
         return adrs
 
     def get_func_args(self):
@@ -88,7 +95,8 @@ class SymbolTableClass:
         for row in self.pars_table:
             if row.category == "var" and row.type == "void" and not row.err_wrote:
                 row.err_wrote = True
-                SemanticLevel.Semantic.Semantic.get_instance().error(ErrorTypeEnum.void_type, row.lexeme)
+                SemanticLevel.Semantic.Semantic.get_instance().error(
+                    ErrorTypeEnum.void_type, row.lexeme)
 
 
 class SymbolRow:
