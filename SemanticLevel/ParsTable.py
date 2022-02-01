@@ -1,3 +1,5 @@
+from SemanticLevel.Semantic import TempManager
+
 last_adr = 100
 
 
@@ -19,7 +21,7 @@ class ParsTable:
     def set_last_args(self, args):
         global last_adr
         self.pars_table[self.pars_table.__len__() - 1].args_cells = args
-        last_adr += (args - 1) * 4
+        self.pars_table[self.pars_table.__len__() - 1].temp_start_pos = TempManager.get_instance().get_arr_temp(args)
 
     def set_line_category(self, line, c):
         for row in self.pars_table:
@@ -53,6 +55,7 @@ class ParsRow:
     type = ""
     scope = ""
     line = 0
+    temp_start_pos = 0
     # func, var
     category = ""
 

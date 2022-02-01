@@ -99,7 +99,7 @@ def get_next_token(token_tuple, line_number):
                 pars_table.add(pars_row)
                 pars_row = ParsTable.ParsRow()
                 active_row = False
-            if token_tuple[0] == 'NUM' and last_state_id == 17:
+            if token_tuple[0] == 'NUM' and last_state.nterminal_id == "Var-declaration-prime":
                 pars_table.set_last_args(int(token_tuple[1]))
 
             if token_tuple[0] == 'KEYWORD' or token_tuple[0] == 'SYMBOL':
