@@ -53,12 +53,12 @@ class Semantic:
         self.parse_table = pars_table
         self.temp_manager = TempManager(500, 4)
         semantic_instance = self
-        print(r"    {:20} {:15} {}".format(
+        print(r"    {:30} {:15} {}".format(
             "func_name", "input_token", "Semantic Stack"))
 
     def run(self, func_name, input_token):
         print(
-            r"==> {func_name:20} {input_token:15} {SemanticRoutines}".
+            r"==> {func_name:30} {input_token:15} {SemanticRoutines}".
             format(func_name=func_name[1:], input_token=input_token,
                    SemanticRoutines=SemanticRoutines.semantic_stack))
         func_name = func_name[1:len(func_name)]
