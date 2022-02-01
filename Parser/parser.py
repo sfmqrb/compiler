@@ -73,16 +73,20 @@ def get_next_token(token_tuple, line_number):
         else:
             # pars table
             if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
-                symbol_row.type = token_tuple[1]
-                active_row = True
-                if last_state.nterminal_id == "Type-specifier":
-                    symbol_row.category = "var"
-                elif last_state.nterminal_id == "Params":
-                    if symbol_row.category != "param":
-                        symbol_row.category = "param"
-                        symbol_table.inc_func_args()
+                if last_state.nterminal_id == "Params" and token_tuple[1] == "void":
+                    # todo fosh?
+                    pass
                 else:
-                    symbol_row.category = "var"
+                    symbol_row.type = token_tuple[1]
+                    active_row = True
+                    if last_state.nterminal_id == "Type-specifier":
+                        symbol_row.category = "var"
+                    elif last_state.nterminal_id == "Params":
+                        if symbol_row.category != "param":
+                            symbol_row.category = "param"
+                            symbol_table.inc_func_args()
+                    else:
+                        symbol_row.category = "var"
             if last_state.nterminal_id == "Fun-declaration-prime":
                 no_bracket_function = True
                 symbol_table.set_line_category(line_number, "func")
