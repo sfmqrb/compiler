@@ -82,7 +82,7 @@ class Semantic:
             err = "#" + line_number + ": SemanticLevel Error! Type mismatch in operands, Got '" + \
                   illegal + "' instead of '" + expected + "'"
         elif err_type == ErrorTypeEnum.type_matching:
-            err = "#" + line_number + ": SemanticLevel Error!Mismatch in type of argument " + arg + \
+            err = "#" + line_number + ": SemanticLevel Error!Mismatch in type of argument " + str(arg) + \
                   " for '" + id + "'. Expected '" + expected + \
                   "' but got '" + illegal + "' instead "
         self.errors.append(err)

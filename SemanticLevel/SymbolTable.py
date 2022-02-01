@@ -35,8 +35,9 @@ class SymbolTableClass:
     def set_last_args(self, args, arr_temp):
         global last_adr
         self.pars_table[self.pars_table.__len__() - 1].args_cells = args
-        self.pars_table[self.pars_table.__len__() -
-                        1].temp_start_pos = arr_temp
+        self.pars_table[self.pars_table.__len__() - 1].is_arr = True
+        self.pars_table[self.pars_table.__len__() - 1].temp_start_pos = arr_temp
+
 
     def set_line_category(self, line, c):
         for row in self.pars_table:
@@ -51,11 +52,11 @@ class SymbolTableClass:
             else:
                 return
 
-    def inc_func_args(self):
+    def inc_func_args(self, row):
         for i in range(self.pars_table.__len__()):
             if self.pars_table[self.pars_table.__len__() - 1 - i].category == "func":
-                self.pars_table[self.pars_table.__len__() - 1 -
-                                i].args_cells += 1
+                self.pars_table[self.pars_table.__len__() - 1 - i].args_cells += 1
+                self.pars_table[self.pars_table.__len__() - 1 - i].params_type.append(row)
                 return
 
     def get_adr(self, lexeme):
@@ -73,10 +74,15 @@ class SymbolTableClass:
     def set_starting_line(self, line):
         self.pars_table[self.pars_table.__len__() - 1].starting_line = line
 
-    def get_starting_line(self, lexeme):
+    def get_starting_line(self, lexeme, by_adr= False):
         for i in range(self.pars_table.__len__()):
-            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
-                return self.pars_table[self.pars_table.__len__() - 1 - i].starting_line
+            if not by_adr:
+                if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+                    return self.pars_table[self.pars_table.__len__() - 1 - i].starting_line
+            else:
+                adr = int(lexeme)
+                if self.pars_table[self.pars_table.__len__() - 1 - i].address == adr:
+                    return self.pars_table[self.pars_table.__len__() - 1 - i].starting_line
 
     def find_adrs(self):
         adrs = []
@@ -110,12 +116,28 @@ class SymbolRow:
     args_cells = 0
     type = ""
     scope = ""
+    params_type = [].copy()
     starting_line = 0
     line = 0
     temp_start_pos = 0
     # func, var
     category = ""
     err_wrote = False
+
+    def __init__(self):
+        self.address = 0
+        self.lexeme = ""
+        self.args_cells = 0
+        self.type = ""
+        self.scope = ""
+        self.params_type = [].copy()
+        self.starting_line = 0
+        self.line = 0
+        self.temp_start_pos = 0
+        # func, var
+        self.category = ""
+        self.err_wrote = False
+        self.is_arr = False
 
     def __str__(self):
         return "address: " + str(self.address) + " lexeme: " + self.lexeme + " scope: " + str(self.scope)

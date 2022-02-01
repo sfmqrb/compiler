@@ -45,10 +45,17 @@ brackets = list()
 no_bracket_function = False
 scope = 0
 gl_line_number = 0
+func_declare_started = False
+
+func_in_call = False
+call_params = []
+parameter_counted = False
+count_params = 0
+function_row = None
 
 
 def get_next_token(token_tuple, line_number):
-    global active_row, symbol_row, no_bracket_function, scope, gl_line_number
+    global active_row, symbol_row, no_bracket_function, scope, gl_line_number, func_in_call, count_params, parameter_counted, call_params, func_declare_started, function_row
     gl_line_number = line_number
     next_token = False
     if token_tuple != "$":
@@ -72,13 +79,50 @@ def get_next_token(token_tuple, line_number):
             # break
         else:
             # error-check
-            # count_params = 0
-            # # function parameter number error check
-            # if token_tuple[0] == 'ID' and last_state.nterminal_id == "Expression":
-            #     func_row: SymbolTable.SymbolRow
-            #     func_row = symbol_table.get_row(token_tuple[1])
-            #     if func_row.category == "func":
-            #         a = 1
+
+            # function parameter number error check
+            if token_tuple[0] == 'ID' and last_state.nterminal_id == "Expression":
+                row = symbol_table.get_row(token_tuple[1])
+                if row.category == "func":
+                    function_row = row
+                    func_in_call = True
+            elif token_tuple[0] == 'ID' and func_in_call:
+                param_row: SymbolTable.SymbolRow
+                param_row = symbol_table.get_row(token_tuple[1])
+                if param_row.category == "var" and not parameter_counted:
+                    call_params.append(param_row)
+                    parameter_counted = True
+                    count_params += 1
+            elif token_tuple[0] == 'NUM' and func_in_call:
+                param_row = SymbolTable.SymbolRow()
+                param_row.args_cells = 0
+                param_row.lexeme = str(token_tuple[1])
+                param_row.category = "var"
+                param_row.type = "int"
+                if not parameter_counted:
+                    call_params.append(param_row)
+                    parameter_counted = True
+                    count_params += 1
+            if token_tuple[1] == ',' and func_in_call:
+                parameter_counted = False
+            if token_tuple[1] == ')' and last_state.nterminal_id == "Arg-list-prime" and func_in_call:
+                # finish func call
+                # check for errors
+                if call_params.__len__() == function_row.params_type.__len__():
+                    pass
+                    for i in range(call_params.__len__()):
+                        if call_params[i].is_arr != function_row.params_type[i].is_arr:
+                            expected = "array" if function_row.params_type[i].is_arr else "int"
+                            illegal = "array" if call_params[i].is_arr else "int"
+                            Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_matching,
+                                                                   function_row.lexeme, illegal=illegal, arg= i + 1,
+                                                                   expected=expected)
+                else:
+                    Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.number_mathing,
+                                                           function_row.lexeme, )
+                func_in_call = False
+                call_params.clear()
+
             # pars table
             if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
                 if last_state.nterminal_id == "Params" and token_tuple[1] == "void":
@@ -88,15 +132,17 @@ def get_next_token(token_tuple, line_number):
                     symbol_row.type = token_tuple[1]
                     active_row = True
                     if last_state.nterminal_id == "Type-specifier":
-                        symbol_row.category = "var"
-                    elif last_state.nterminal_id == "Params":
+                        if symbol_row.category != "param":
+                            symbol_row.category = "var"
+                    elif last_state.nterminal_id == "Params" or func_declare_started:
+                        func_declare_started = True
                         if symbol_row.category != "param":
                             symbol_row.category = "param"
-                            symbol_table.inc_func_args()
-                    else:
-                        symbol_row.category = "var"
+                            symbol_table.inc_func_args(symbol_row)
+
             if last_state.nterminal_id == "Fun-declaration-prime":
                 no_bracket_function = True
+                func_declare_started = False
                 symbol_table.set_line_category(line_number, "func")
                 scope += 1
             if token_tuple[0] == 'ID' and active_row:
@@ -107,9 +153,14 @@ def get_next_token(token_tuple, line_number):
                 symbol_row = SymbolTable.SymbolRow()
                 active_row = False
             if token_tuple[0] == 'NUM' and last_state.nterminal_id == "Var-declaration-prime":
-                symbol_table.set_last_args(int(token_tuple[1]), TempManager.get_instance().get_arr_temp(int(token_tuple[1])))
+                symbol_table.set_last_args(int(token_tuple[1]),
+                                           TempManager.get_instance().get_arr_temp(int(token_tuple[1])))
             if token_tuple[1] == ';':
                 symbol_table.check_void_var()
+            if token_tuple[1] == ']' and func_declare_started:
+                symbol_table.set_last_args(0, 0)
+            if token_tuple[1] == ')':
+                func_declare_started = False
 
             if token_tuple[0] == 'KEYWORD' or token_tuple[0] == 'SYMBOL':
                 token = token_tuple[1]
