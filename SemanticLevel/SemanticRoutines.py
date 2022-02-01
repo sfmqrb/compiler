@@ -94,25 +94,30 @@ def func_call_add_args(find_adr, get_temp, input_token):
 
 
 def func_call_end(find_adr, get_temp, input_token, find_adrs=None):
+    global ARG_COUNT
     # encountered JP operation so + 1 is needed
     return_adr = get_PB_next() + 1
 
     frs.push("#0", program_block)               # push rv
     frs.push(return_adr, program_block)         # push ra
+    frs.push(ARG_COUNT, program_block)          # push arg_count
 
     function_id = semantic_stack.pop()
     function_addr = find_adr(function_id)  # direct like line 6 or line 20
 
     program_block.append(f"(JP, {function_addr}, , )")
     _restore_snapshot(find_adr, get_temp, input_token, find_adrs)
-    frs.pop()                                   # pop ra
-    pop_addr = frs.pop()                        # pop rv
-    
-                                                # addr of return value
-                                                # stored in semantic_stack
+    # pop arg_count
+    frs.pop(program_block, _assign_=False)
+    # pop ra
+    frs.pop(program_block, _assign_=False)
+    # pop rv
+    pop_addr = frs.pop(program_block)
+    # addr of return value stored in semantic_stack
     semantic_stack.append(pop_addr)
     for _ in range(ARG_COUNT):
         frs.pop(program_block, _assign_=False)  # pop input args
+    ARG_COUNT = 0
 
 
 # TODO function declaration
