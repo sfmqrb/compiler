@@ -10,10 +10,14 @@ from Parser.grammer_to_transition import rule_to_states
 
 
 def pp_list_of_tuples(lsot):
+    f = open("output.txt", "w")
+    s = ""
     print("\n[")
     for idx, t in enumerate(lsot):
+        s += f"{idx}\t{t}\n"
         print(r"{idx:3}: {t}".format(idx=idx, t=t))
     print("]")
+    f.write(s)
 
 
 # Main imports
