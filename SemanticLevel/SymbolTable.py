@@ -1,11 +1,19 @@
 from SemanticLevel.Semantic import TempManager
 
 last_adr = 100
+symbol_table_instance = None
 
 
-class ParsTable:
+class SymbolTableClass:
     scope_stack = []
     pars_table = []
+
+    @staticmethod
+    def get_instance():
+        global symbol_table_instance
+        if symbol_table_instance is None:
+            symbol_table_instance = SymbolTableClass
+        return symbol_table_instance
 
     def add(self, row):
         global last_adr
@@ -47,13 +55,33 @@ class ParsTable:
             if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
                 return self.pars_table[self.pars_table.__len__() - 1 - i].address
 
+    def get_arr_temp(self, lexeme):
+        pass
 
-class ParsRow:
+    def set_starting_line(self, lexeme, line):
+        for i in range(self.pars_table.__len__()):
+            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+                self.pars_table[self.pars_table.__len__() - 1 - i].starting_line = line
+
+    def find_adrs(self):
+        adrs = []
+        last_scope = -1
+        for i in range(self.pars_table.__len__()):
+            if last_scope == -1:
+                last_scope = self.pars_table[self.pars_table.__len__() - 1 - i].scope
+            if last_scope != self.pars_table[self.pars_table.__len__() - 1 - i].scope:
+                return adrs
+            adrs.append(self.pars_table[self.pars_table.__len__() - 1 - i].address)
+        return adrs
+
+
+class SymbolRow:
     address = 0
     lexeme = ""
     args_cells = 0
     type = ""
     scope = ""
+    starting_line = 0
     line = 0
     temp_start_pos = 0
     # func, var

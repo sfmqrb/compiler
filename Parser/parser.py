@@ -1,6 +1,6 @@
 # For test
 from SemanticLevel.SemanticRoutines import program_block
-from SemanticLevel import ParsTable, Semantic
+from SemanticLevel import SymbolTable, Semantic
 import jsonpickle
 import json
 from Parser import DFA
@@ -43,8 +43,8 @@ for line in f:
 #           '}', '$']
 DFA.states_stack.append(DFA.nterminal_first_state['Program'])
 # DFA.states_stack.append(DFA.nterminal_first_state['P'])
-pars_row = ParsTable.ParsRow()
-pars_table = ParsTable.ParsTable()
+pars_row = SymbolTable.SymbolRow()
+pars_table = SymbolTable.SymbolTableClass.get_instance()
 semantic = Semantic.Semantic(pars_table)
 active_row = False
 # (started, ended, function dependent)
@@ -98,7 +98,7 @@ def get_next_token(token_tuple, line_number):
                 pars_row.line = line_number
                 pars_row.scope = scope
                 pars_table.add(pars_row)
-                pars_row = ParsTable.ParsRow()
+                pars_row = ParsTable.SymbolRow()
                 active_row = False
             if token_tuple[0] == 'NUM' and last_state.nterminal_id == "Var-declaration-prime":
                 pars_table.set_last_args(int(token_tuple[1]))
