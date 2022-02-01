@@ -1,8 +1,8 @@
-Program -> Declaration-list $
+Program -> Declaration-list #at_the_end $
 Declaration-list -> Declaration Declaration-list | EPSILON
 Declaration -> Declaration-initial Declaration-prime
 Declaration-initial ->  Type-specifier #pid ID
-Declaration-prime -> Fun-declaration-prime | Var-declaration-prime #pop
+Declaration-prime -> #save_first_func Fun-declaration-prime | Var-declaration-prime #pop
 Var-declaration-prime -> ; | [ NUM ] #set_tmp_addr ;
 Fun-declaration-prime ->  #set_starting_line ( Params ) #declaration_after_header Compound-stmt
 Type-specifier -> int | void
