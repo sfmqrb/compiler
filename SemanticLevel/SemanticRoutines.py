@@ -30,16 +30,16 @@ def get_PB_next():
 
 # related to function call to handle SnapshotStack
 def _save_snapshot(get_temp, input_token):
-    last_scope_addrs = st.get_adrs()
+    last_scope_addrs = st.find_adrs()
     for addr in last_scope_addrs:
         sss.push(addr, program_block)
 
 
 def _restore_snapshot(get_temp, input_token):
-    last_scope_addrs = st.get_adrs()
+    last_scope_addrs = st.find_adrs()
     for addr in last_scope_addrs[::-1]:
-        pop_addr = sss.pop(addr)
-        program_block.append(f"(assign, {str(pop_addr)}, {str(addr)}, )")
+        pop_addr = sss.pop(program_block)
+        program_block.append(f"(ASSIGN, {str(pop_addr)}, {str(addr)}, )")
 
 
 def func_set_starting_line(get_temp, input_token):
@@ -76,7 +76,7 @@ def func_call_end(get_temp, input_token):
 
     function_id = semantic_stack.pop()
     # function_addr = find_adr(function_id)  # direct like line 6 or line 20
-    function_addr = st.find_starting_line(
+    function_addr = st.get_starting_line(
         function_id)  # direct like line 6 or line 20
 
     program_block.append(f"(JP, {function_addr}, , )")
@@ -94,14 +94,19 @@ def func_call_end(get_temp, input_token):
 
 # function declaration
 def func_declaration_after_header(get_temp, input_token):
-    arg_count = st.get_func_args(input_token)
-    for first_arg_offset in range(3, 2 + arg_count):
+    arg_count = st.get_func_args()
+    for first_arg_offset in range(3, 3 + arg_count):
         arg = semantic_stack.pop()
         t = frs.access_using_offset(first_arg_offset, program_block, get_temp)
         program_block.append(f"(ASSIGN, {str(t)}, {str(arg)}, )")
 
 
+def func_push_zero(get_temp, input_token):
+    semantic_stack.append("#0")
+
 # function return
+
+
 def func_declaration_after_return(get_temp, input_token):
     rv = semantic_stack.pop()
     frs.push(rv, program_block)
