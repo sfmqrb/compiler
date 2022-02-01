@@ -82,7 +82,9 @@ def get_next_token(token_tuple, line_number):
                 if last_state.nterminal_id == "Type-specifier":
                     pars_row.category = "var"
                 elif last_state.nterminal_id == "Params":
-                    pars_row.category = "param"
+                    if pars_row.category != "param":
+                        pars_row.category = "param"
+                        pars_table.inc_func_args()
                 else:
                     pars_row.category = "var"
             if last_state.nterminal_id == "Fun-declaration-prime":

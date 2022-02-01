@@ -34,6 +34,12 @@ class ParsTable:
             else:
                 return
 
+    def inc_func_args(self):
+        for i in range(self.pars_table.__len__()):
+            if self.pars_table[self.pars_table.__len__() - 1 - i].category == "func":
+                self.pars_table[self.pars_table.__len__() - 1 - i].args_cells += 1
+                return
+
     def get_adr(self, lexeme):
         for i in range(self.pars_table.__len__()):
             if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
