@@ -1,6 +1,8 @@
+import SemanticLevel.SymbolTable
 from SemanticLevel import SemanticRoutines
-from SemanticLevel.ErrorType import ErrorType
+from SemanticLevel.ErrorType import ErrorTypeEnum
 from SemanticLevel import ErrorType
+import SemanticLevel.ErrorType
 
 semantic_instance = None
 temp_instance = None
@@ -40,6 +42,9 @@ class Semantic:
 
     @staticmethod
     def get_instance():
+        global semantic_instance
+        if semantic_instance is None:
+            semantic_instance = Semantic(SemanticLevel.SymbolTable.SymbolTableClass.get_instance())
         return semantic_instance
 
     def __init__(self, pars_table):
@@ -56,28 +61,24 @@ class Semantic:
                 format(func_name=func_name[1:], input_token=input_token,
                        SemanticRoutines=SemanticRoutines.semantic_stack))
         func_name = func_name[1:len(func_name)]
-        try:
-            getattr(SemanticRoutines, "func_" + func_name)(self.temp_manager.get_temp, input_token)
-        except:
-            pass
+        getattr(SemanticRoutines, "func_" + func_name)(self.temp_manager.get_temp, input_token)
 
-    def error(self, err_type, id, expected, illegal, arg):
+    def error(self, err_type, id, expected=None, illegal=None, arg=None):
         line_number = str(ErrorType.gl_line_number)
-        t = err_type == ErrorType.scoping
-        if t:
+        if err_type == ErrorTypeEnum.scoping:
             err = "#" + line_number + ": SemanticLevel Error! '" + id + "' is not defined"
-        elif err_type == ErrorType.void_type:
+        elif err_type == ErrorTypeEnum.void_type:
             err = "#" + line_number + ": SemanticLevel Error! Illegal type of void for '" + id + "'"
-        elif err_type == ErrorType.number_mathing:
+        elif err_type == ErrorTypeEnum.number_mathing:
             err = "#" + line_number + \
                   ":semantic error! Mismatch in numbers of arguments of '" + id + "'"
-        elif err_type == ErrorType.break_stmt:
+        elif err_type == ErrorTypeEnum.break_stmt:
             err = "#" + line_number + \
                   ": SemanticLevel Error! No 'while' or 'switch' found for 'break'"
-        elif err_type == ErrorType.type_mismatch:
+        elif err_type == ErrorTypeEnum.type_mismatch:
             err = "#" + line_number + ": SemanticLevel Error! Type mismatch in operands, Got '" + \
                   illegal + "' instead of '" + expected + "'"
-        elif err_type == ErrorType.type_matching:
+        elif err_type == ErrorTypeEnum.type_matching:
             err = "#" + line_number + ": SemanticLevel Error!Mismatch in type of argument " + arg + \
                   " for '" + id + "'. Expected '" + expected + \
                   "' but got '" + illegal + "' instead "

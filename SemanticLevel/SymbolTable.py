@@ -1,5 +1,3 @@
-from SemanticLevel.Semantic import TempManager
-
 last_adr = 100
 symbol_table_instance = None
 
@@ -26,10 +24,10 @@ class SymbolTableClass:
                 self.pars_table[self.pars_table.__len__() -
                                 2].category = "func"
 
-    def set_last_args(self, args):
+    def set_last_args(self, args, arr_temp):
         global last_adr
         self.pars_table[self.pars_table.__len__() - 1].args_cells = args
-        self.pars_table[self.pars_table.__len__() - 1].temp_start_pos = TempManager.get_instance().get_arr_temp(args)
+        self.pars_table[self.pars_table.__len__() - 1].temp_start_pos = arr_temp
 
     def set_line_category(self, line, c):
         for row in self.pars_table:
@@ -78,6 +76,11 @@ class SymbolTableClass:
                 return adrs
             adrs.append(self.pars_table[self.pars_table.__len__() - 1 - i].address)
         return adrs
+
+    def get_func_args(self, lexeme):
+        for i in range(self.pars_table.__len__()):
+            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+                return self.pars_table[self.pars_table.__len__() - 1 - i].args_cells
 
 
 class SymbolRow:

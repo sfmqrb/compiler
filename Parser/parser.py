@@ -1,6 +1,7 @@
 # For test
 from SemanticLevel.SemanticRoutines import program_block
 from SemanticLevel import SymbolTable, Semantic
+from SemanticLevel.Semantic import TempManager
 import jsonpickle
 import json
 from Parser import DFA
@@ -33,19 +34,11 @@ DFA.save_states()
 f = open("input.txt", "r")
 for line in f:
     line_counter += 1
-
-# string = [('KEYWORD', 'void'), ('ID', 'main'), ('SYMBOL', '('), ('KEYWORD', 'void'), ('SYMBOL', ')'), ('SYMBOL', '{')
-#     , ('KEYWORD', 'int'), ('ID', 'a'), ('SYMBOL', ';'),
-#           ('KEYWORD', 'int'), ('ID', 'b'), ('SYMBOL', ';'),
-#           ('ID', 'a'), ('SYMBOL', '='), ('ID', 'b'), ('SYMBOL', '+'), ('NUM', '1'), ('SYMBOL', ';'),
-#           ('SYMBOL', '}'),'$']
-# string = ['void', 'ID', '(', 'void', ')', '{', 'int', 'ID', ';', 'int', 'ID', ';', 'ID', '=', 'ID', '+', 'NUM', ';',
-#           '}', '$']
 DFA.states_stack.append(DFA.nterminal_first_state['Program'])
 # DFA.states_stack.append(DFA.nterminal_first_state['P'])
 symbol_row = SymbolTable.SymbolRow()
 symbol_table = SymbolTable.SymbolTableClass.get_instance()
-semantic = Semantic.Semantic(symbol_table)
+semantic = Semantic.Semantic.get_instance()
 active_row = False
 # (started, ended, function dependent)
 brackets = list()
@@ -92,7 +85,7 @@ def get_next_token(token_tuple, line_number):
             if last_state.nterminal_id == "Fun-declaration-prime":
                 no_bracket_function = True
                 symbol_table.set_line_category(line_number, "func")
-                scope +=1
+                scope += 1
             if token_tuple[0] == 'ID' and active_row:
                 symbol_row.lexeme = token_tuple[1]
                 symbol_row.line = line_number
@@ -101,7 +94,8 @@ def get_next_token(token_tuple, line_number):
                 symbol_row = SymbolTable.SymbolRow()
                 active_row = False
             if token_tuple[0] == 'NUM' and last_state.nterminal_id == "Var-declaration-prime":
-                symbol_table.set_last_args(int(token_tuple[1]))
+                symbol_table.set_last_args(int(token_tuple[1]),
+                                           TempManager.get_instance().get_arr_temp(int(token_tuple[1])))
 
             if token_tuple[0] == 'KEYWORD' or token_tuple[0] == 'SYMBOL':
                 token = token_tuple[1]

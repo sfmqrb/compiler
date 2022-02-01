@@ -1,9 +1,11 @@
 from gettext import find
 from glob import glob
+
+import SemanticLevel.Semantic
 from SemanticLevel.SymbolTable import SymbolTableClass
+from SemanticLevel.ErrorType import ErrorTypeEnum
 from matplotlib.pyplot import get
 import SemanticLevel.stacks as sf
-
 
 semantic_stack = []
 program_block = []
@@ -13,17 +15,9 @@ WORD_SIZE = 4
 ARG_COUNT = 0
 
 st = SymbolTableClass.get_instance()
+semantic = SemanticLevel.Semantic.Semantic.get_instance()
 sss = sf.SnapshotStack(program_block)
 frs = sf.FunctionRelatedStack(program_block)
-
-# should imported
-def get_arg_count_last():
-    pass
-
-
-# should imported
-def find_adrs():
-    pass
 
 
 def get_PB_next():
@@ -35,13 +29,13 @@ def get_PB_next():
 
 # related to function call to handle SnapshotStack
 def _save_snapshot(get_temp, input_token):
-    last_scope_addrs = st.find_adrs()
+    last_scope_addrs = st.get_adrs()
     for addr in last_scope_addrs:
         sss.push(addr, program_block)
 
 
-def _restore_snapshot(find_adr, get_temp, input_token):
-    last_scope_addrs = find_adrs()
+def _restore_snapshot(get_temp, input_token):
+    last_scope_addrs = st.get_adrs()
     for addr in last_scope_addrs[::-1]:
         pop_addr = sss.pop(addr)
         program_block.append(f"(assign, {str(pop_addr)}, {str(addr)}, )")
@@ -61,7 +55,7 @@ def func_call_begin(get_temp, input_token):
     _save_snapshot(get_temp, input_token)
 
 
-def func_call_add_args(find_adr, get_temp, input_token):
+def func_call_add_args(get_temp, input_token):
     global ARG_COUNT
     ARG_COUNT += 1
     # todo push to SemanticStack calling args
@@ -82,7 +76,7 @@ def func_call_end(get_temp, input_token):
     function_addr = st.find_starting_line(function_id)  # direct like line 6 or line 20
 
     program_block.append(f"(JP, {function_addr}, , )")
-    _restore_snapshot(st.find_adr, get_temp, input_token)
+    _restore_snapshot(get_temp, input_token)
 
     rv = frs.pop(program_block)
     frs.pop(program_block, _assign_=False)
@@ -96,8 +90,7 @@ def func_call_end(get_temp, input_token):
 
 # function declaration
 def func_declaration_after_header(get_temp, input_token):
-    arg_count = get_arg_count_last()
-
+    arg_count = st.get_func_args(input_token)
     for first_arg_offset in range(3, 2 + arg_count):
         arg = semantic_stack.pop()
         t = frs.access_using_offset(first_arg_offset, program_block, get_temp)
@@ -113,7 +106,9 @@ def func_declaration_after_return(get_temp, input_token):
 
 
 def func_pid(get_temp, input_token):
-    p = st.find_adr(input_token)
+    p = st.get_adr(input_token)
+    if p is None:
+        semantic.error(ErrorTypeEnum.scoping, input_token)
     semantic_stack.append(p)
     pass
 
@@ -182,7 +177,11 @@ def func_jpf_save(get_temp, input_token):
 def func_jp(get_temp, input_token):
     i = get_PB_next()
     PBAddr = semantic_stack.pop()
-    program_block[PBAddr] = f"(JP, {str(i)}, , )"
+    # todo
+    try:
+        program_block[int(PBAddr)] = f"(JP, {str(i)}, , )"
+    except:
+        program_block.append(f"(JP err, {str(i)}, , )")
 
 
 def func_jpf(get_temp, input_token):
@@ -210,11 +209,11 @@ def func_parr(get_temp, input_token):
     # semantic_stack.append(arr_index)
     semantic_stack.append(f"@{arr_index}")
     semantic_stack.append(f"#{WORD_SIZE}")
-    func_mult_op(st.find_adr, get_temp, None)
+    func_mult_op(get_temp, None)
 
     semantic_stack.append("+")
     semantic_stack.append(arr_id)
-    func_add_op(st.find_adr, get_temp, None, address_mode=True)
+    func_add_op(get_temp, None, address_mode=True)
 
 
 def func_pop(get_temp, input_token):

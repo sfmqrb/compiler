@@ -1,7 +1,9 @@
 import enum
 
 gl_line_number = 0
-class ErrorType(enum.Enum):
+
+
+class ErrorTypeEnum(enum.Enum):
     scoping = 1
     void_type = 2
     number_mathing = 3
