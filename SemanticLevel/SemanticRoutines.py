@@ -44,7 +44,13 @@ def _restore_snapshot(find_adr, get_temp, input_token):
         program_block.append(f"(assign, {str(pop_addr)}, {str(addr)}, )")
 
 
+def func_set_starting_line():
+    # TODO:
+    pass
+
 # function call
+
+
 def func_call_begin(find_adr, get_temp, input_token):
     global ARG_COUNT
     ARG_COUNT = 0
@@ -56,19 +62,21 @@ def func_call_add_args(find_adr, get_temp, input_token):
     ARG_COUNT += 1
     # todo push to SemanticStack calling args
     arg = semantic_stack.pop()
-    frs.push(arg)
+    frs.push(arg, program_block)
 
 
 def func_call_end(find_adr, get_temp, input_token):
     global ARG_COUNT
-    # encountered JP operation so + 7 is needed
-    return_adr = get_PB_next() + 7
+    # encountered JP operation so +5 is needed
+    return_adr = get_PB_next() + 5
 
     frs.push(ARG_COUNT, program_block)          # push arg_count
     frs.push(return_adr, program_block)         # push ra
 
     function_id = semantic_stack.pop()
-    function_addr = find_adr(function_id)  # direct like line 6 or line 20
+    # function_addr = find_adr(function_id)  # direct like line 6 or line 20
+    function_addr = find_starting_line(
+        function_id)  # direct like line 6 or line 20
 
     program_block.append(f"(JP, {function_addr}, , )")
     _restore_snapshot(find_adr, get_temp, input_token)
