@@ -278,3 +278,7 @@ def func_at_the_end(get_temp, input_token):
     if FIRST_FUNC:
         program_block[FIRST_FUNC[1]
                       ] = f"(JP, {str(st.get_starting_line('main'))}, , )"
+
+
+def output(lexeme):
+    program_block.append(f"(PRINT, {lexeme}, , )")

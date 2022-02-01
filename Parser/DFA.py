@@ -63,7 +63,8 @@ class State:
             try:
                 Node(
                     tuple_token,
-                    parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                    parent=tree_heads_Nodes_list[tree_heads_list.__len__(
+                    ) - 1],
                 )
             except:
                 print(token)
@@ -80,7 +81,8 @@ class State:
         # non terminal
         else:
             for nt_trans in self.nterminal_trans:
-                normal_trans = nterminal_first_dict[nt_trans[0]].__contains__(token)
+                normal_trans = nterminal_first_dict[nt_trans[0]].__contains__(
+                    token)
                 epsilon_trans = nterminal_follow_dict[nt_trans[0]].__contains__(
                     token
                 ) and nterminal_first_dict[nt_trans[0]].__contains__("")
@@ -91,7 +93,8 @@ class State:
                     tree_heads_Nodes_list.append(
                         Node(
                             str(nt_trans[0]),
-                            parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                            parent=tree_heads_Nodes_list[tree_heads_list.__len__(
+                            ) - 1],
                         )
                     )
                     tree_heads_list.append(str(nt_trans[0]))
@@ -107,7 +110,8 @@ class State:
             try:
                 Node(
                     "epsilon",
-                    parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                    parent=tree_heads_Nodes_list[tree_heads_list.__len__(
+                    ) - 1],
                 )
             except:
                 print(token)
@@ -136,7 +140,8 @@ class State:
                 try:
                     Node(
                         k,
-                        parent=tree_heads_Nodes_list[tree_heads_list.__len__() - 1],
+                        parent=tree_heads_Nodes_list[tree_heads_list.__len__(
+                        ) - 1],
                     )
                 except:
                     print(token)
@@ -157,6 +162,7 @@ class State:
                 return False, None
         # syntax-error
         if self.terminal_trans.keys().__len__() > 0:
+            print("syntax_errors")
             missing_token = list(self.terminal_trans.keys())[0]
             state_id = self.terminal_trans[missing_token]
             state = id_state_dict[state_id]
@@ -209,9 +215,11 @@ class State:
         except:
             a = 1
         if token == "$":
-            error = "#" + str(line_number) + " : " + "syntax error, Unexpected EOF"
+            error = "#" + str(line_number) + " : " + \
+                "syntax error, Unexpected EOF"
         else:
-            error = "#" + str(line_number) + " : " + "syntax error, illegal " + token
+            error = "#" + str(line_number) + " : " + \
+                "syntax error, illegal " + token
         if log:
             print(error)
         return True, error
