@@ -4,7 +4,7 @@ Declaration -> Declaration-initial Declaration-prime
 Declaration-initial ->  Type-specifier #pid ID
 Declaration-prime -> Fun-declaration-prime | Var-declaration-prime #pop
 Var-declaration-prime -> ; | [ NUM ] #set_tmp_addr ;
-Fun-declaration-prime ->  #set_starting_line ( Params ) Compound-stmt
+Fun-declaration-prime ->  #set_starting_line ( Params ) #declaration_after_header Compound-stmt
 Type-specifier -> int | void
 Params -> int #pid ID Param-prime Param-list | void
 Param-list -> , Param Param-list | EPSILON
@@ -17,8 +17,8 @@ Expression-stmt -> Expression ; #pop | #break break ; | ;
 Selection-stmt -> if ( Expression ) #save Statement Else-stmt
 Else-stmt -> endif #jpf | else #jpf_save Statement endif #jp
 Iteration-stmt -> repeat #label Statement until ( Expression ) #until
-Return-stmt -> return Return-stmt-prime
-Return-stmt-prime -> ; | Expression ;
+Return-stmt -> return Return-stmt-prime #declaration_after_return
+Return-stmt-prime -> #push_zero ; | Expression ;
 Expression -> Simple-expression-zegond | #pid ID B
 B -> = Expression #assign | [ Expression #parr ] H | Simple-expression-prime
 H -> = Expression #assign | G D C
@@ -38,8 +38,8 @@ G -> * Factor #mult_op G | EPSILON
 Factor -> ( Expression ) | #pid ID Var-call-prime | #pnum NUM
 Var-call-prime -> ( Args ) | Var-prime
 Var-prime -> [ Expression #parr ] | EPSILON
-Factor-prime -> ( Args ) | EPSILON
+Factor-prime -> #call_begin ( Args ) #call_end | EPSILON
 Factor-zegond -> ( Expression ) | #pnum NUM
 Args -> Arg-list | EPSILON
-Arg-list -> Expression Arg-list-prime
-Arg-list-prime -> , Expression Arg-list-prime | EPSILON
+Arg-list -> Expression #call_add_args Arg-list-prime
+Arg-list-prime -> , Expression #call_add_args Arg-list-prime | EPSILON
