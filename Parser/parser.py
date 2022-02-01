@@ -81,7 +81,7 @@ def get_next_token(token_tuple, line_number):
             # error-check
 
             # function parameter number error check
-            if token_tuple[0] == 'ID' and last_state.nterminal_id == "Expression":
+            if token_tuple[0] == 'ID' and last_state.nterminal_id == "Expression" and token_tuple[1] != "output":
                 row = symbol_table.get_row(token_tuple[1])
                 if row.category == "func":
                     function_row = row
@@ -115,7 +115,7 @@ def get_next_token(token_tuple, line_number):
                             expected = "array" if function_row.params_type[i].is_arr else "int"
                             illegal = "array" if call_params[i].is_arr else "int"
                             Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_matching,
-                                                                   function_row.lexeme, illegal=illegal, arg= i + 1,
+                                                                   function_row.lexeme, illegal=illegal, arg=i + 1,
                                                                    expected=expected)
                 else:
                     Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.number_mathing,
@@ -166,6 +166,8 @@ def get_next_token(token_tuple, line_number):
                 token = token_tuple[1]
             else:
                 token = token_tuple[0]
+            if token_tuple[1] == "output":
+                token = "output"
             next_token, e = last_state.next_state(
                 token, token_tuple, line_number, semantic)
         if e is not None:

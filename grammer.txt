@@ -19,7 +19,7 @@ Else-stmt -> endif #jpf | else #jpf_save Statement endif #jp
 Iteration-stmt -> repeat #label Statement until ( Expression ) #until
 Return-stmt -> return Return-stmt-prime 
 Return-stmt-prime -> #push_zero #declaration_after_return ; | Expression #declaration_after_return ;
-Expression -> Simple-expression-zegond | #pid ID B
+Expression -> Simple-expression-zegond | #pid ID B | #output output B
 B -> = Expression #assign | [ Expression #parr ] H | Simple-expression-prime
 H -> = Expression #assign | G D C
 Simple-expression-zegond -> Additive-expression-zegond C

@@ -285,7 +285,7 @@ def func_at_the_end(get_temp, input_token):
                       ] = f"(JP, {str(st.get_starting_line('main'))}, , )"
 
 
-def output():
+def func_output(get_temp, input_token):
     pop_addr = semantic_stack.pop()
     pop_addr = get_address_better_handling(pop_addr)
     program_block.append(f"(PRINT, {pop_addr}, , )")

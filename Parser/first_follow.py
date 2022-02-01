@@ -23,15 +23,16 @@ first = {
         "ID",
         "(",
         "NUM",
+        "output"
     },
-    "Statement": {"{", ";", "break", "if", "repeat", "return", "ID", "(", "NUM"},
-    "Expression-stmt": {";", "break", "ID", "(", "NUM"},
+    "Statement": {"{", ";", "break", "if", "repeat", "return", "ID", "(", "NUM", "output"},
+    "Expression-stmt": {";", "break", "ID", "(", "NUM", "output"},
     "Selection-stmt": {"if"},
     "Else-stmt": {"else", "endif"},
     "Iteration-stmt": {"repeat"},
     "Return-stmt": {"return"},
     "Return-stmt-prime": {";", "ID", "(", "NUM"},
-    "Expression": {"ID", "(", "NUM"},
+    "Expression": {"ID", "(", "NUM", "output"},
     "B": {"[", "=", "(", "*", "+", "-", "<", "==", ""},
     "H": {"=", "*", "", "+", "-", "<", "=="},
     "Simple-expression-zegond": {"(", "NUM"},
@@ -287,7 +288,8 @@ follow = {
     "Arg-list": {")"},
     "Arg-list-prime": {")"},
     "#pnum": {"NUM"},
-    "#pid": {"ID"}
+    "#pid": {"ID"},
+    "#output": {"output"}
 }
 
 # first = {
