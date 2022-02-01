@@ -71,6 +71,14 @@ def get_next_token(token_tuple, line_number):
                 '$', '$', line_counter, semantic)
             # break
         else:
+            # error-check
+            # count_params = 0
+            # # function parameter number error check
+            # if token_tuple[0] == 'ID' and last_state.nterminal_id == "Expression":
+            #     func_row: SymbolTable.SymbolRow
+            #     func_row = symbol_table.get_row(token_tuple[1])
+            #     if func_row.category == "func":
+            #         a = 1
             # pars table
             if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
                 if last_state.nterminal_id == "Params" and token_tuple[1] == "void":

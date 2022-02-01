@@ -27,6 +27,11 @@ class SymbolTableClass:
                 self.pars_table[self.pars_table.__len__() -
                                 2].category = "func"
 
+    def get_row(self, lexeme):
+        for row in self.pars_table:
+            if row.lexeme == lexeme:
+                return row
+
     def set_last_args(self, args, arr_temp):
         global last_adr
         self.pars_table[self.pars_table.__len__() - 1].args_cells = args
@@ -82,8 +87,8 @@ class SymbolTableClass:
                 ) - 1 - i].scope
             if last_scope != self.pars_table[self.pars_table.__len__() - 1 - i].scope:
                 return adrs
-            adrs.append(
-                self.pars_table[self.pars_table.__len__() - 1 - i].address)
+            if self.pars_table[self.pars_table.__len__() - 1 - i].category != "func":
+                adrs.append(self.pars_table[self.pars_table.__len__() - 1 - i].address)
         return adrs
 
     def get_func_args(self):
