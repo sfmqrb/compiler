@@ -56,13 +56,12 @@ class SymbolTableClass:
             if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
                 return self.pars_table[self.pars_table.__len__() - 1 - i].address
 
-    def get_arr_temp(self, lexeme):
-        pass
+    def get_arr_temp(self):
+        return self.pars_table[self.pars_table.__len__() - 1].temp_start_pos, self.pars_table[
+            self.pars_table.__len__() - 1].address
 
-    def set_starting_line(self, lexeme, line):
-        for i in range(self.pars_table.__len__()):
-            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
-                self.pars_table[self.pars_table.__len__() - 1 - i].starting_line = line
+    def set_starting_line(self, line):
+        self.pars_table[self.pars_table.__len__() - 1].starting_line = line
 
     def get_starting_line(self, lexeme):
         for i in range(self.pars_table.__len__()):
@@ -80,9 +79,9 @@ class SymbolTableClass:
             adrs.append(self.pars_table[self.pars_table.__len__() - 1 - i].address)
         return adrs
 
-    def get_func_args(self, lexeme):
+    def get_func_args(self):
         for i in range(self.pars_table.__len__()):
-            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+            if self.pars_table[self.pars_table.__len__() - 1 - i].category == "func":
                 return self.pars_table[self.pars_table.__len__() - 1 - i].args_cells
 
     def check_void_var(self):

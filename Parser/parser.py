@@ -95,8 +95,7 @@ def get_next_token(token_tuple, line_number):
                 symbol_row = SymbolTable.SymbolRow()
                 active_row = False
             if token_tuple[0] == 'NUM' and last_state.nterminal_id == "Var-declaration-prime":
-                symbol_table.set_last_args(int(token_tuple[1]),
-                                           TempManager.get_instance().get_arr_temp(int(token_tuple[1])))
+                symbol_table.set_last_args(int(token_tuple[1]), TempManager.get_instance().get_arr_temp(int(token_tuple[1])))
             if token_tuple[1] == ';':
                 symbol_table.check_void_var()
 
@@ -114,6 +113,8 @@ def draw_tree():
     # print(pars_table.pars_table)
 
     x = Semantic.Semantic.errors
+    print("semantic errors: ")
+    print(x)
     pp_list_of_tuples(program_block)
 
     a = ""
