@@ -26,7 +26,7 @@ def get_PB_next():
     return len(program_block)
 
 
-def get_address_better_handling(arg, is_id = False):
+def get_address_better_handling(arg, is_id=False):
     init_arg = arg
     try:
         arg = int(arg)
@@ -291,3 +291,13 @@ def func_output(get_temp, input_token):
     pop_addr = semantic_stack.pop()
     pop_addr = get_address_better_handling(pop_addr)
     program_block.append(f"(PRINT, {pop_addr}, , )")
+
+
+def func_set_tmp_value(get_temp, input_token):
+    pop_addr = semantic_stack.pop()
+    pop_addr = get_address_better_handling(pop_addr)
+    program_block.append(f"(ASSIGN, #0, {pop_addr}, )")
+
+
+def func_after_func_declaration(get_temp, input_token):
+    semantic_stack.pop()
