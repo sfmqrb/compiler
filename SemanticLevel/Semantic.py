@@ -51,9 +51,10 @@ class Semantic:
     def __init__(self, pars_table):
         global semantic_instance
         self.parse_table = pars_table
-        self.temp_manager = TempManager(500, 4)
+        self.temp_manager = TempManager(1500, 4)
         semantic_instance = self
-        print(r"    {:30} {:15} {}".format("func_name", "input_token", "Semantic Stack"))
+        print(r"    {:30} {:15} {}".format(
+            "func_name", "input_token", "Semantic Stack"))
 
     def run(self, func_name, input_token):
         print(

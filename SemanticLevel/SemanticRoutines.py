@@ -52,7 +52,7 @@ def _save_snapshot(get_temp, input_token):
 def _restore_snapshot(get_temp, input_token):
     last_scope_addrs = st.find_adrs()
     for addr in last_scope_addrs[::-1]:
-        pop_addr = sss.pop(program_block)
+        pop_addr = sss.pop(program_block, get_temp)
         program_block.append(f"(ASSIGN, {str(pop_addr)}, {str(addr)}, )")
 
 
@@ -97,13 +97,13 @@ def func_call_end(get_temp, input_token):
     program_block.append(f"(JP, {function_addr}, , )")
     _restore_snapshot(get_temp, input_token)
 
-    rv = frs.pop(program_block)
-    frs.pop(program_block, _assign_=False)
-    frs.pop(program_block, _assign_=False)
+    rv = frs.pop(program_block, get_temp)
+    frs.pop(program_block, get_temp, _assign_=False)
+    frs.pop(program_block, get_temp, _assign_=False)
     # addr of return value stored in semantic_stack
     semantic_stack.append(rv)
     for _ in range(ARG_COUNT):
-        frs.pop(program_block, _assign_=False)  # pop input args
+        frs.pop(program_block, get_temp, _assign_=False)  # pop input args
     ARG_COUNT = 0
 
 
