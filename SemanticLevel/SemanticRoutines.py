@@ -126,7 +126,6 @@ def func_push_zero(get_temp, input_token):
 
 def func_declaration_after_return(get_temp, input_token):
     rv = semantic_stack.pop()
-    # print("rv", rv)
     addr_rv = get_address_better_handling(rv)
     frs.push(addr_rv, program_block)
     ra = frs.access_using_offset(2, program_block, get_temp)

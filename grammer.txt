@@ -4,7 +4,7 @@ Declaration -> Declaration-initial Declaration-prime
 Declaration-initial ->  Type-specifier #pid ID
 Declaration-prime -> #save_first_func Fun-declaration-prime | Var-declaration-prime 
 Var-declaration-prime -> #set_tmp_value ; | [ NUM ] #set_tmp_addr #pop ;
-Fun-declaration-prime ->  #set_starting_line ( Params ) #declaration_after_header Compound-stmt #after_func_declaration
+Fun-declaration-prime ->  #set_starting_line ( Params ) #declaration_after_header Compound-stmt #push_zero #declaration_after_return #after_func_declaration
 Type-specifier -> int | void
 Params -> int #pid ID Param-prime Param-list | void
 Param-list -> , Param Param-list | EPSILON
