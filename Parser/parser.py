@@ -111,8 +111,8 @@ def get_next_token(token_tuple, line_number):
                 if func_call_table.call_params.__len__() == func_call_table.function_row.params_type.__len__():
                     for i in range(func_call_table.call_params.__len__()):
                         if func_call_table.call_params[i].is_arr != func_call_table.function_row.params_type[i].is_arr:
-                            expected = "array" if function_row.params_type[i].is_arr else "int"
-                            illegal = "array" if call_params[i].is_arr else "int"
+                            expected = "array" if func_call_table.function_row.params_type[i].is_arr else "int"
+                            illegal = "array" if func_call_table.call_params[i].is_arr else "int"
                             Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_matching,
                                                                    func_call_table.function_row.lexeme, illegal=illegal,
                                                                    arg=i + 1,

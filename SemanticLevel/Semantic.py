@@ -76,7 +76,7 @@ class Semantic:
                   ":semantic error! Mismatch in numbers of arguments of '" + id + "'"
         elif err_type == ErrorTypeEnum.break_stmt:
             err = "#" + line_number + \
-                  ": SemanticLevel Error! No 'while' or 'switch' found for 'break'"
+                  ": Semantic Error! No 'repeat ... until' found for 'break'."
         elif err_type == ErrorTypeEnum.type_mismatch:
             err = "#" + line_number + ": SemanticLevel Error! Type mismatch in operands, Got '" + \
                   illegal + "' instead of '" + expected + "'"

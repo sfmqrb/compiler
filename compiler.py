@@ -76,7 +76,8 @@ def main():
     save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
     save_list2file("symbol_table.txt", scnr.lexemes)
     save_tree("parse_tree.txt")
-    save_errors("syntax_errors.txt")
+    save_syntax_errors("syntax_errors.txt")
+    # save_semantic_errors("semantic_errors.txt")
 
 
 def save_tree(addr):
@@ -87,7 +88,7 @@ def save_tree(addr):
     f.close()
 
 
-def save_errors(addr):
+def save_syntax_errors(addr):
     errors = parser.get_pars_errors()
     if errors.__len__() == 0:
         f = open(addr, "w", encoding="utf-8")
@@ -95,6 +96,19 @@ def save_errors(addr):
         f.close()
     else:
         f = open("syntax_errors.txt", "w", encoding="utf-8")
+        for e in errors:
+            f.write(e + "\n")
+        f.close()
+
+
+def save_semantic_errors(addr, semantic):
+    errors = semantic.errors
+    if errors.__len__() == 0:
+        f = open(addr, "w", encoding="utf-8")
+        f.write("The input program is semantically correct.")
+        f.close()
+    else:
+        f = open(addr, "w", encoding="utf-8")
         for e in errors:
             f.write(e + "\n")
         f.close()

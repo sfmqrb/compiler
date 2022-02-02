@@ -26,7 +26,7 @@ def get_PB_next():
     return len(program_block)
 
 
-def get_address_better_handling(arg):
+def get_address_better_handling(arg, is_id = False):
     init_arg = arg
     try:
         arg = int(arg)
@@ -35,6 +35,8 @@ def get_address_better_handling(arg):
 
     if arg == None:
         arg = init_arg
+        if is_id:
+            semantic.error(ErrorTypeEnum.scoping, arg)
     return arg
 
 ####################### Main Routines #########################
@@ -132,7 +134,7 @@ def func_declaration_after_return(get_temp, input_token):
 
 
 def func_pid(get_temp, input_token):
-    p = get_address_better_handling(input_token)
+    p = get_address_better_handling(input_token, is_id=True)
     if p is None:
         semantic.error(ErrorTypeEnum.scoping, input_token)
     semantic_stack.append(p)
@@ -285,7 +287,9 @@ def func_at_the_end(get_temp, input_token):
                       ] = f"(JP, {str(st.get_starting_line('main'))}, , )"
 
 
-def output(get_temp, input_token):
-    pop_addr = semantic_stack.pop()
-    pop_addr = get_address_better_handling(pop_addr)
-    program_block.append(f"(PRINT, {pop_addr}, , )")
+def func_output(get_temp, input_token):
+    pass
+    # TODO
+    # pop_addr = semantic_stack.pop()
+    # pop_addr = get_address_better_handling(pop_addr)
+    # program_block.append(f"(PRINT, {pop_addr}, , )")
