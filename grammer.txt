@@ -36,9 +36,9 @@ Term-prime -> Factor-prime G
 Term-zegond -> Factor-zegond G
 G -> * Factor #mult_op G | EPSILON
 Factor -> ( Expression ) | #pid ID Var-call-prime | #pnum NUM
-Var-call-prime -> ( Args ) | Var-prime
+Var-call-prime -> ( #call_begin Args #call_end ) | Var-prime
 Var-prime -> [ Expression #parr ] | EPSILON
-Factor-prime -> #call_begin ( Args ) #call_end | EPSILON
+Factor-prime -> ( #call_begin Args #call_end ) | EPSILON
 Factor-zegond -> ( Expression ) | #pnum NUM
 Args -> Arg-list | EPSILON
 Arg-list -> Expression #call_add_args Arg-list-prime
