@@ -110,7 +110,7 @@ def save_semantic_errors(addr):
     else:
         f = open(addr, "w", encoding="utf-8")
         for e in errors:
-            e = e.replace("'",'')
+            e = e.replace("'", '')
             f.write(e + "\n")
         f.close()
 

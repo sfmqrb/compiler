@@ -1,10 +1,7 @@
 from collections import deque
 
-import jsonpickle
-from anytree import Node, RenderTree
 from Parser import first_follow
-import json
-from SemanticLevel import Semantic
+
 
 log = False
 id_state_dict = dict()
@@ -15,8 +12,6 @@ nterminal_first_state = dict()
 # state_id_nterminal_dict = dict()
 pars_tree = (0, [])
 tree_heads_list = ["Program"]
-first_node = Node(tree_heads_list[0])
-tree_heads_Nodes_list = [first_node]
 token_type = ""
 token_main = ""
 
@@ -52,7 +47,6 @@ class State:
         if self.end_state:
             states_stack.pop()
             tree_heads_list.pop()
-            tree_heads_Nodes_list.pop()
             if log:
                 print("end state, return")
             return False, None
@@ -60,18 +54,9 @@ class State:
         if self.terminal_trans.__contains__(token):
             state_id = self.terminal_trans[token]
             state = id_state_dict[state_id]
-            try:
-                Node(
-                    tuple_token,
-                    parent=tree_heads_Nodes_list[tree_heads_list.__len__(
-                    ) - 1],
-                )
-            except:
-                print(token)
             if state.end_state:
                 states_stack.pop()
                 tree_heads_list.pop()
-                tree_heads_Nodes_list.pop()
             else:
                 states_stack.pop()
                 states_stack.append(state_id)
@@ -90,13 +75,6 @@ class State:
                     states_stack.pop()
                     states_stack.append(nt_trans[1])
                     states_stack.append(nterminal_first_state[nt_trans[0]])
-                    tree_heads_Nodes_list.append(
-                        Node(
-                            str(nt_trans[0]),
-                            parent=tree_heads_Nodes_list[tree_heads_list.__len__(
-                            ) - 1],
-                        )
-                    )
                     tree_heads_list.append(str(nt_trans[0]))
                     if log:
                         print("read nterminal to " + str(nt_trans[1]))
@@ -107,18 +85,9 @@ class State:
         if self.terminal_trans.__contains__("") and nterminal_follow_dict[self.nterminal_id].__contains__(token):
             state_id = self.terminal_trans[""]
             state = id_state_dict[state_id]
-            try:
-                Node(
-                    "epsilon",
-                    parent=tree_heads_Nodes_list[tree_heads_list.__len__(
-                    ) - 1],
-                )
-            except:
-                print(token)
             if state.end_state:
                 states_stack.pop()
                 tree_heads_list.pop()
-                tree_heads_Nodes_list.pop()
             else:
                 states_stack.pop()
                 states_stack.append(state_id)
@@ -137,14 +106,6 @@ class State:
             if semantic_trans:
                 state_id = self.terminal_trans[k]
                 state = id_state_dict[state_id]
-                try:
-                    Node(
-                        k,
-                        parent=tree_heads_Nodes_list[tree_heads_list.__len__(
-                        ) - 1],
-                    )
-                except:
-                    print(token)
                 if len(tuple_token) > 1:
                     current_token = tuple_token[1]
                 else:
@@ -153,7 +114,6 @@ class State:
                 if state.end_state:
                     states_stack.pop()
                     tree_heads_list.pop()
-                    tree_heads_Nodes_list.pop()
                 else:
                     states_stack.pop()
                     states_stack.append(state_id)
@@ -161,7 +121,7 @@ class State:
                     print("read token to " + str(state_id))
                 return False, None
         # syntax-error
-        print("syntax_errors")
+        # print("syntax_errors")
         if self.terminal_trans.keys().__len__() > 0:
             missing_token = list(self.terminal_trans.keys())[0]
             state_id = self.terminal_trans[missing_token]
@@ -173,7 +133,6 @@ class State:
             if state.end_state:
                 states_stack.pop()
                 tree_heads_list.pop()
-                tree_heads_Nodes_list.pop()
             else:
                 states_stack.pop()
                 states_stack.append(state_id)
@@ -204,7 +163,6 @@ class State:
                 if state.end_state:
                     states_stack.pop()
                     tree_heads_list.pop()
-                    tree_heads_Nodes_list.pop()
                 else:
                     states_stack.pop()
                     states_stack.append(state_id)

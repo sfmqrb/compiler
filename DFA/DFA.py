@@ -1,5 +1,6 @@
-from DFA.states import STATE_SCANNER
 import re
+
+from DFA.states import STATE_SCANNER
 from DFA.states_trans import STATES_TRANS
 from Tools.regex import RE
 
@@ -89,14 +90,16 @@ def get_final_token(this_state, s, addition_str, start_token, line, token):
 
 def print_letter_state(this_char_idx, this_state, this_char, next_state, log):
     if re.match(RE.MY_NEWLINE, this_char):
-        print(
-            "{: >10} {: >20} {: >15} {: >20} {: >10}".format(
-                *["NEWLINE", this_state, this_char_idx, next_state, log]
-            )
-        )
+        pass
+        # print(
+        #     "{: >10} {: >20} {: >15} {: >20} {: >10}".format(
+        #         *["NEWLINE", this_state, this_char_idx, next_state, log]
+        #     )
+        # )
     else:
-        print(
-            "{: >10} {: >20} {: >15} {: >20} {: >10}".format(
-                *[this_char, this_state, this_char_idx, next_state, log]
-            )
-        )
+        pass
+        # print(
+        #     "{: >10} {: >20} {: >15} {: >20} {: >10}".format(
+        #         *[this_char, this_state, this_char_idx, next_state, log]
+        #     )
+        # )

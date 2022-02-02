@@ -1,22 +1,22 @@
 # For test
-from SemanticLevel.SemanticRoutines import program_block
-from SemanticLevel import SymbolTable, Semantic
-from SemanticLevel.Semantic import TempManager
-import jsonpickle
-import json
 from Parser import DFA
 from Parser.grammer_to_transition import fill_nterminal_id_dict
 from Parser.grammer_to_transition import rule_to_states
+from SemanticLevel import SymbolTable, Semantic
+from SemanticLevel.Semantic import TempManager
+from SemanticLevel.SemanticRoutines import program_block
+from SemanticLevel.ErrorType import error
+
 
 
 def pp_list_of_tuples(lsot):
     f = open("output.txt", "w")
     s = ""
-    print("\n[")
+    # print("\n[")
     for idx, t in enumerate(lsot):
         s += f"{idx}\t{t}\n"
-        print(r"{idx:3}: {t}".format(idx=idx, t=t))
-    print("]")
+        # print(r"{idx:3}: {t}".format(idx=idx, t=t))
+    # print("]")
     f.write(s)
 
 
@@ -82,7 +82,7 @@ def get_next_token(token_tuple, line_number):
                 arrays_stack.pop()
         if token_tuple[1] == ';' or token_tuple[1] == ')':
             if arrays_stack.__len__() > 0:
-                Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_mismatch, arrays_stack[0].lexeme,
+                error(SymbolTable.ErrorTypeEnum.type_mismatch, arrays_stack[0].lexeme,
                                                        illegal="array", expected="int")
                 arrays_stack.pop()
     while not next_token:
@@ -131,12 +131,12 @@ def get_next_token(token_tuple, line_number):
                         if func_call_table.call_params[i].is_arr != func_call_table.function_row.params_type[i].is_arr:
                             expected = "array" if func_call_table.function_row.params_type[i].is_arr else "int"
                             illegal = "array" if func_call_table.call_params[i].is_arr else "int"
-                            Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_matching,
+                            error(SymbolTable.ErrorTypeEnum.type_matching,
                                                                    func_call_table.function_row.lexeme, illegal=illegal,
                                                                    arg=i + 1,
                                                                    expected=expected)
                 else:
-                    Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.number_mathing,
+                    error(SymbolTable.ErrorTypeEnum.number_mathing,
                                                            func_call_table.function_row.lexeme, )
 
             # pars table
@@ -195,16 +195,11 @@ def draw_tree():
     # print(pars_table.pars_table)
 
     x = Semantic.Semantic.errors
-    print("semantic errors: ")
-    print(x)
+    # print("semantic errors: ")
+    # print(x)
     pp_list_of_tuples(program_block)
 
     a = ""
-    for pre, fill, node in DFA.RenderTree(DFA.first_node):
-        p = ("%s%s" % (pre, node.name))
-        x = "'"
-        p = p.replace(x, "")
-        a += p + "\n"
     return a[0:a.__len__() - 1]
 
 

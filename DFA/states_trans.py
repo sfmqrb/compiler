@@ -1,6 +1,7 @@
+import re
+
 from DFA.states import STATE_SCANNER
 from Tools.regex import RE
-import re
 
 
 class STATES_TRANS:

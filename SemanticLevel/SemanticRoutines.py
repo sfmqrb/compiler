@@ -1,11 +1,8 @@
-from gettext import find
-from glob import glob
-
 import SemanticLevel.Semantic
-from SemanticLevel.SymbolTable import SymbolTableClass
-from SemanticLevel.ErrorType import ErrorTypeEnum
-from matplotlib.pyplot import get
 import SemanticLevel.stacks as sf
+from SemanticLevel.ErrorType import ErrorTypeEnum
+from SemanticLevel.SymbolTable import SymbolTableClass
+from SemanticLevel.ErrorType import error
 
 semantic_stack = []
 program_block = []
@@ -17,7 +14,6 @@ ARG_COUNT = 0
 FIRST_FUNC = False
 
 st = SymbolTableClass.get_instance()
-semantic = SemanticLevel.Semantic.Semantic.get_instance()
 sss = sf.SnapshotStack(program_block)
 frs = sf.FunctionRelatedStack(program_block)
 
@@ -36,7 +32,7 @@ def get_address_better_handling(arg, is_id=False):
     if arg == None:
         arg = init_arg
         if is_id:
-            semantic.error(ErrorTypeEnum.scoping, arg)
+            error(ErrorTypeEnum.scoping, arg)
     return arg
 
 ####################### Main Routines #########################
@@ -135,7 +131,7 @@ def func_declaration_after_return(get_temp, input_token):
 def func_pid(get_temp, input_token):
     p = get_address_better_handling(input_token, is_id=True)
     if p is None:
-        semantic.error(ErrorTypeEnum.scoping, input_token)
+        error(ErrorTypeEnum.scoping, input_token)
     semantic_stack.append(p)
     pass
 
@@ -244,7 +240,7 @@ def func_break(get_temp, input_token):
     if ru_stack.__len__() > 0:
         program_block.append(f"b(JP, {'?'}, , )")
     else:
-        semantic.error(ErrorTypeEnum.break_stmt, None)
+        error(ErrorTypeEnum.break_stmt, None)
         pass
 
 

@@ -1,6 +1,7 @@
+import re
+
 from DFA.DFA import get_final_token, get_token_type, get_next_state
 from DFA.states import STATE_SCANNER
-import re
 from Tools.regex import RE
 
 
@@ -73,7 +74,7 @@ class scanner:
                     #     self.line, self.token, self.token_type, self.start_token, self.end_token))
                     to_return = (self.line, self.token_type, self.token)
                     if self.this_state == STATE_SCANNER.ERROR:
-                        print(self.token)
+                        # print(self.token)
                         self.errors.append((self.line, self.token, self.token_type))
                         to_return = self.empty_return
                     if self.token_type == "COMMENT":

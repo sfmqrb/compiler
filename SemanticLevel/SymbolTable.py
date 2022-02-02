@@ -1,4 +1,3 @@
-import SemanticLevel.Semantic
 from SemanticLevel.ErrorType import ErrorTypeEnum
 
 last_adr = 100
@@ -109,8 +108,7 @@ class SymbolTableClass:
         for row in self.pars_table:
             if row.category == "var" and row.type == "void" and not row.err_wrote:
                 row.err_wrote = True
-                SemanticLevel.Semantic.Semantic.get_instance().error(
-                    ErrorTypeEnum.void_type, row.lexeme)
+                SemanticLevel.Semantic.Semantic.get_instance().error(ErrorTypeEnum.void_type, row.lexeme)
 
 
 class SymbolRow:
