@@ -288,8 +288,6 @@ def func_at_the_end(get_temp, input_token):
 
 
 def func_output(get_temp, input_token):
-    pass
-    # TODO
-    # pop_addr = semantic_stack.pop()
-    # pop_addr = get_address_better_handling(pop_addr)
-    # program_block.append(f"(PRINT, {pop_addr}, , )")
+    pop_addr = semantic_stack.pop()
+    pop_addr = get_address_better_handling(pop_addr)
+    program_block.append(f"(PRINT, {pop_addr}, , )")

@@ -161,8 +161,8 @@ class State:
                     print("read token to " + str(state_id))
                 return False, None
         # syntax-error
+        print("syntax_errors")
         if self.terminal_trans.keys().__len__() > 0:
-            print("syntax_errors")
             missing_token = list(self.terminal_trans.keys())[0]
             state_id = self.terminal_trans[missing_token]
             state = id_state_dict[state_id]
