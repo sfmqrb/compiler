@@ -1,7 +1,7 @@
 import scanner
 from Parser import parser
 from SemanticLevel import ErrorType
-
+from SemanticLevel.SemanticRoutines import program_block
 
 # amir mohammad mohammadi 97107126
 # sajad faghfur maghreby 97106187
@@ -69,15 +69,16 @@ def main():
                 (str(next_token_type), str(next_token)), line)
         # print("{: >3}{: >20}{: >20}".format(*[line, next_token, next_token_type]))
 
-    if scnr.errors.__len__() == 0:
-        empty_error_file("lexical_errors.txt")
-    else:
-        save_tuple2file_based_on_1element("lexical_errors.txt", scnr.errors)
-    save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
-    save_list2file("symbol_table.txt", scnr.lexemes)
-    save_tree("parse_tree.txt")
-    save_syntax_errors("syntax_errors.txt")
+    # if scnr.errors.__len__() == 0:
+    #     empty_error_file("lexical_errors.txt")
+    # else:
+    #     save_tuple2file_based_on_1element("lexical_errors.txt", scnr.errors)
+    # save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
+    # save_list2file("symbol_table.txt", scnr.lexemes)
+    # save_tree("parse_tree.txt")
+    # save_syntax_errors("syntax_errors.txt")
     save_semantic_errors("semantic_errors.txt")
+    parser.pp_list_of_tuples(program_block)
 
 
 def save_tree(addr):
@@ -110,7 +111,7 @@ def save_semantic_errors(addr):
     else:
         f = open(addr, "w", encoding="utf-8")
         for e in errors:
-            e = e.replace("'", '')
+            # e = e.replace("'", '')
             f.write(e + "\n")
         f.close()
 

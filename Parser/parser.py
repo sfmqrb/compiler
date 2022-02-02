@@ -6,6 +6,7 @@ from SemanticLevel import SymbolTable, Semantic
 from SemanticLevel.Semantic import TempManager
 from SemanticLevel.SemanticRoutines import program_block
 from SemanticLevel.ErrorType import error
+from SemanticLevel.ErrorType import semantic_errors
 
 
 
@@ -13,9 +14,12 @@ def pp_list_of_tuples(lsot):
     f = open("output.txt", "w")
     s = ""
     # print("\n[")
-    for idx, t in enumerate(lsot):
-        s += f"{idx}\t{t}\n"
-        # print(r"{idx:3}: {t}".format(idx=idx, t=t))
+    if semantic_errors.__len__() > 0:
+        s = "The output code has not been generated"
+    else:
+        for idx, t in enumerate(lsot):
+            s += f"{idx}\t{t}\n"
+            # print(r"{idx:3}: {t}".format(idx=idx, t=t))
     # print("]")
     f.write(s)
 
@@ -23,7 +27,6 @@ def pp_list_of_tuples(lsot):
 # Main imports
 
 errors = []
-f = open("grammer.txt", "r")
 # f = open("c-minus_001 (1).txt", "r")
 # f = open("test_grammer", "r")
 line_counter = 1
@@ -57,7 +60,7 @@ arrays_stack = []
 
 
 def get_next_token(token_tuple, line_number):
-    global active_row, symbol_row, no_bracket_function, scope, gl_line_number, func_in_call, count_params, parameter_counted, call_params, func_declare_started, function_row, arrays_stack
+    global active_row, symbol_row, no_bracket_function, scope, gl_line_number, func_in_call, count_params, parameter_counted, call_params, func_declare_started, function_row, func_call_table_list
     gl_line_number = line_number
     next_token = False
     if token_tuple != "$":
@@ -75,7 +78,8 @@ def get_next_token(token_tuple, line_number):
         # check for type missmatch error
         if token_tuple[0] == 'ID':
             id_row = symbol_table.get_row(token_tuple[1])
-            if id_row is not None and id_row.is_arr and id_row.category == "var":
+            if id_row is not None and id_row.is_arr and id_row.category == "var"\
+                    and not func_declare_started and not active_row:
                 arrays_stack.append(id_row)
         if token_tuple[1] == ']':
             if arrays_stack.__len__() > 0:

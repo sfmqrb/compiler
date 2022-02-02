@@ -1,4 +1,5 @@
 from SemanticLevel.ErrorType import ErrorTypeEnum
+from SemanticLevel.ErrorType import error
 
 last_adr = 100
 symbol_table_instance = None
@@ -27,9 +28,9 @@ class SymbolTableClass:
                                 2].category = "func"
 
     def get_row(self, lexeme):
-        for row in self.pars_table:
-            if row.lexeme == lexeme:
-                return row
+        for i in range(self.pars_table.__len__()):
+            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+                return self.pars_table[self.pars_table.__len__() - 1 - i]
 
     def set_last_args(self, args, arr_temp):
         global last_adr
@@ -108,7 +109,7 @@ class SymbolTableClass:
         for row in self.pars_table:
             if row.category == "var" and row.type == "void" and not row.err_wrote:
                 row.err_wrote = True
-                SemanticLevel.Semantic.Semantic.get_instance().error(ErrorTypeEnum.void_type, row.lexeme)
+                error(ErrorTypeEnum.void_type, row.lexeme)
 
 
 class SymbolRow:
