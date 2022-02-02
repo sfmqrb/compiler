@@ -86,3 +86,4 @@ class Semantic:
                   " for '" + id + "'. Expected '" + expected + \
                   "' but got '" + illegal + "' instead "
         self.errors.append(err)
+        ErrorType.semantic_errors = self.errors

@@ -232,28 +232,28 @@ class State:
         print(self.end_state)
 
 
-def save_states():
-    global id_state_dict
-    jsonpickle.unpickler.loadclass("Parser.DFA.State")
-    nodes_json_pickled = jsonpickle.encode(id_state_dict, keys=False)
-    nodes_json = json.dumps(nodes_json_pickled)
-    nodes_json_pickled1 = jsonpickle.decode(nodes_json, keys=False)
-    python_file = open("states.json", "w")
-    python_file.write(nodes_json_pickled1)
-    python_file.close()
-    nodes_json_pickled = jsonpickle.encode(nterminal_first_state, keys=False)
-    nodes_json = json.dumps(nodes_json_pickled)
-    nodes_json_pickled1 = jsonpickle.decode(nodes_json, keys=False)
-    python_file = open("nterminal_first_state.json", "w")
-    python_file.write(nodes_json_pickled1)
-    python_file.close()
-
-
-def load_state():
-    global id_state_dict
-    global nterminal_first_state
-    python_file = open("states.json", "r")
-    state_dict_load = jsonpickle.unpickler.decode(python_file.read())
-    id_state_dict = {int(k): v for k, v in state_dict_load.items()}
-    python_file = open("nterminal_first_state.json", "r")
-    nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())
+# def save_states():
+#     global id_state_dict
+#     jsonpickle.unpickler.loadclass("Parser.DFA.State")
+#     nodes_json_pickled = jsonpickle.encode(id_state_dict, keys=False)
+#     nodes_json = json.dumps(nodes_json_pickled)
+#     nodes_json_pickled1 = jsonpickle.decode(nodes_json, keys=False)
+#     python_file = open("states.json", "w")
+#     python_file.write(nodes_json_pickled1)
+#     python_file.close()
+#     nodes_json_pickled = jsonpickle.encode(nterminal_first_state, keys=False)
+#     nodes_json = json.dumps(nodes_json_pickled)
+#     nodes_json_pickled1 = jsonpickle.decode(nodes_json, keys=False)
+#     python_file = open("nterminal_first_state.json", "w")
+#     python_file.write(nodes_json_pickled1)
+#     python_file.close()
+#
+#
+# def load_state():
+#     global id_state_dict
+#     global nterminal_first_state
+#     python_file = open("states.json", "r")
+#     state_dict_load = jsonpickle.unpickler.decode(python_file.read())
+#     id_state_dict = {int(k): v for k, v in state_dict_load.items()}
+#     python_file = open("nterminal_first_state.json", "r")
+#     nterminal_first_state = jsonpickle.unpickler.decode(python_file.read())

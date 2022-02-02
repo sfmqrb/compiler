@@ -77,7 +77,7 @@ def main():
     save_list2file("symbol_table.txt", scnr.lexemes)
     save_tree("parse_tree.txt")
     save_syntax_errors("syntax_errors.txt")
-    # save_semantic_errors("semantic_errors.txt")
+    save_semantic_errors("semantic_errors.txt")
 
 
 def save_tree(addr):
@@ -101,8 +101,8 @@ def save_syntax_errors(addr):
         f.close()
 
 
-def save_semantic_errors(addr, semantic):
-    errors = semantic.errors
+def save_semantic_errors(addr):
+    errors = ErrorType.semantic_errors
     if errors.__len__() == 0:
         f = open(addr, "w", encoding="utf-8")
         f.write("The input program is semantically correct.")
@@ -110,6 +110,7 @@ def save_semantic_errors(addr, semantic):
     else:
         f = open(addr, "w", encoding="utf-8")
         for e in errors:
+            e = e.replace("'",'')
             f.write(e + "\n")
         f.close()
 

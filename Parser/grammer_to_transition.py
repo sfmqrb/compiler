@@ -8,7 +8,7 @@ last_nterminal = ""
 
 def fill_nterminal_id_dict(grammar):
     i = 0
-    for line in grammar.split("\n"):
+    for line in grammar.split("@"):
         nterminal_id_dict[line.split()[0]] = i
         i += 1
 

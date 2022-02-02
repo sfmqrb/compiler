@@ -27,13 +27,13 @@ f = open("grammer.txt", "r")
 # f = open("c-minus_001 (1).txt", "r")
 # f = open("test_grammer", "r")
 line_counter = 1
-grammar = f.read()
+grammar = \
+    "Program -> Declaration-list #at_the_end $@Declaration-list -> Declaration Declaration-list | EPSILON@Declaration -> Declaration-initial Declaration-prime@Declaration-initial ->  Type-specifier #pid ID@Declaration-prime -> #save_first_func Fun-declaration-prime | Var-declaration-prime @Var-declaration-prime -> #set_tmp_value ; | [ NUM ] #set_tmp_addr #pop ;@Fun-declaration-prime ->  #set_starting_line ( Params ) #declaration_after_header Compound-stmt #push_zero #declaration_after_return #after_func_declaration@Type-specifier -> int | void@Params -> int #pid ID Param-prime Param-list | void@Param-list -> , Param Param-list | EPSILON@Param -> Declaration-initial Param-prime@Param-prime -> [  ] | EPSILON@Compound-stmt -> { Declaration-list Statement-list }@Statement-list -> Statement Statement-list | EPSILON@Statement -> Expression-stmt | Compound-stmt | Selection-stmt | Iteration-stmt | Return-stmt | output ( Expression #output ) ;@Expression-stmt -> Expression ; #pop | #break break ; | ;@Selection-stmt -> if ( Expression ) #save Statement Else-stmt@Else-stmt -> endif #jpf | else #jpf_save Statement endif #jp@Iteration-stmt -> repeat #label Statement until ( Expression ) #until@Return-stmt -> return Return-stmt-prime @Return-stmt-prime -> #push_zero #declaration_after_return ; | Expression #declaration_after_return ;@Expression -> Simple-expression-zegond | #pid ID B@B -> = Expression #assign | [ Expression #parr ] H | Simple-expression-prime@H -> = Expression #assign | G D C@Simple-expression-zegond -> Additive-expression-zegond C@Simple-expression-prime -> Additive-expression-prime C@C -> #push Relop Additive-expression #comp_op | EPSILON@Relop -> < | ==@Additive-expression -> Term D@Additive-expression-prime -> Term-prime D@Additive-expression-zegond -> Term-zegond D@D ->  #push Addop Term #add_op D | EPSILON@Addop -> + | -@Term -> Factor G@Term-prime -> Factor-prime G@Term-zegond -> Factor-zegond G@G -> * Factor #mult_op G | EPSILON@Factor -> ( Expression ) | #pid ID Var-call-prime | #pnum NUM@Var-call-prime -> ( #call_begin Args #call_end ) | Var-prime@Var-prime -> [ Expression #parr ] | EPSILON@Factor-prime -> ( #call_begin Args #call_end ) | EPSILON@Factor-zegond -> ( Expression ) | #pnum NUM@Args -> Arg-list | EPSILON@Arg-list -> Expression #call_add_args Arg-list-prime@Arg-list-prime -> , Expression #call_add_args Arg-list-prime | EPSILON"
+
 fill_nterminal_id_dict(grammar)
-for line in grammar.split("\n"):
+for line in grammar.split("@"):
     rule_to_states(DFA.State, line)
-# save transitions in json
-DFA.save_states()
-# DFA.load_state()
+
 
 f = open("input.txt", "r")
 for line in f:
@@ -80,7 +80,7 @@ def get_next_token(token_tuple, line_number):
         if token_tuple[1] == ']':
             if arrays_stack.__len__() > 0:
                 arrays_stack.pop()
-        if token_tuple[1] == ';' or ')':
+        if token_tuple[1] == ';' or token_tuple[1] == ')':
             if arrays_stack.__len__() > 0:
                 Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_mismatch, arrays_stack[0].lexeme,
                                                        illegal="array", expected="int")
