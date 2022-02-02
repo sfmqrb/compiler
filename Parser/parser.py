@@ -90,14 +90,14 @@ def get_next_token(token_tuple, line_number):
                 if row.category == "func":
                     function_row = row
                     func_in_call = True
-            elif token_tuple[0] == 'ID' and func_in_call:
+            elif token_tuple[0] == 'ID' and func_in_call and token_tuple[1] != "output":
                 param_row: SymbolTable.SymbolRow
                 param_row = symbol_table.get_row(token_tuple[1])
                 if param_row.category == "var" and not parameter_counted:
                     call_params.append(param_row)
                     parameter_counted = True
                     count_params += 1
-            elif token_tuple[0] == 'NUM' and func_in_call:
+            elif token_tuple[0] == 'NUM' and func_in_call and token_tuple[1] != "output":
                 param_row = SymbolTable.SymbolRow()
                 param_row.args_cells = 0
                 param_row.lexeme = str(token_tuple[1])
