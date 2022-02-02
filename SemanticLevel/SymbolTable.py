@@ -144,3 +144,23 @@ class SymbolRow:
 
     def __str__(self):
         return "address: " + str(self.address) + " lexeme: " + self.lexeme + " scope: " + str(self.scope)
+
+
+class FuncCallBlock:
+    call_params = []
+    function_row = None
+    read_param = True
+
+    def __init__(self, func_row):
+        self.function_row = func_row
+        self.call_params = []
+        self.read_param = True
+        self.start_param = False
+
+    def add_param_row(self, row):
+        if not self.call_params.__contains__(row) and self.read_param:
+            self.call_params.append(row)
+            self.read_param = False
+
+    def next_param(self):
+        self.read_param = True

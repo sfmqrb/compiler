@@ -50,12 +50,8 @@ no_bracket_function = False
 scope = 0
 gl_line_number = 0
 func_declare_started = False
-
+func_call_table_list = []
 func_in_call = False
-call_params = []
-parameter_counted = False
-count_params = 0
-function_row = None
 
 
 def get_next_token(token_tuple, line_number):
@@ -85,47 +81,45 @@ def get_next_token(token_tuple, line_number):
             # error-check
 
             # function parameter number error check
-            if token_tuple[0] == 'ID' and last_state.nterminal_id == "Expression" and token_tuple[1] != "output":
+            if token_tuple[0] == 'ID' and last_state.terminal_trans.keys().__contains__("#pid") and token_tuple[1] != "output":
                 row = symbol_table.get_row(token_tuple[1])
-                if row.category == "func":
-                    function_row = row
-                    func_in_call = True
-            elif token_tuple[0] == 'ID' and func_in_call and token_tuple[1] != "output":
+                if row is not None and row.category == "func":
+                    fcb = SymbolTable.FuncCallBlock(row)
+                    func_call_table_list.append(fcb)
+                    a = 1
+            elif token_tuple[0] == 'ID' and func_call_table_list.__len__() > 0 and token_tuple[1] != "output":
                 param_row: SymbolTable.SymbolRow
                 param_row = symbol_table.get_row(token_tuple[1])
-                if param_row.category == "var" and not parameter_counted:
-                    call_params.append(param_row)
-                    parameter_counted = True
-                    count_params += 1
-            elif token_tuple[0] == 'NUM' and func_in_call and token_tuple[1] != "output":
+                if func_call_table_list[-1].start_param:
+                    func_call_table_list[func_call_table_list.__len__() - 1].add_param_row(param_row)
+            elif token_tuple[0] == 'NUM' and func_call_table_list.__len__() > 0 and token_tuple[1] != "output":
                 param_row = SymbolTable.SymbolRow()
                 param_row.args_cells = 0
                 param_row.lexeme = str(token_tuple[1])
                 param_row.category = "var"
                 param_row.type = "int"
-                if not parameter_counted:
-                    call_params.append(param_row)
-                    parameter_counted = True
-                    count_params += 1
-            if token_tuple[1] == ',' and func_in_call:
-                parameter_counted = False
-            if token_tuple[1] == ')' and last_state.nterminal_id == "Arg-list-prime" and func_in_call:
+                func_call_table_list[func_call_table_list.__len__() - 1].add_param_row(param_row)
+            if token_tuple[1] == ',' and func_call_table_list.__len__() > 0:
+                func_call_table_list[func_call_table_list.__len__() - 1].next_param()
+            if token_tuple[1] == '(' and func_call_table_list.__len__() > 0:
+                func_call_table_list[func_call_table_list.__len__() - 1].start_param = True
+            if token_tuple[1] == ')' \
+                    and last_state.nterminal_id == "Arg-list-prime" and func_call_table_list.__len__() > 0:
                 # finish func call
                 # check for errors
-                if call_params.__len__() == function_row.params_type.__len__():
-                    pass
-                    for i in range(call_params.__len__()):
-                        if call_params[i].is_arr != function_row.params_type[i].is_arr:
+                func_call_table = func_call_table_list.pop()
+                if func_call_table.call_params.__len__() == func_call_table.function_row.params_type.__len__():
+                    for i in range(func_call_table.call_params.__len__()):
+                        if func_call_table.call_params[i].is_arr != func_call_table.function_row.params_type[i].is_arr:
                             expected = "array" if function_row.params_type[i].is_arr else "int"
                             illegal = "array" if call_params[i].is_arr else "int"
                             Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_matching,
-                                                                   function_row.lexeme, illegal=illegal, arg=i + 1,
+                                                                   func_call_table.function_row.lexeme, illegal=illegal,
+                                                                   arg=i + 1,
                                                                    expected=expected)
                 else:
                     Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.number_mathing,
-                                                           function_row.lexeme, )
-                func_in_call = False
-                call_params.clear()
+                                                           func_call_table.function_row.lexeme, )
 
             # pars table
             if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
