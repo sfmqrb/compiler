@@ -44,7 +44,7 @@ symbol_row = SymbolTable.SymbolRow()
 symbol_table = SymbolTable.SymbolTableClass.get_instance()
 semantic = Semantic.Semantic.get_instance()
 active_row = False
-# (started, ended, function dependent)
+
 brackets = list()
 no_bracket_function = False
 scope = 0
@@ -53,9 +53,11 @@ func_declare_started = False
 func_call_table_list = []
 func_in_call = False
 
+arrays_stack = []
+
 
 def get_next_token(token_tuple, line_number):
-    global active_row, symbol_row, no_bracket_function, scope, gl_line_number, func_in_call, count_params, parameter_counted, call_params, func_declare_started, function_row
+    global active_row, symbol_row, no_bracket_function, scope, gl_line_number, func_in_call, count_params, parameter_counted, call_params, func_declare_started, function_row, arrays_stack
     gl_line_number = line_number
     next_token = False
     if token_tuple != "$":
@@ -70,6 +72,19 @@ def get_next_token(token_tuple, line_number):
                 symbol_table.check_void_var()
                 symbol_table.remove_scope(scope)
                 scope -= 1
+        # check for type missmatch error
+        if token_tuple[0] == 'ID':
+            id_row = symbol_table.get_row(token_tuple[1])
+            if id_row is not None and id_row.is_arr and id_row.category == "var":
+                arrays_stack.append(id_row)
+        if token_tuple[1] == ']':
+            if arrays_stack.__len__() > 0:
+                arrays_stack.pop()
+        if token_tuple[1] == ';' or ')':
+            if arrays_stack.__len__() > 0:
+                Semantic.Semantic.get_instance().error(SymbolTable.ErrorTypeEnum.type_mismatch, arrays_stack[0].lexeme,
+                                                       illegal="array", expected="int")
+                arrays_stack.pop()
     while not next_token:
         last_state_id = DFA.states_stack[DFA.states_stack.__len__() - 1]
         last_state = DFA.id_state_dict[last_state_id]
@@ -81,7 +96,8 @@ def get_next_token(token_tuple, line_number):
             # error-check
 
             # function parameter number error check
-            if token_tuple[0] == 'ID' and last_state.terminal_trans.keys().__contains__("#pid") and token_tuple[1] != "output":
+            if token_tuple[0] == 'ID' and last_state.terminal_trans.keys().__contains__("#pid") and token_tuple[
+                1] != "output":
                 row = symbol_table.get_row(token_tuple[1])
                 if row is not None and row.category == "func":
                     fcb = SymbolTable.FuncCallBlock(row)
@@ -91,6 +107,8 @@ def get_next_token(token_tuple, line_number):
                 param_row: SymbolTable.SymbolRow
                 param_row = symbol_table.get_row(token_tuple[1])
                 if func_call_table_list[-1].start_param:
+                    if param_row in arrays_stack:
+                        arrays_stack.remove(param_row)
                     func_call_table_list[func_call_table_list.__len__() - 1].add_param_row(param_row)
             elif token_tuple[0] == 'NUM' and func_call_table_list.__len__() > 0 and token_tuple[1] != "output":
                 param_row = SymbolTable.SymbolRow()
@@ -124,7 +142,7 @@ def get_next_token(token_tuple, line_number):
             # pars table
             if token_tuple[0] == 'KEYWORD' and (token_tuple[1] == "int" or token_tuple[1] == "void"):
                 if last_state.nterminal_id == "Params" and token_tuple[1] == "void":
-                    # todo fosh?
+                    # void in function input
                     pass
                 else:
                     symbol_row.type = token_tuple[1]
@@ -143,6 +161,7 @@ def get_next_token(token_tuple, line_number):
                 func_declare_started = False
                 symbol_table.set_line_category(line_number, "func")
                 scope += 1
+
             if token_tuple[0] == 'ID' and active_row:
                 symbol_row.lexeme = token_tuple[1]
                 symbol_row.line = line_number
