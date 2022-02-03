@@ -2,6 +2,7 @@ import scanner
 from Parser import parser
 from SemanticLevel import ErrorType
 from SemanticLevel.SemanticRoutines import program_block
+from Tools.Development import develop_mode
 
 # amir mohammad mohammadi 97107126
 # sajad faghfur maghreby 97106187
@@ -73,10 +74,11 @@ def main():
     #     empty_error_file("lexical_errors.txt")
     # else:
     #     save_tuple2file_based_on_1element("lexical_errors.txt", scnr.errors)
-    # save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
-    # save_list2file("symbol_table.txt", scnr.lexemes)
-    # save_tree("parse_tree.txt")
-    # save_syntax_errors("syntax_errors.txt")
+    if develop_mode:
+        save_tuple2file_based_on_1element("tokens.txt", scnr.tokens)
+        save_list2file("symbol_table.txt", scnr.lexemes)
+        save_tree("parse_tree.txt")
+        save_syntax_errors("syntax_errors.txt")
     save_semantic_errors("semantic_errors.txt")
     parser.pp_list_of_tuples(program_block)
 
@@ -91,6 +93,7 @@ def save_tree(addr):
 
 def save_syntax_errors(addr):
     errors = parser.get_pars_errors()
+    print("syntax errors:[")
     if errors.__len__() == 0:
         f = open(addr, "w", encoding="utf-8")
         f.write("There is no syntax error.")
@@ -98,8 +101,10 @@ def save_syntax_errors(addr):
     else:
         f = open("syntax_errors.txt", "w", encoding="utf-8")
         for e in errors:
+            print(e+"\n")
             f.write(e + "\n")
         f.close()
+    print("]")
 
 
 def save_semantic_errors(addr):

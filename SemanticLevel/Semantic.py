@@ -3,6 +3,7 @@ import SemanticLevel.SymbolTable
 from SemanticLevel import ErrorType
 from SemanticLevel import SemanticRoutines
 from SemanticLevel.ErrorType import ErrorTypeEnum
+from Tools.Development import develop_mode
 
 semantic_instance = None
 temp_instance = None
@@ -53,14 +54,16 @@ class Semantic:
         self.parse_table = pars_table
         self.temp_manager = TempManager(1500, 4)
         semantic_instance = self
-        # print(r"    {:30} {:15} {}".format(
-        #     "func_name", "input_token", "Semantic Stack"))
+        if develop_mode:
+            print(r"    {:30} {:15} {}".format(
+                "func_name", "input_token", "Semantic Stack"))
 
     def run(self, func_name, input_token):
-        # print(
-        #     r"==> {func_name:30} {input_token:15} {SemanticRoutines}".
-        #     format(func_name=func_name[1:], input_token=input_token,
-        #            SemanticRoutines=SemanticRoutines.semantic_stack))
+        if develop_mode:
+            print(
+                r"==> {func_name:30} {input_token:15} {SemanticRoutines}".
+                format(func_name=func_name[1:], input_token=input_token,
+                       SemanticRoutines=SemanticRoutines.semantic_stack))
         func_name = func_name[1:len(func_name)]
         getattr(SemanticRoutines, "func_" +
                 func_name)(self.temp_manager.get_temp, input_token)
