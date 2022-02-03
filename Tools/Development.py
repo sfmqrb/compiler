@@ -1,1 +1,1 @@
-develop_mode = True
+develop_mode = False

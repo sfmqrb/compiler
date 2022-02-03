@@ -46,7 +46,6 @@ def is_number(x):
 ####################### Main Routines #########################
 
 def get_important_tmps(semantic_stack):
-    print(semantic_stack)
     ls = list(map(lambda x:str(x).replace("@", ""), semantic_stack))
     ls = list(filter(lambda x: is_number(x) and int(x) in temps_list, ls))
     
@@ -60,14 +59,14 @@ def _save_snapshot(get_temp, input_token):
 
 def _save_important_tmps(get_temp, input_token):
     important_tmps = get_important_tmps(semantic_stack)
-    print("int SIT==>", important_tmps)
+    # print("int SIT==>", important_tmps)
     for it in important_tmps:
         sss.push(it, program_block)
         
 
 def _restore_important_tmps(get_temp, input_token):
     important_tmps = get_important_tmps(semantic_stack)
-    print("int RIT==>", important_tmps)
+    # print("int RIT==>", important_tmps)
     
     for it in important_tmps[::-1]:
         pop_addr = sss.pop(program_block, get_temp)
