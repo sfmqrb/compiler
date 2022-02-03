@@ -4,6 +4,7 @@ from SemanticLevel.ErrorType import ErrorTypeEnum
 from SemanticLevel.SymbolTable import SymbolTableClass
 from SemanticLevel.ErrorType import error
 
+temps_list = sf.temps_list
 semantic_stack = []
 program_block = []
 ru_stack = []
@@ -42,18 +43,12 @@ def is_number(x):
     except:
         return False
     
-def get_last_k(ls, k=2):
-    if len(ls) < k:
-        return ls
-    else:
-        return ls[-k:]
-
 ####################### Main Routines #########################
 
 def get_important_tmps(semantic_stack):
     print(semantic_stack)
     ls = list(map(lambda x:str(x).replace("@", ""), semantic_stack))
-    ls = list(filter(lambda x: is_number(x), ls))
+    ls = list(filter(lambda x: is_number(x) and int(x) in temps_list, ls))
     
     return ls
     
@@ -65,8 +60,6 @@ def _save_snapshot(get_temp, input_token):
 
 def _save_important_tmps(get_temp, input_token):
     important_tmps = get_important_tmps(semantic_stack)
-    important_tmps.pop()
-    important_tmps = get_last_k(important_tmps)
     print("int SIT==>", important_tmps)
     for it in important_tmps:
         sss.push(it, program_block)
@@ -74,7 +67,6 @@ def _save_important_tmps(get_temp, input_token):
 
 def _restore_important_tmps(get_temp, input_token):
     important_tmps = get_important_tmps(semantic_stack)
-    important_tmps = get_last_k(important_tmps)
     print("int RIT==>", important_tmps)
     
     for it in important_tmps[::-1]:
@@ -198,6 +190,7 @@ def func_add_op(get_temp, input_token, address_mode=False):
     action = "ADD" if semantic_stack.pop() == "+" else "SUB"
     left = semantic_stack.pop()
     t = get_temp()
+    temps_list.append(t)
     program_block.append(
         f"({action}, {str(left)}, {imdtTrue}{str(right)}, {str(t)})")
     semantic_stack.append(f"{addrTrue}{str(t)}")
@@ -208,6 +201,7 @@ def func_mult_op(get_temp, input_token):
     action = "MULT"
     second = semantic_stack.pop()
     t = get_temp()
+    temps_list.append(t)
     program_block.append(f"({action}, {str(first)}, {str(second)}, {str(t)})")
     semantic_stack.append(t)
 
@@ -217,6 +211,7 @@ def func_comp_op(get_temp, input_token):
     action = "EQ" if semantic_stack.pop() == "==" else "LT"
     left = semantic_stack.pop()
     t = get_temp()
+    temps_list.append(t)
     program_block.append(f"({action}, {str(left)}, {str(right)}, {str(t)})")
     semantic_stack.append(t)
 
