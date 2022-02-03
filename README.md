@@ -6,11 +6,13 @@
 
 A scanner is a program that takes a sequence of characters (the source file of the program) and produces a sequence of tokens that will be used to feed the compiler's parser.
 
+A file called "input.txt" contains the raw code. Also, this file is in the same directory as `compiler.py`.
+
 ## phase 2
 
 ### Parser
 
-A parser is a compiler or interpreter component that breaks data into smaller elements for easy translation into another language. 
+A parser is a compiler or interpreter component that breaks data into smaller elements for easy translation into another language. In this project we implemented a recursive descent parser.A recursive descent parser is a kind of top-down parser built from a set of mutually recursive procedures (or a non-recursive equivalent) where each such procedure implements one of the nonterminals of the grammar.
 
 - parse tree
 
@@ -20,7 +22,7 @@ A parser is a compiler or interpreter component that breaks data into smaller el
 
 ### Code generator
 
-Generate intermediate code which is relatively close to assembly language
+Generate intermediate code which is relatively close to assembly language.
 
 - handle recursive functions
 
