@@ -27,10 +27,14 @@ class SymbolTableClass:
                 self.pars_table[self.pars_table.__len__() -
                                 2].category = "func"
 
-    def get_row(self, lexeme):
+    def get_row(self, lexeme, adr=False):
         for i in range(self.pars_table.__len__()):
-            if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
-                return self.pars_table[self.pars_table.__len__() - 1 - i]
+            if not adr:
+                if self.pars_table[self.pars_table.__len__() - 1 - i].lexeme == lexeme:
+                    return self.pars_table[self.pars_table.__len__() - 1 - i]
+            else:
+                if self.pars_table[self.pars_table.__len__() - 1 - i].address == lexeme:
+                    return self.pars_table[self.pars_table.__len__() - 1 - i]
 
     def set_last_args(self, args, arr_temp):
         global last_adr
@@ -51,6 +55,16 @@ class SymbolTableClass:
                 self.pars_table.pop()
             else:
                 return
+
+    def is_lexeme(self, address):
+        row = self.get_row(address, adr=True)
+        return row is not None
+
+    def get_category(self, lexeme, adr=False):
+        # return var or func
+        row = self.get_row(lexeme, adr=adr)
+        if row is not None:
+            return row.category
 
     def inc_func_args(self, row):
         for i in range(self.pars_table.__len__()):

@@ -7,20 +7,25 @@ from SemanticLevel.Semantic import TempManager
 from SemanticLevel.SemanticRoutines import program_block
 from SemanticLevel.ErrorType import error
 from SemanticLevel.ErrorType import semantic_errors
+from Tools.Development import develop_mode
 
 
 
 def pp_list_of_tuples(lsot):
     f = open("output.txt", "w")
     s = ""
-    # print("\n[")
+    if develop_mode:
+        print("\n[")
     if semantic_errors.__len__() > 0:
         s = "The output code has not been generated"
     else:
         for idx, t in enumerate(lsot):
             s += f"{idx}\t{t}\n"
-            # print(r"{idx:3}: {t}".format(idx=idx, t=t))
-    # print("]")
+            if develop_mode:
+                pass
+                print(r"{idx:3}: {t}".format(idx=idx, t=t))
+    if develop_mode:
+        print("]")
     f.write(s)
 
 
@@ -198,12 +203,18 @@ def get_next_token(token_tuple, line_number):
 def draw_tree():
     # print(pars_table.pars_table)
 
-    x = Semantic.Semantic.errors
-    # print("semantic errors: ")
-    # print(x)
-    pp_list_of_tuples(program_block)
+    x = semantic_errors
+    if develop_mode:
+        print("semantic errors: ")
+        print(x)
+    # pp_list_of_tuples(program_block)
 
     a = ""
+    for pre, fill, node in DFA.RenderTree(DFA.first_node):
+        p = ("%s%s" % (pre, node.name))
+        x = "'"
+        p = p.replace(x, "")
+        a += p + "\n"
     return a[0:a.__len__() - 1]
 
 
