@@ -56,6 +56,10 @@ class SymbolTableClass:
             else:
                 return
 
+    def is_lexeme(self, address):
+        row = self.get_row(address, adr=True)
+        return row is not None
+
     def get_category(self, lexeme, adr=False):
         # return var or func
         row = self.get_row(lexeme, adr=adr)
