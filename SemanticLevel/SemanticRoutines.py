@@ -35,15 +35,51 @@ def get_address_better_handling(arg, is_id=False):
             error(ErrorTypeEnum.scoping, arg)
     return arg
 
+def is_number(x):
+    try:
+        int(x)
+        return True
+    except:
+        return False
+    
+def get_last_k(ls, k=2):
+    if len(ls) < k:
+        return ls
+    else:
+        return ls[-k:]
+
 ####################### Main Routines #########################
 
-
+def get_important_tmps(semantic_stack):
+    print(semantic_stack)
+    ls = list(map(lambda x:str(x).replace("@", ""), semantic_stack))
+    ls = list(filter(lambda x: is_number(x), ls))
+    
+    return ls
+    
 # related to function call to handle SnapshotStack
 def _save_snapshot(get_temp, input_token):
     last_scope_addrs = st.find_adrs()
     for addr in last_scope_addrs:
         sss.push(addr, program_block)
 
+def _save_important_tmps(get_temp, input_token):
+    important_tmps = get_important_tmps(semantic_stack)
+    important_tmps.pop()
+    important_tmps = get_last_k(important_tmps)
+    print("int SIT==>", important_tmps)
+    for it in important_tmps:
+        sss.push(it, program_block)
+        
+
+def _restore_important_tmps(get_temp, input_token):
+    important_tmps = get_important_tmps(semantic_stack)
+    important_tmps = get_last_k(important_tmps)
+    print("int RIT==>", important_tmps)
+    
+    for it in important_tmps[::-1]:
+        pop_addr = sss.pop(program_block, get_temp)
+        program_block.append(f"(ASSIGN, {str(pop_addr)}, {str(it)}, )")
 
 def _restore_snapshot(get_temp, input_token):
     last_scope_addrs = st.find_adrs()
@@ -65,6 +101,7 @@ def func_call_begin(get_temp, input_token):
     global ARG_COUNT
     ARG_COUNT = 0
     _save_snapshot(get_temp, input_token)
+    _save_important_tmps(get_temp, input_token)
 
 
 def func_call_add_args(get_temp, input_token):
@@ -91,6 +128,7 @@ def func_call_end(get_temp, input_token):
         function_id, by_adr=True)  # direct like line 6 or line 20
 
     program_block.append(f"(JP, {function_addr}, , )")
+    _restore_important_tmps(get_temp, input_token)
     _restore_snapshot(get_temp, input_token)
 
     rv = frs.pop(program_block, get_temp)
