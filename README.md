@@ -46,8 +46,10 @@ Generate intermediate code which is relatively close to assembly language.
 
 </div>
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> Run
+<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
+    Run
 </div>
+
 <div style="margin-left: 20px;">
 
 ```
@@ -57,21 +59,26 @@ make run
 
 </div>
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> Interpreter
-</div>
-<div style="margin-left: 20px;">
-Put output.txt file in interpreter directory and run tester\_<your_os>
+<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
+    Interpreter
 </div>
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> Debugging
-</div>
 <div style="margin-left: 20px;">
-For program to create symbol_table, lexical_errors, syntax_errors and pars_tree in file tools/Development.py set develop_mode = True.
+    Put output.txt file in interpreter directory and run './tester/YOUR_OPERATING_SYSTEM'
 </div>
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> Code Contributors
+<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
+    Debugging
+</div>
+    
+<div style="margin-left: 20px;">
+    For program to create symbol_table, lexical_errors, syntax_errors and pars_tree in file tools/Development.py set develop_mode = True.
+</div>
+
+<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
+    Code Contributors
 </div>
 <div style="margin-left: 20px;">
-Project's code is written by
+    Project's code is written by
 <a href="https://github.com/sfmqrb/compiler/graphs/contributors"> contributors </a>
 </div>
