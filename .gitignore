@@ -146,6 +146,6 @@ test_grammer
 .vscode/settings.json
 input1.txt
 input.txt
-output.txt
+Interpreter/output.txt
 tester_Linux.out
 semantic_errors.txt

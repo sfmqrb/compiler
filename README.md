@@ -33,3 +33,9 @@ Generate intermediate code which is relatively close to assembly language.
 pip install -r requirements.txt
 make run
 ```
+
+##Interpreter
+put output.txt file in interpreter directory and run tester_<your_os>
+
+##Debugging
+For program to create symbol_table, lexical_errors, syntax_errors and pars_tree in file tools/Development.py set develop_mode = True. 
