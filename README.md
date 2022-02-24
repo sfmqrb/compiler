@@ -57,7 +57,7 @@ make run
 
 ##    Interpreter
 
-Put output.txt file in interpreter directory and run './tester/YOUR_OPERATING_SYSTEM'
+Put output.txt file in interpreter directory and run `./tester_<YOUR_OPERATING_SYSTEM>`
 
 ## Debugging
     
