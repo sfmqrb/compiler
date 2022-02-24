@@ -7,7 +7,7 @@
 <div style="margin: 20px">
     <h2> phase 1 </h2>
 
-<h3 style="color: #aaa; margin-top:20px"> 
+<h3 style="margin-top:20px"> 
     Scanner
 </h3>
 
@@ -22,7 +22,7 @@ A file called "input.txt" contains the raw code. Also, this file is in the same 
     <h2> phase 2 </h2>
 </div>
 
-<h3 style="color: #aaa; margin-top:20px"> 
+<h3 style="margin-top:20px"> 
     Parser
 </h3>
 
@@ -36,7 +36,7 @@ A parser is a compiler or interpreter component that breaks data into smaller el
     <h2> phase 3 </h2>
 </div>
 
-<h3 style="color: #aaa; margin-top:20px">
+<h3 style="margin-top:20px">
     Code Generator
 </h3>
 
@@ -46,39 +46,23 @@ Generate intermediate code which is relatively close to assembly language.
 
 </div>
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
-    Run
-</div>
 
-<div style="margin-left: 20px;">
+## Run
 
 ```
 pip install -r requirements.txt
 make run
 ```
 
-</div>
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
-    Interpreter
-</div>
+##    Interpreter
 
-<div style="margin-left: 20px;">
-    Put output.txt file in interpreter directory and run './tester/YOUR_OPERATING_SYSTEM'
-</div>
+Put output.txt file in interpreter directory and run './tester/YOUR_OPERATING_SYSTEM'
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
-    Debugging
-</div>
+## Debugging
     
-<div style="margin-left: 20px;">
-    For program to create symbol_table, lexical_errors, syntax_errors and pars_tree in file tools/Development.py set develop_mode = True.
-</div>
+For program to create symbol_table, lexical_errors, syntax_errors and pars_tree in file tools/Development.py set develop_mode = True.
 
-<div style="color: #aaa; margin-top: 20px; font-size: 20px"> 
-    Code Contributors
-</div>
-<div style="margin-left: 20px;">
-    Project's code is written by
+## Code Contributors
+Project's code is written by
 <a href="https://github.com/sfmqrb/compiler/graphs/contributors"> contributors </a>
-</div>
