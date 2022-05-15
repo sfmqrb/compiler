@@ -61,7 +61,7 @@ Put output.txt file in interpreter directory and run `./tester_<YOUR_OPERATING_S
 
 ## Debugging
     
-For program to create symbol_table, lexical_errors, syntax_errors and pars_tree in file tools/Development.py set develop_mode = True.
+For program to create symbol_table, lexical_errors, syntax_errors and parse_tree in the path `tools/Development.py` set `develop_mode = True`.
 
 ## Code Contributors
 Project's code is written by
