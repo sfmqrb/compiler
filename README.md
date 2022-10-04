@@ -5,7 +5,7 @@
 </h2>
 
 <div style="margin: 20px">
-    <h2> phase 1 </h2>
+    <h2> phase 1</h2>
 
 <h3 style="margin-top:20px"> 
     Scanner
